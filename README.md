@@ -2,7 +2,11 @@
 
 Embed additional web content into a Capacitor App
 
-> ⚠ WIP - Work in Progress ⚠
+> **⚠ WIP - Work in Progress ⚠**
+>
+> The project is part of my diploma thesis, an overview can be found at [hampoelz/HTL_Diplomarbeit](https://github.com/hampoelz/HTL_Diplomarbeit).
+>
+> ⏰ Planed Deadline: March 2023
 
 ## Install
 
