@@ -1,64 +1,79 @@
+import type { CapacitorException} from '@capacitor/core';
 import { WebPlugin } from '@capacitor/core';
 
-import type { BrowserViewPlugin } from './definitions';
+import type { BrowserView, BrowserViewPlugin, Rectangle } from './definitions';
 
 export class BrowserViewWeb extends WebPlugin implements BrowserViewPlugin {
-  createBrowserView(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+  protected unavailableBrowserView(): CapacitorException {
+    return this.unavailable('WebViews are not available in browser.');
   }
-  setAutoResize(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+  createBrowserView(): Promise<{ value: BrowserView; }> {
+    throw this.unavailableBrowserView();
   }
   setBounds(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
-  getBounds(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+  getBounds(): Promise<{ value: Rectangle; }> {
+    throw this.unavailableBrowserView();
   }
   setBackgroundColor(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
   loadURL(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
-  getURL(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+  getURL(): Promise<{ value: string; }> {
+    throw this.unavailableBrowserView();
   }
-  getTitle(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+  getTitle(): Promise<{ value: string; }> {
+    throw this.unavailableBrowserView();
   }
   stop(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
   reload(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
-  canGoBack(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+  canGoBack(): Promise<{ value: boolean; }> {
+    throw this.unavailableBrowserView();
   }
-  canGoForward(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+  canGoForward(): Promise<{ value: boolean; }> {
+    throw this.unavailableBrowserView();
   }
   clearHistory(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
   goBack(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
   goForward(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
   setUserAgent(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
-  getUserAgent(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+  appendUserAgent(): void {
+    throw this.unavailableBrowserView();
+  }
+  getUserAgent(): Promise<{ value: string; }> {
+    throw this.unavailableBrowserView();
   }
   executeJavaScript(): Promise<any> {
-    throw this.unavailable('WebViews are not available in browser.');
+    throw this.unavailableBrowserView();
   }
-  setZoomFactor(): void {
-    throw this.unavailable('WebViews are not available in browser.');
+  setAllowMultipleWindows(): void {
+    throw this.unavailableBrowserView();
   }
-  
+  getAllowMultipleWindows(): Promise<{ value: boolean; }> {
+    throw this.unavailableBrowserView();
+  }
+  setAllowedNavigation(): void {
+    throw this.unavailableBrowserView();
+  }
+  getAllowedNavigation(): Promise<{ value: string[]; }> {
+    throw this.unavailableBrowserView();
+  }
+  sendMessage(): Promise<{ value: boolean; }> {
+    throw this.unavailableBrowserView();
+  }
 }

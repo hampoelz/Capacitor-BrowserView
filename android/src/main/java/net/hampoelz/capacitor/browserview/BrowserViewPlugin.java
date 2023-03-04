@@ -1,57 +1,61 @@
 package net.hampoelz.capacitor.browserview;
 
+import android.webkit.WebView;
+
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @CapacitorPlugin(name = "BrowserView")
 public class BrowserViewPlugin extends Plugin {
 
-    private BrowserView implementation = new BrowserView();
+    private BrowserView implementation;
+
+    public void load() {
+        implementation = new BrowserView(this);
+    }
+
+    //region PluginMethods
+    //---------------------------------------------------------------------------------------
 
     @PluginMethod
     public void createBrowserView(PluginCall call) {
-        JSObject options = call.getObject("options");
-        String type = options.getString("type");
+        boolean enableBridge = call.getBoolean("enableBridge", false);
 
-        Boolean useCapacitor = type.equals("CapacitorWebView");
+        // TODO: Parse global plugin settings
 
-        JSObject browserView = new JSObject();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                WebView webView = new WebView(getContext());
 
-        // TODO
+                // TODO: Set WebView settings
+                // TODO: Implement Capacitor <-> BrowserView Bridge
 
-        call.resolve(browserView);
+                JSObject browserView = implementation.CreateBrowserView(webView);
+                call.resolve(new JSObject().put("value", browserView));
+            }
+        });
     }
 
-    // ------------------------------------------------------------------------------------------ \\
-
-    @PluginMethod
-    public void setAutoResize(PluginCall call) {
-        JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
-
-        JSObject options = call.getObject("options");
-        Boolean width = options.getBoolean("width", false);
-        Boolean height = options.getBoolean("height", false);
-        Boolean horizontal = options.getBoolean("horizontal", false);
-        Boolean vertical = options.getBoolean("vertical", false);
-
-        // TODO
-
-        call.resolve();
-    }
+    // Visual -------------------------------------------------------------------------------
 
     @PluginMethod
     public void setBounds(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
-        JSObject options = call.getObject("options");
-        JSObject bounds = options.getJSObject("bounds");
+        JSObject bounds = call.getObject("bounds");
         Number x = bounds.getInteger("x");
         Number y = bounds.getInteger("y");
         Number width = bounds.getInteger("width");
@@ -66,7 +70,7 @@ public class BrowserViewPlugin extends Plugin {
     public void getBounds(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         Number x = Double.NaN;
         Number y = Double.NaN;
@@ -76,45 +80,36 @@ public class BrowserViewPlugin extends Plugin {
         // TODO
 
         JSObject bounds = new JSObject();
-        browserView.put("x", x);
-        browserView.put("y", y);
-        browserView.put("width", width);
-        browserView.put("height", height);
+        bounds.put("x", x);
+        bounds.put("y", y);
+        bounds.put("width", width);
+        bounds.put("height", height);
 
-        JSObject ret = new JSObject();
-        ret.put("value", bounds);
-
-        call.resolve(ret);
+        call.resolve(new JSObject().put("value", bounds));
     }
 
     @PluginMethod
     public void setBackgroundColor(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
-        JSObject options = call.getObject("options");
-        JSObject color = options.getJSObject("color");
-        Number red = color.getInteger("red", 255);
-        Number green = color.getInteger("green", 255);
-        Number blue = color.getInteger("blue", 255);
-        Number alpha = color.getInteger("alpha", 100);
+        String color = call.getString("color");
 
         // TODO
 
         call.resolve();
     }
 
-    // ------------------------------------------------------------------------------------------ \\
+    // Actions ------------------------------------------------------------------------------
 
     @PluginMethod
     public void loadURL(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
-        JSObject options = call.getObject("options");
-        String url = options.getString("url");
+        String url = call.getString("url");
 
         // TODO
 
@@ -125,119 +120,116 @@ public class BrowserViewPlugin extends Plugin {
     public void getURL(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         String url = "";
 
         // TODO
 
-        JSObject ret = new JSObject();
-        ret.put("value", url);
-
-        call.resolve(ret);
+        call.resolve(new JSObject().put("value", url));
     }
 
     @PluginMethod
     public void getTitle(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         String title = "";
 
         // TODO
 
-        JSObject ret = new JSObject();
-        ret.put("value", title);
-
-        call.resolve(ret);
+        call.resolve(new JSObject().put("value", title));
     }
 
     @PluginMethod
     public void stop(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         // TODO
+
+        call.resolve();
     }
 
     @PluginMethod
     public void reload(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         // TODO
+
+        call.resolve();
     }
 
     @PluginMethod
     public void canGoBack(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
-        Boolean canGoBack = false;
+        boolean canGoBack = false;
 
         // TODO
 
-        JSObject ret = new JSObject();
-        ret.put("value", canGoBack);
-
-        call.resolve(ret);
+        call.resolve(new JSObject().put("value", canGoBack));
     }
 
     @PluginMethod
     public void canGoForward(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
-        Boolean canGoForward = false;
+        boolean canGoForward = false;
 
         // TODO
 
-        JSObject ret = new JSObject();
-        ret.put("value", canGoForward);
-
-        call.resolve(ret);
+        call.resolve(new JSObject().put("value", canGoForward));
     }
 
     @PluginMethod
     public void clearHistory(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         // TODO
+
+        call.resolve();
     }
 
     @PluginMethod
     public void goBack(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         // TODO
+
+        call.resolve();
     }
 
     @PluginMethod
     public void goForward(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         // TODO
+
+        call.resolve();
     }
 
     @PluginMethod
     public void setUserAgent(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
-        JSObject options = call.getObject("options");
-        String userAgent = options.getString("userAgent");
+        String userAgent = call.getString("userAgent");
 
         // TODO
 
@@ -248,68 +240,261 @@ public class BrowserViewPlugin extends Plugin {
     public void getUserAgent(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
         String userAgent = "";
 
         // TODO
 
-        JSObject ret = new JSObject();
-        ret.put("value", userAgent);
-
-        call.resolve(ret);
+        call.resolve(new JSObject().put("value", userAgent));
     }
 
     @PluginMethod
-    public void executeJavaScript(PluginCall call) {
+    public void appendUserAgent(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
         if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
+            call.reject("The specified BrowserView does not exist");
 
-        JSObject options = call.getObject("options");
-        String code = options.getString("code");
-
-        // TODO
-
-        call.resolve(); // TODO: resolve with the result of the executed code or reject if the result of the code is a rejected promise.
-    }
-
-    @PluginMethod
-    public void setZoomFactor(PluginCall call) {
-        JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView doesn't exist");
-
-        JSObject options = call.getObject("options");
-        Number factor = options.getInteger("factor");
+        String userAgent = "";
 
         // TODO
 
         call.resolve();
     }
 
-    // ------------------------------------------------------------------------------------------ \\
+    @PluginMethod
+    public void executeJavaScript(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        if (!implementation.BrowserViewExists(browserView))
+            call.reject("The specified BrowserView does not exist");
 
-    public void didFinishLoad(JSObject browserView, String url) {
-        if (browserView == null) return;
+        String code = call.getString("code");
 
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-        ret.put("url", url);
+        // TODO
 
-        notifyListeners("did-finish-load", ret);
+        call.resolve();
+
+        // TODO: resolve with the result of the executed code or reject if the result of the code is a rejected promise.
     }
 
-    public void didStopLoading(JSObject browserView) {
-        if (browserView == null) return;
+    @PluginMethod
+    public void setAllowMultipleWindows(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        if (!implementation.BrowserViewExists(browserView))
+            call.reject("The specified BrowserView does not exist");
 
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
+        boolean allowMultipleWindows = call.getBoolean("allowMultipleWindows", true);
 
-        notifyListeners("did-stop-loading", ret);
+        // TODO
+
+        call.resolve();
     }
 
-    public void didFailLoad(JSObject browserView, Integer errorCode, String errorDescription, String validatedURL) {
+    @PluginMethod
+    public void getAllowMultipleWindows(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        if (!implementation.BrowserViewExists(browserView))
+            call.reject("The specified BrowserView does not exist");
+
+        boolean allowMultipleWindows = true;
+
+        // TODO
+
+        call.resolve(new JSObject().put("value", allowMultipleWindows));
+    }
+
+    @PluginMethod
+    public void setAllowedNavigation(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        if (!implementation.BrowserViewExists(browserView))
+            call.reject("The specified BrowserView does not exist");
+
+        try {
+            JSArray allowNavigationArray = call.getArray("allowNavigation");
+            List<String> allowNavigation = new ArrayList<>();
+
+            for(int i=0; i < allowNavigationArray.length(); i++) {
+                allowNavigation.add(allowNavigationArray.getString(i));
+            }
+
+            // TODO
+
+            call.resolve();
+        } catch (JSONException e) {
+            call.reject(e.toString());
+        }
+    }
+
+    @PluginMethod
+    public void getAllowedNavigation(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        if (!implementation.BrowserViewExists(browserView))
+            call.reject("The specified BrowserView does not exist");
+
+        List<String> allowNavigation = new ArrayList<>();
+
+        // TODO
+
+        JSArray allowNavigationArray = new JSArray(allowNavigation);
+
+        call.resolve(new JSObject().put("value", allowNavigationArray));
+    }
+
+    // Bridge -------------------------------------------------------------------------------
+
+    @PluginMethod
+    public void sendMessage(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        if (!implementation.BrowserViewExists(browserView))
+            call.reject("The specified BrowserView does not exist");
+
+        String eventName = call.getString("eventName");
+        JSArray args = call.getArray("args");
+
+        // Serialize data
+        JSObject data = new JSObject();
+        data.put("event", eventName);
+        data.put("payload", args.toString());
+
+        // TODO
+
+        boolean result = false;
+
+        call.resolve(new JSObject().put("value", result));
+    }
+
+    //---------------------------------------------------------------------------------------
+    //endregion
+
+    //region PluginEvents
+    //---------------------------------------------------------------------------------------
+
+    public void onNewWindow(JSObject browserView, String url) {
+        notifyBrowserViewUrlListeners("new-window", browserView, url);
+    }
+
+    public void onCloseWindow(JSObject browserView) {
+        notifyBrowserViewListeners("close-window", browserView);
+    }
+
+    public void onPageFaviconUpdated(JSObject browserView, byte[] bytes) {
+        // TODO: Test byteArray vs String encodedIcon = Base64.encodeToString(icon, Base64.NO_WRAP);
+        notifyBrowserViewIconListeners("page-favicon-updated", browserView, bytes);
+    }
+
+    public void onPageTitleUpdated(JSObject browserView, String title) {
+        notifyBrowserViewTitleListeners("page-title-updated", browserView, title);
+    }
+
+    public void onEnterHtmlFullScreen(JSObject browserView) {
+        notifyBrowserViewListeners("enter-html-full-screen", browserView);
+    }
+
+    public void onLeaveHtmlFullScreen(JSObject browserView) {
+        notifyBrowserViewListeners("leave-html-full-screen", browserView);
+    }
+
+    public void onWillNavigate(JSObject browserView, String url) {
+        notifyBrowserViewUrlListeners("will-navigate", browserView, url);
+    }
+
+    public void onDidStartLoading(JSObject browserView) {
+        notifyBrowserViewListeners("did-start-loading", browserView);
+    }
+
+    public void onDidFrameFinishLoad(JSObject browserView) {
+        notifyBrowserViewListeners("did-frame-finish-load", browserView);
+    }
+
+    public void onDidFinishLoad(JSObject browserView) {
+        notifyBrowserViewListeners("did-finish-load", browserView);
+    }
+
+    public void onDidFailLoad(JSObject browserView, int errorCode, String errorDescription, String validatedURL) {
+        notifyBrowserViewErrorListeners("did-fail-load", browserView, errorCode, errorDescription, validatedURL);
+    }
+
+    public void onDomReady(JSObject browserView) {
+        notifyBrowserViewListeners("dom-ready", browserView);
+    }
+
+    public void onHttpError(JSObject browserView, String url, int httpResponseCode, String httpStatusText) {
+        notifyBrowserViewResponseListeners("http-error", browserView, url, httpResponseCode, httpStatusText);
+    }
+
+    public void onRenderProcessGone(JSObject browserView, boolean crashed) {
+        notifyBrowserViewRenderProcessGoneListeners("render-process-gone", browserView, crashed);
+    }
+
+    public void onUnresponsive(JSObject browserView) {
+        notifyBrowserViewListeners("unresponsive", browserView);
+    }
+
+    public void onResponsive(JSObject browserView) {
+        notifyBrowserViewListeners("responsive", browserView);
+    }
+
+    // Bridge -------------------------------------------------------------------------------
+
+    public void onChannelReceive(JSObject browserView, JSONObject data) throws JSONException {
+        String eventName = data.getString("event");
+        String payload = data.getString("payload");
+
+        notifyBrowserViewChannelListeners("channel-" + eventName, browserView, payload);
+    }
+
+    //---------------------------------------------------------------------------------------
+    //endregion
+
+    //region PluginListeners
+    //---------------------------------------------------------------------------------------
+
+    public void notifyBrowserViewListeners(String eventName, JSObject browserView) {
+        if (browserView == null) return;
+
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+
+        notifyListeners(eventName, args);
+    }
+
+    public void notifyBrowserViewUrlListeners(String eventName, JSObject browserView, String url) {
+        if (browserView == null) return;
+
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+        args.put("url", url);
+
+        notifyListeners(eventName, args);
+    }
+
+    public void notifyBrowserViewIconListeners(String eventName, JSObject browserView, byte[] icon) {
+        if (browserView == null) return;
+
+        JSArray byteArray = new JSArray();
+
+        for(int i=0; i < icon.length; i++) {
+            byteArray.put(icon[i]);
+        }
+
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+        args.put("icon", byteArray);
+
+        notifyListeners(eventName, args);
+    }
+
+    public void notifyBrowserViewTitleListeners(String eventName, JSObject browserView, String title) {
+        if (browserView == null) return;
+
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+        args.put("title", title);
+
+        notifyListeners(eventName, args);
+    }
+
+    public void notifyBrowserViewErrorListeners(String eventName, JSObject browserView, int errorCode, String errorDescription, String validatedURL) {
         if (browserView == null) return;
 
         JSObject error = new JSObject();
@@ -317,94 +502,57 @@ public class BrowserViewPlugin extends Plugin {
         error.put("errorDescription", errorDescription);
         error.put("validatedURL", validatedURL);
 
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-        ret.put("error", error);
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+        args.put("error", error);
 
-        notifyListeners("did-fail-load", ret);
+        notifyListeners(eventName, args);
     }
 
-    public void didStartLoading(JSObject browserView) {
-        if (browserView == null) return;
-
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-
-        notifyListeners("did-start-loading", ret);
-    }
-
-    public void didStartNavigation(JSObject browserView, String url) {
-        if (browserView == null) return;
-
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-        ret.put("url", url);
-
-        notifyListeners("did-start-navigation", ret);
-    }
-
-    public void domReady(JSObject browserView) {
-        if (browserView == null) return;
-
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-
-        notifyListeners("dom-ready", ret);
-    }
-
-    public void willNavigate(JSObject browserView, String url) {
-        if (browserView == null) return;
-
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-        ret.put("url", url);
-
-        notifyListeners("will-navigate", ret);
-    }
-
-    public void httpError(JSObject browserView, String url, Integer httpResponseCode, String httpStatusText) {
+    public void notifyBrowserViewResponseListeners(String eventName, JSObject browserView, String url, int httpResponseCode, String httpStatusText) {
         if (browserView == null) return;
 
         JSObject errorResponse = new JSObject();
         errorResponse.put("httpResponseCode", httpResponseCode);
         errorResponse.put("httpStatusText", httpStatusText);
 
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-        ret.put("url", url);
-        ret.put("errorResponse", errorResponse);
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+        args.put("url", url);
+        args.put("errorResponse", errorResponse);
 
-        notifyListeners("http-error", ret);
+        notifyListeners(eventName, args);
     }
 
-    public void unresponsive(JSObject browserView) {
-        if (browserView == null) return;
-
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-
-        notifyListeners("unresponsive", ret);
-    }
-
-    public void responsive(JSObject browserView) {
-        if (browserView == null) return;
-
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-
-        notifyListeners("responsive", ret);
-    }
-
-    public void renderProcessGone(JSObject browserView, Boolean crashed) {
+    public void notifyBrowserViewRenderProcessGoneListeners(String eventName, JSObject browserView, boolean crashed) {
         if (browserView == null) return;
 
         JSObject details = new JSObject();
         details.put("crashed", crashed);
 
-        JSObject ret = new JSObject();
-        ret.put("browserView", browserView);
-        ret.put("details", details);
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+        args.put("details", details);
 
-        notifyListeners("render-process-gone", ret);
+        notifyListeners(eventName, args);
     }
+
+    public void notifyBrowserViewChannelListeners(String eventName, JSObject browserView, String payload) throws JSONException {
+        if (browserView == null) return;
+
+        // Deserialize data
+        JSArray payloadArray = new JSArray(payload);
+
+        JSObject event = new JSObject();
+        event.put("args", payloadArray);
+
+        JSObject args = new JSObject();
+        args.put("browserView", browserView);
+        args.put("event", event);
+
+        notifyListeners(eventName, args);
+    }
+
+    //---------------------------------------------------------------------------------------
+    //endregion
 }

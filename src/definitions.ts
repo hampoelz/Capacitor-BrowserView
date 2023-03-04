@@ -1,112 +1,462 @@
+/// <reference types="@capacitor/cli" />
+
 import type { PluginListenerHandle } from '@capacitor/core';
 
-export type uint8 = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 | 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 89 | 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127 | 128 | 129 | 130 | 131 | 132 | 133 | 134 | 135 | 136 | 137 | 138 | 139 | 140 | 141 | 142 | 143 | 144 | 145 | 146 | 147 | 148 | 149 | 150 | 151 | 152 | 153 | 154 | 155 | 156 | 157 | 158 | 159 | 160 | 161 | 162 | 163 | 164 | 165 | 166 | 167 | 168 | 169 | 170 | 171 | 172 | 173 | 174 | 175 | 176 | 177 | 178 | 179 | 180 | 181 | 182 | 183 | 184 | 185 | 186 | 187 | 188 | 189 | 190 | 191 | 192 | 193 | 194 | 195 | 196 | 197 | 198 | 199 | 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 | 209 | 210 | 211 | 212 | 213 | 214 | 215 | 216 | 217 | 218 | 219 | 220 | 221 | 222 | 223 | 224 | 225 | 226 | 227 | 228 | 229 | 230 | 231 | 232 | 233 | 234 | 235 | 236 | 237 | 238 | 239 | 240 | 241 | 242 | 243 | 244 | 245 | 246 | 247 | 248 | 249 | 250 | 251 | 252 | 253 | 254 | 255;
-export type percent = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 | 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 89 | 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 | 100;
+declare module '@capacitor/cli' {
+  export interface PluginsConfig {
+    /**
+     * These config values are available:
+     */
+    BrowserView?: {
+      /**
+       * Default external URL loaded in BrowserViews.
+       * 
+       * @since 1.0.0
+       */
+      url?: string;
 
-export type WebViewType = "WebView" | "CapacitorWebView";
+      /**
+       * Open links that request a new tab or window _(`target="_blank"`)_
+       * in the external browser instead of the BrowserViews.
+       * 
+       * @since 1.0.0
+       * @default true
+       */
+      allowMultipleWindows?: boolean;
+
+      /**
+       * Set additional URLs the BrowserViews can navigate to.
+       * 
+       * By default, all external URLs are opened in the external browser (not
+       * the BrowserView).
+       * 
+       * @since 1.0.0
+       * @default []
+       */
+      allowNavigation?: string[];
+
+      /**
+       * TODO
+       * 
+       * @since 1.0.0
+       * @default false
+       */
+      enableBridge?: boolean;
+
+      /**
+       * Default user agent for BrowserViews.
+       *
+       * @since 1.0.0
+       */
+      overrideUserAgent?: string;
+      
+      /**
+       * String to append to the original user agent for BrowserViews.
+       *
+       * This is disregarded if `overrideUserAgent` is used.
+       *
+       * @since 1.0.0
+       */
+      appendUserAgent?: string;
+
+      /**
+       * Background color for BrowserViews.
+       *
+       * @since 1.0.0
+       */
+      backgroundColor?: string;
+
+      android?: {
+        /**
+         * Default user agent for BrowserViews on Android.
+         * 
+         * Overrides global `overrideUserAgent` option.
+         * 
+         * @since 1.0.0
+         */
+        overrideUserAgent?: string;
+
+        /**
+         * String to append to the original user agent for BrowserViews for Android.
+         * 
+         * Overrides global `appendUserAgent` option.
+         * 
+         * This is disregarded if `overrideUserAgent` is used.
+         * 
+         * @since 1.0.0
+         */
+        appendUserAgent?: string;
+
+        /**
+         * Background color for BrowserViews for Android.
+         * 
+         * Overrides global `backgroundColor` option.
+         * 
+         * @since 1.0.0
+         */
+        backgroundColor?: string;
+
+        /**
+         * Enable mixed content in the BrowserViews for Android.
+         * 
+         * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
+         * is disabled by default for security. During development, you may need to
+         * enable it to allow the BrowserViews to load files from different schemes.
+         * 
+         * **This is not intended for use in production.**
+         * 
+         * @since 1.0.0
+         * @default false
+         */
+        allowMixedContent?: boolean;
+
+        /**
+         * Always enable debuggable web content.
+         * 
+         * This is automatically enabled during development.
+         * 
+         * @since 1.0.0
+         * @default false
+         */
+        webContentsDebuggingEnabled?: boolean;
+      };
+
+      electron?: {
+        /**
+         * Default user agent for BrowserViews on Electron.
+         * 
+         * Overrides global `overrideUserAgent` option.
+         * 
+         * @since 1.0.0
+         */
+        overrideUserAgent?: string;
+
+        /**
+         * String to append to the original user agent for BrowserViews for Electron.
+         * 
+         * Overrides global `appendUserAgent` option.
+         * 
+         * This is disregarded if `overrideUserAgent` is used.
+         * 
+         * @since 1.0.0
+         */
+        appendUserAgent?: string;
+
+        /**
+         * Background color for BrowserViews for Electron.
+         * 
+         * Overrides global `backgroundColor` option.
+         * 
+         * @since 1.0.0
+         */
+        backgroundColor?: string;
+
+        /**
+         * Enable mixed content in the BrowserViews for Electron.
+         * 
+         * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
+         * is disabled by default for security. During development, you may need to
+         * enable it to allow the BrowserViews to load files from different schemes.
+         * 
+         * **This is not intended for use in production.**
+         * 
+         * @since 1.0.0
+         * @default false
+         */
+        allowMixedContent?: boolean;
+
+        /**
+         * Always enable dev tools.
+         * 
+         * This is automatically enabled during development.
+         * 
+         * @since 1.0.0
+         * @default false
+         */
+        webContentsDebuggingEnabled?: boolean;
+      };
+    };
+  }
+}
 
 export interface BrowserViewPlugin {
-  createBrowserView(options?: { type: WebViewType}): Promise<BrowserView>;
+  createBrowserView(options?: CreateBrowserViewOptions): Promise<{ value: BrowserView }>;
 
-  setAutoResize(browserView: BrowserView, options: AutoResizeOptions): void;
-  setBounds(browserView: BrowserView, options: { bounds: Rectangle }): void;
-  getBounds(browserView: BrowserView): Promise<{ value: Rectangle }>;
-  setBackgroundColor(browserView: BrowserView, options: { color: RGBA }): void;
+  // android:   WebView#setLayoutParams
+  //            ViewGroup.MarginLayoutParams
+  // electron:  browser-view#viewsetboundsbounds-experimental
+  setBounds(options: BrowserViewBoundsOptions): void;
 
-  // WebView#loadUrl(java.lang.String)
-  loadURL(browserView: BrowserView, options: { url: string }): void;
-  // WebView#getUrl()
-  getURL(browserView: BrowserView): Promise<{ value: string }>;
-  // WebView#getTitle()
-  getTitle(browserView: BrowserView): Promise<{ value: string }>;
-  // WebView#stopLoading()
-  stop(browserView: BrowserView): void;
-  // WebView#reload()
-  reload(browserView: BrowserView): void;
-  // WebView#canGoBack()
-  canGoBack(browserView: BrowserView): Promise<{ value: boolean }>
-  // WebView#canGoForward()
-  canGoForward(browserView: BrowserView): Promise<{ value: boolean }>
-  // WebView#clearHistory()
-  clearHistory(browserView: BrowserView): void;
-  // WebView#goBack()
-  goBack(browserView: BrowserView): void;
-  // WebView#goForward()
-  goForward(browserView: BrowserView): void;
-  // WebSettings#setUserAgentString(java.lang.String)
-  setUserAgent(browserView: BrowserView, options: { userAgent: string }): void;
-  // WebSettings#getUserAgentString()
-  getUserAgent(browserView: BrowserView): Promise<{ value: string }>;
-  // WebView#evaluateJavascript(java.lang.String, android.webkit.ValueCallback<java.lang.String>)
-  executeJavaScript(browserView: BrowserView, options: { code: string }): Promise<any>;
-  // WebView#setInitialScale(int)
-  setZoomFactor(browserView: BrowserView, options: { factor: number }): void;
+  // android:   WebView#getLayoutParams
+  //            ViewGroup.MarginLayoutParams
+  // electron:  browser-view#viewgetbounds-experimental
+  getBounds(options: BrowserViewOptions): Promise<{ value: Rectangle }>;
 
-  // WebViewClient#onPageFinished(android.webkit.WebView, java.lang.String)
+  // android:   WebView#setBackgroundColor
+  // electron:  browser-view#viewsetbackgroundcolorcolor-experimental
+  setBackgroundColor(options: BrowserViewColorOptions): void;
+
+  // android:   WebView#loadUrl
+  // electron:  web-contents#contentsloadurlurl-options
+  loadURL(options: BrowserViewUrlOptions): void;
+
+  // android:   WebView#getUrl
+  // electron:  web-contents#contentsgeturl
+  getURL(options: BrowserViewOptions): Promise<{ value: string }>;
+
+  // android:   WebView#getTitle
+  // electron:  web-contents#contentsgettitle
+  getTitle(options: BrowserViewOptions): Promise<{ value: string }>;
+
+  // android:   WebView#stopLoading
+  // electron:  web-contents#contentsstop
+  stop(options: BrowserViewOptions): void;
+
+  // android:   WebView#reload
+  // electron:  web-contents#contentsreload
+  reload(options: BrowserViewOptions): void;
+
+  // android:   WebView#canGoBack
+  // electron:  web-contents#contentscangoback
+  canGoBack(options: BrowserViewOptions): Promise<{ value: boolean }>
+
+  // android:   WebView#canGoForward
+  // electron:  web-contents#contentscangoforward
+  canGoForward(options: BrowserViewOptions): Promise<{ value: boolean }>
+
+  // android:   WebView#clearHistory
+  // electron:  web-contents#contentsclearhistory
+  clearHistory(options: BrowserViewOptions): void;
+
+  // android:   WebView#goBack
+  // electron:  web-contents#contentsgoback
+  goBack(options: BrowserViewOptions): void;
+
+  // android:   WebView#goForward
+  // electron:  web-contents#contentsgoforward
+  goForward(options: BrowserViewOptions): void;
+
+  // android:   WebSettings#setUserAgentString
+  // electron:  web-contents#contentssetuseragentuseragent
+  setUserAgent(options: BrowserViewUserAgentOptions): void;
+
+  // android:   WebSettings#getUserAgentString
+  //            WebSettings#setUserAgentString
+  // electron:  web-contents#contentsgetuseragent
+  //            web-contents#contentssetuseragentuseragent
+  appendUserAgent(options: BrowserViewUserAgentOptions): void;
+
+  // android:   WebSettings#getUserAgentString
+  // electron:  web-contents#contentsgetuseragent
+  getUserAgent(options: BrowserViewOptions): Promise<{ value: string }>;
+
+  // android:   WebView#evaluateJavascript
+  // electron:  web-contents#contentsexecutejavascriptcode-usergesture
+  // TODO: resolve with the result of the executed code or reject if the result of the code is a rejected promise.
+  executeJavaScript(options: BrowserViewExecuteOptions): Promise<any>;
+
+  // android:   WebSettings#setSupportMultipleWindows
+  // electron:  breaking-changes#removed-webcontents-new-window-event
+  //            web-contents#contentssetwindowopenhandlerhandler
+  setAllowMultipleWindows(options: BrowserViewWindowOptions): void;
+  getAllowMultipleWindows(options: BrowserViewOptions): Promise<{ value: boolean }>;
+
+  // android:   WebChromeClient#onCreateWindow
+  //            WebViewClient#shouldOverrideUrlLoading
+  // electron:  breaking-changes#removed-webcontents-new-window-event
+  //            web-contents#contentssetwindowopenhandlerhandler
+  //            web-contents#event-will-navigate
+  setAllowedNavigation(options: BrowserViewNavigationOptions): void;
+  getAllowedNavigation(options: BrowserViewOptions): Promise<{ value: string[] }>;
+
+  //
+  sendMessage(options: BrowserViewMessageOptions): Promise<{ value: boolean }>;
+
+  // android:   WebChromeClient#onCreateWindow
+  // electron:  breaking-changes#removed-webcontents-new-window-event
+  //            web-contents#contentssetwindowopenhandlerhandler
   addListener(
-    eventName: 'did-finish-load',
-    listenerFunc: FinishLoadListener,
+    eventName: 'new-window',
+    listenerFunc: BrowserViewUrlListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebChromeClient#onCloseWindow
+  // electron:  web-contents#event-destroyed
   addListener(
-    eventName: 'did-stop-loading',
-    listenerFunc: StopLoadingListener,
+    eventName: 'close-window',
+    listenerFunc: BrowserViewListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewClient#onReceivedError(android.webkit.WebView, android.webkit.WebResourceRequest, android.webkit.WebResourceError)
+
+  // android:   WebChromeClient#onReceivedIcon
+  // electron:  web-contents#event-page-favicon-updated
   addListener(
-    eventName: 'did-fail-load',
-    listenerFunc: FailLoadListener,
+    eventName: 'page-favicon-updated',
+    listenerFunc: BrowserViewIconListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewClient#onPageStarted(android.webkit.WebView, java.lang.String, android.graphics.Bitmap)
+
+  // android:   WebChromeClient#onReceivedTitle
+  // electron:  web-contents#event-page-title-updated
   addListener(
-    eventName: 'did-start-loading',
-    listenerFunc: StartLoadingListener,
+    eventName: 'page-title-updated',
+    listenerFunc: BrowserViewTitleListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebChromeClient#onShowCustomView
+  //            requires min level 7
+  // electron:  web-contents#event-enter-html-full-screen
   addListener(
-    eventName: 'did-start-navigation',
-    listenerFunc: StartNavigationListener,
+    eventName: 'enter-html-full-screen',
+    listenerFunc: BrowserViewListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewClient#onPageCommitVisible(android.webkit.WebView, java.lang.String)
+
+  // android:   WebChromeClient#onHideCustomView
+  //            requires min level 7
+  // electron:  web-contents#event-leave-html-full-screen
   addListener(
-    eventName: 'dom-ready',
-    listenerFunc: DomReadyListener,
+    eventName: 'leave-html-full-screen',
+    listenerFunc: BrowserViewListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewClient#onLoadResource(android.webkit.WebView, java.lang.String)
+
+  // android:   WebViewClient#shouldOverrideUrlLoading
+  // electron:  web-contents#event-will-navigate
   addListener(
     eventName: 'will-navigate',
-    listenerFunc: WillNavigateListener,
+    listenerFunc: BrowserViewUrlListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewClient#onReceivedHttpError(android.webkit.WebView, android.webkit.WebResourceRequest, android.webkit.WebResourceResponse)
-  // did-navigate
+  
+  // android    WebViewClient#onPageStarted
+  // electron:  web-contents#event-did-start-loading
+  addListener(
+    eventName: 'did-start-loading',
+    listenerFunc: BrowserViewListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebViewClient#onPageFinished
+  // electron:  web-contents#event-did-frame-finish-load
+  addListener(
+    eventName: 'did-frame-finish-load',
+    listenerFunc: BrowserViewListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebViewClient#onPageFinished
+  // electron:  web-contents#event-did-finish-load
+  addListener(
+    eventName: 'did-finish-load',
+    listenerFunc: BrowserViewListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebViewClient#onReceivedError
+  // electron:  web-contents#event-did-fail-load
+  addListener(
+    eventName: 'did-fail-load',
+    listenerFunc: BrowserViewErrorListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebViewClient#
+  // !          requires min level 23
+  // electron:  web-contents#event-dom-ready
+  addListener(
+    eventName: 'dom-ready',
+    listenerFunc: BrowserViewListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebViewClient#onReceivedHttpError
+  // !          requires min level 23
+  // electron:  web-contents#event-did-navigate
+  // !          using httpResponseCode
   addListener(
     eventName: 'http-error',
-    listenerFunc: HttpErrorListener,
+    listenerFunc: BrowserViewResponseListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewRenderProcessClient#onRenderProcessUnresponsive(android.webkit.WebView, android.webkit.WebViewRenderProcess)
-  addListener(
-    eventName: 'unresponsive',
-    listenerFunc: UnresponsiveListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewRenderProcessClient#onRenderProcessResponsive(android.webkit.WebView, android.webkit.WebViewRenderProcess)
-  addListener(
-    eventName: 'responsive',
-    listenerFunc: ResponsiveListener,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
-  // WebViewClient#onRenderProcessGone(android.webkit.WebView, android.webkit.RenderProcessGoneDetail)
+
+  // android:   WebViewClient#onRenderProcessGone
+  // !          requires min level 26
+  // electron:  web-contents#event-render-process-gone
   addListener(
     eventName: 'render-process-gone',
-    listenerFunc: RenderProcessGoneListener,
+    listenerFunc: BrowserViewRenderProcessGoneListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebViewRenderProcessClient#onRenderProcessUnresponsive
+  // !          requires min level 29
+  // electron:  web-contents#event-unresponsive
+  addListener(
+    eventName: 'unresponsive',
+    listenerFunc: BrowserViewListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  // android:   WebViewRenderProcessClient#onRenderProcessResponsive
+  // !          requires min level 29
+  // electron:  web-contents#event-responsive
+  addListener(
+    eventName: 'responsive',
+    listenerFunc: BrowserViewListener
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  //
+  addListener(
+    eventName: ChannelEventName<string>,
+    listenerFunc: BrowserViewChannelListener
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
 
 export interface BrowserView {
-  uuid: string
+  uuid: string;
 }
 
-export interface AutoResizeOptions {
-  width: boolean;
-  height: boolean;
-  horizontal: boolean;
-  vertical: boolean;
+export interface CreateBrowserViewOptions {
+  /**
+   * @default false
+   */
+  enableBridge: boolean;
+}
+
+export interface BrowserViewOptions {
+  browserView: BrowserView;
+}
+
+export interface BrowserViewBoundsOptions {
+  browserView: BrowserView;
+  bounds: Rectangle;
+}
+
+export interface BrowserViewColorOptions {
+  browserView: BrowserView;
+  color: string;
+}
+
+export interface BrowserViewUrlOptions {
+  browserView: BrowserView;
+  url: string;
+}
+
+export interface BrowserViewUserAgentOptions {
+  browserView: BrowserView;
+  userAgent: string;
+}
+
+export interface BrowserViewExecuteOptions {
+  browserView: BrowserView;
+  code: string;
+}
+
+export interface BrowserViewWindowOptions {
+  browserView: BrowserView;
+  /**
+   * @default true
+   */
+  allowMultipleWindows: boolean;
+}
+
+export interface BrowserViewNavigationOptions {
+  browserView: BrowserView;
+  allowNavigation: string[];
+}
+
+export interface BrowserViewMessageOptions {
+  browserView: BrowserView;
+  eventName: ChannelEventName<string>;
+  args: any[];
 }
 
 export interface Rectangle {
@@ -116,24 +466,16 @@ export interface Rectangle {
   height: number;
 }
 
-export interface RGBA {
-  red: uint8;
-  green: uint8;
-  blue: uint8;
-  alpha: percent;
-}
+export type BrowserViewListener = (browserView: BrowserView) => void;
+export type BrowserViewUrlListener = (browserView: BrowserView, url: string) => void;
+export type BrowserViewIconListener = (browserView: BrowserView, icon: Int8Array) => void;
+export type BrowserViewTitleListener = (browserView: BrowserView, title: string) => void;
+export type BrowserViewErrorListener = (browserView: BrowserView, error: WebResourceError) => void;
+export type BrowserViewResponseListener = (browserView: BrowserView, url: string, errorResponse: WebResourceResponse) => void;
+export type BrowserViewRenderProcessGoneListener = (browserView: BrowserView, details: RenderProcessGoneDetail) => void;
+export type BrowserViewChannelListener = (browserView: BrowserView, event: ChannelListenerEvent) => void;
 
-export type FinishLoadListener = (browserView: BrowserView, url: string) => void;
-export type StopLoadingListener = (browserView: BrowserView) => void;
-export type FailLoadListener = (browserView: BrowserView, error: WebResourceError) => void;
-export type StartLoadingListener = (browserView: BrowserView) => void;
-export type StartNavigationListener = (browserView: BrowserView, url: string) => void;
-export type DomReadyListener = (browserView: BrowserView) => void;
-export type WillNavigateListener = (browserView: BrowserView, url: string) => void;
-export type HttpErrorListener = (browserView: BrowserView, url: string, errorResponse: WebResourceResponse) => void;
-export type UnresponsiveListener = (browserView: BrowserView) => void;
-export type ResponsiveListener = (browserView: BrowserView) => void;
-export type RenderProcessGoneListener = (browserView: BrowserView, details: RenderProcessGoneDetail) => void;
+export type ChannelEventName<TChannel extends string> = `channel-${TChannel}`;
 
 export interface WebResourceError {
   errorCode: number;
@@ -148,4 +490,8 @@ export interface WebResourceResponse {
 
 export interface RenderProcessGoneDetail {
   crashed: boolean;
+}
+
+export interface ChannelListenerEvent {
+  args: any[];
 }
