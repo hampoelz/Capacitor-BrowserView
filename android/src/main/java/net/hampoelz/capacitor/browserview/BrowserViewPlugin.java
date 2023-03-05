@@ -1,19 +1,27 @@
 package net.hampoelz.capacitor.browserview;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
+import com.getcapacitor.Logger;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginConfig;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.util.WebColor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @CapacitorPlugin(name = "BrowserView")
 public class BrowserViewPlugin extends Plugin {
@@ -24,26 +32,92 @@ public class BrowserViewPlugin extends Plugin {
         implementation = new BrowserView(this);
     }
 
+    private class PluginSettings {
+        public final String url;
+        public final boolean allowMultipleWindows;
+        public final String[] allowNavigation;
+        public final boolean enableBridge;
+        public final String overrideUserAgent;
+        public final String appendUserAgent;
+        public final String backgroundColor;
+        public final boolean allowMixedContent;
+
+        public PluginSettings() throws JSONException {
+            PluginConfig config = getConfig();
+            JSONObject androidConfigJSON = config.getObject("android");
+            JSObject androidConfig = JSObject.fromJSONObject(androidConfigJSON);
+
+            String overrideUserAgentDefault = config.getString("overrideUserAgent");
+            String appendUserAgentDefault = config.getString("appendUserAgent");
+            String backgroundColorDefault = config.getString("backgroundColor");
+
+            url = config.getString("url");
+            allowMultipleWindows = config.getBoolean("allowMultipleWindows", true);
+            allowNavigation = config.getArray("allowNavigation");
+            enableBridge = config.getBoolean("enableBridge", false);
+            overrideUserAgent = androidConfig.getString("overrideUserAgent", overrideUserAgentDefault);
+            appendUserAgent = androidConfig.getString("appendUserAgent", appendUserAgentDefault);
+            backgroundColor = androidConfig.getString("backgroundColor", backgroundColorDefault);
+            allowMixedContent = Boolean.TRUE.equals(androidConfig.getBoolean("allowMixedContent", false));
+        }
+    }
+
     //region PluginMethods
     //---------------------------------------------------------------------------------------
 
     @PluginMethod
+    @SuppressLint("SetJavaScriptEnabled")
     public void createBrowserView(PluginCall call) {
-        boolean enableBridge = call.getBoolean("enableBridge", false);
+        PluginSettings pluginSettings;
 
-        // TODO: Parse global plugin settings
+        try {
+            pluginSettings = new PluginSettings();
+        } catch (JSONException ex) {
+            // TODO: custom reject message
+            call.reject(ex.toString());
+            return;
+        }
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WebView webView = new WebView(getContext());
+        boolean enableBridge = Boolean.TRUE.equals(call.getBoolean("enableBridge", pluginSettings.enableBridge));
 
-                // TODO: Set WebView settings
-                // TODO: Implement Capacitor <-> BrowserView Bridge
+        getActivity().runOnUiThread(() -> {
+            WebView webView = new WebView(getContext());
+            WebSettings settings = webView.getSettings();
 
-                JSObject browserView = implementation.CreateBrowserView(webView);
-                call.resolve(new JSObject().put("value", browserView));
+            settings.setJavaScriptEnabled(true);
+            settings.setDomStorageEnabled(true);
+            settings.setGeolocationEnabled(true);
+            settings.setDatabaseEnabled(true);
+            settings.setAppCacheEnabled(true);
+            settings.setJavaScriptCanOpenWindowsAutomatically(true);
+            settings.setSupportMultipleWindows(pluginSettings.allowMultipleWindows);
+            if (pluginSettings.allowMixedContent) {
+                settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             }
+
+            if (pluginSettings.overrideUserAgent == null && pluginSettings.appendUserAgent != null) {
+                String defaultUserAgent = settings.getUserAgentString();
+                settings.setUserAgentString(defaultUserAgent + " " + pluginSettings.appendUserAgent);
+            } else if (pluginSettings.overrideUserAgent != null) {
+                settings.setUserAgentString(pluginSettings.overrideUserAgent);
+            }
+
+            try {
+                if (pluginSettings.backgroundColor != null) {
+                    webView.setBackgroundColor(WebColor.parseColor(pluginSettings.backgroundColor));
+                }
+            } catch (IllegalArgumentException ex) {
+                Logger.debug("WebView background color not applied");
+            }
+
+            if (pluginSettings.url != null) {
+                webView.loadUrl(pluginSettings.url);
+            }
+
+            // TODO: Implement Capacitor <-> BrowserView Bridge
+
+            JSObject browserView = implementation.CreateBrowserView(webView);
+            call.resolve(new JSObject().put("value", browserView));
         });
     }
 
@@ -52,16 +126,44 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void setBounds(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         JSObject bounds = call.getObject("bounds");
-        Number x = bounds.getInteger("x");
-        Number y = bounds.getInteger("y");
-        Number width = bounds.getInteger("width");
-        Number height = bounds.getInteger("height");
+        Integer x = bounds.getInteger("x");
+        Integer y = bounds.getInteger("y");
+        Integer width = bounds.getInteger("width");
+        Integer height = bounds.getInteger("height");
 
-        // TODO
+        ViewGroup.LayoutParams defaultLayoutParams = webView.getLayoutParams();
+
+        if (defaultLayoutParams != null) {
+            if (width == null) {
+                width = defaultLayoutParams.width;
+            }
+            if (height == null) {
+                height = defaultLayoutParams.height;
+            }
+        }
+
+        if (width == null || height == null) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
+
+        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(width, height);
+
+        if (x != null && x >= 0)
+            layoutParams.leftMargin = x;
+        if (y != null && y >= 0)
+            layoutParams.topMargin = y;
+
+        webView.setLayoutParams(layoutParams);
 
         call.resolve();
     }
@@ -69,21 +171,26 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void getBounds(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        Number x = Double.NaN;
-        Number y = Double.NaN;
-        Number width = Double.NaN;
-        Number height = Double.NaN;
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) webView.getLayoutParams();
 
-        // TODO
+        if (layoutParams == null) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
 
         JSObject bounds = new JSObject();
-        bounds.put("x", x);
-        bounds.put("y", y);
-        bounds.put("width", width);
-        bounds.put("height", height);
+        bounds.put("x", layoutParams.leftMargin);
+        bounds.put("y", layoutParams.topMargin);
+        bounds.put("width", layoutParams.width);
+        bounds.put("height", layoutParams.height);
 
         call.resolve(new JSObject().put("value", bounds));
     }
@@ -91,12 +198,23 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void setBackgroundColor(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         String color = call.getString("color");
 
-        // TODO
+        try {
+            if (color != null) {
+                webView.setBackgroundColor(Color.parseColor(color));
+            }
+        } catch (IllegalArgumentException ex) {
+            call.reject("WebView background color not applied");
+            return;
+        }
 
         call.resolve();
     }
@@ -106,12 +224,22 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void loadURL(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         String url = call.getString("url");
 
-        // TODO
+        if (url == null) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
+
+        webView.loadUrl(url);
 
         call.resolve();
     }
@@ -119,12 +247,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void getURL(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        String url = "";
-
-        // TODO
+        String url = webView.getUrl();
 
         call.resolve(new JSObject().put("value", url));
     }
@@ -132,12 +262,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void getTitle(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        String title = "";
-
-        // TODO
+        String title = webView.getTitle();
 
         call.resolve(new JSObject().put("value", title));
     }
@@ -145,10 +277,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void stop(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView does not exist");
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        // TODO
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+            call.reject("The specified BrowserView does not exist");
+            return;
+        }
+
+        webView.stopLoading();
 
         call.resolve();
     }
@@ -156,10 +292,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void reload(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView does not exist");
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        // TODO
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+            call.reject("The specified BrowserView does not exist");
+            return;
+        }
+
+        webView.reload();
 
         call.resolve();
     }
@@ -167,12 +307,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void canGoBack(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        boolean canGoBack = false;
-
-        // TODO
+        boolean canGoBack = webView.canGoBack();
 
         call.resolve(new JSObject().put("value", canGoBack));
     }
@@ -180,12 +322,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void canGoForward(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        boolean canGoForward = false;
-
-        // TODO
+        boolean canGoForward = webView.canGoForward();
 
         call.resolve(new JSObject().put("value", canGoForward));
     }
@@ -193,10 +337,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void clearHistory(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView does not exist");
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        // TODO
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+            call.reject("The specified BrowserView does not exist");
+            return;
+        }
+
+        webView.clearHistory();
 
         call.resolve();
     }
@@ -204,10 +352,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void goBack(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView does not exist");
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        // TODO
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+            call.reject("The specified BrowserView does not exist");
+            return;
+        }
+
+        webView.goBack();
 
         call.resolve();
     }
@@ -215,10 +367,14 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void goForward(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
-            call.reject("The specified BrowserView does not exist");
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        // TODO
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+            call.reject("The specified BrowserView does not exist");
+            return;
+        }
+
+        webView.goForward();
 
         call.resolve();
     }
@@ -226,12 +382,23 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void setUserAgent(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         String userAgent = call.getString("userAgent");
 
-        // TODO
+        if (userAgent == null) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
+
+        WebSettings settings = webView.getSettings();
+        settings.setUserAgentString(userAgent);
 
         call.resolve();
     }
@@ -239,12 +406,15 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void getUserAgent(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        String userAgent = "";
-
-        // TODO
+        WebSettings settings = webView.getSettings();
+        String userAgent = settings.getUserAgentString();
 
         call.resolve(new JSObject().put("value", userAgent));
     }
@@ -252,12 +422,24 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void appendUserAgent(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        String userAgent = "";
+        String userAgent = call.getString("userAgent");
 
-        // TODO
+        if (userAgent == null) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
+
+        WebSettings settings = webView.getSettings();
+        String defaultUserAgent = settings.getUserAgentString();
+        settings.setUserAgentString(defaultUserAgent + " " + userAgent);
 
         call.resolve();
     }
@@ -265,27 +447,46 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void executeJavaScript(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         String code = call.getString("code");
 
-        // TODO
+        if (code == null) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
 
-        call.resolve();
+        webView.evaluateJavascript(code, value -> {
+            if (value == null) {
+                call.resolve();
+            } else {
+                call.resolve(new JSObject().put("value", value));
+            }
+        });
 
-        // TODO: resolve with the result of the executed code or reject if the result of the code is a rejected promise.
+        // TODO: Note: call never resolves or rejects when no callback occurs
     }
 
     @PluginMethod
     public void setAllowMultipleWindows(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        boolean allowMultipleWindows = call.getBoolean("allowMultipleWindows", true);
+        boolean allowMultipleWindows = Boolean.TRUE.equals(call.getBoolean("allowMultipleWindows", true));
 
-        // TODO
+        WebSettings settings = webView.getSettings();
+        settings.setSupportMultipleWindows(allowMultipleWindows);
 
         call.resolve();
     }
@@ -293,12 +494,15 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void getAllowMultipleWindows(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
-        boolean allowMultipleWindows = true;
-
-        // TODO
+        WebSettings settings = webView.getSettings();
+        boolean allowMultipleWindows = settings.supportMultipleWindows();
 
         call.resolve(new JSObject().put("value", allowMultipleWindows));
     }
@@ -306,8 +510,12 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void setAllowedNavigation(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        UUID uuid = implementation.UUIDFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || uuid == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         try {
             JSArray allowNavigationArray = call.getArray("allowNavigation");
@@ -320,16 +528,20 @@ public class BrowserViewPlugin extends Plugin {
             // TODO
 
             call.resolve();
-        } catch (JSONException e) {
-            call.reject(e.toString());
+        } catch (JSONException ex) {
+            call.reject(ex.toString());
         }
     }
 
     @PluginMethod
     public void getAllowedNavigation(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        UUID uuid = implementation.UUIDFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || uuid == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         List<String> allowNavigation = new ArrayList<>();
 
@@ -345,11 +557,21 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void sendMessage(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        if (!implementation.BrowserViewExists(browserView))
+        WebView webView = implementation.WebViewFromBrowserView(browserView);
+
+        if (!implementation.BrowserViewExists(browserView) || webView == null) {
             call.reject("The specified BrowserView does not exist");
+            return;
+        }
 
         String eventName = call.getString("eventName");
         JSArray args = call.getArray("args");
+
+        if (eventName == null) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
 
         // Serialize data
         JSObject data = new JSObject();
@@ -473,8 +695,8 @@ public class BrowserViewPlugin extends Plugin {
 
         JSArray byteArray = new JSArray();
 
-        for(int i=0; i < icon.length; i++) {
-            byteArray.put(icon[i]);
+        for (byte b : icon) {
+            byteArray.put(b);
         }
 
         JSObject args = new JSObject();

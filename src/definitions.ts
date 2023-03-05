@@ -109,16 +109,6 @@ declare module '@capacitor/cli' {
          * @default false
          */
         allowMixedContent?: boolean;
-
-        /**
-         * Always enable debuggable web content.
-         * 
-         * This is automatically enabled during development.
-         * 
-         * @since 1.0.0
-         * @default false
-         */
-        webContentsDebuggingEnabled?: boolean;
       };
 
       electron?: {
@@ -164,16 +154,6 @@ declare module '@capacitor/cli' {
          * @default false
          */
         allowMixedContent?: boolean;
-
-        /**
-         * Always enable dev tools.
-         * 
-         * This is automatically enabled during development.
-         * 
-         * @since 1.0.0
-         * @default false
-         */
-        webContentsDebuggingEnabled?: boolean;
       };
     };
   }
@@ -252,8 +232,7 @@ export interface BrowserViewPlugin {
 
   // android:   WebView#evaluateJavascript
   // electron:  web-contents#contentsexecutejavascriptcode-usergesture
-  // TODO: resolve with the result of the executed code or reject if the result of the code is a rejected promise.
-  executeJavaScript(options: BrowserViewExecuteOptions): Promise<any>;
+  executeJavaScript(options: BrowserViewExecuteOptions): void | Promise<{ value: string }>;
 
   // android:   WebSettings#setSupportMultipleWindows
   // electron:  breaking-changes#removed-webcontents-new-window-event

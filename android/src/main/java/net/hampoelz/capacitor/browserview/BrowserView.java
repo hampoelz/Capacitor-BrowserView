@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Message;
-import android.util.Pair;
 import android.view.View;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebChromeClient;
@@ -30,24 +29,24 @@ import java.util.UUID;
 
 public class BrowserView {
 
-    private Map<UUID, WebView> browserViews = new HashMap<UUID, WebView>();
-    private Map<Pair<String, UUID>, String> eventReturnValues = new HashMap<Pair<String, UUID>, String>();
-    private BrowserViewPlugin plugin;
+    private final Map<UUID, WebView> browserViews = new HashMap<>();
+    private final Map<UUID, String[]> allowedNavigations = new HashMap<>();
+    private final BrowserViewPlugin plugin;
 
     public BrowserView(BrowserViewPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public boolean BrowserViewExists(JSObject browserView) {
+    public boolean BrowserViewExists(@Nullable JSObject browserView) {
         UUID uuid = UUIDFromBrowserView(browserView);
         return BrowserViewExists(uuid);
     }
 
-    public boolean BrowserViewExists(UUID uuid) {
+    public boolean BrowserViewExists(@Nullable UUID uuid) {
         return browserViews.containsKey(uuid);
     }
 
-    public UUID UUIDFromBrowserView(JSObject browserView) {
+    public @Nullable UUID UUIDFromBrowserView(@Nullable JSObject browserView) {
         if (browserView == null) return null;
         String uuid = browserView.getString("uuid", null);
 
@@ -55,19 +54,30 @@ public class BrowserView {
         return UUID.fromString(uuid);
     }
 
-    public JSObject BrowserViewFromUUID(UUID uuid) {
-        if (!BrowserViewExists(uuid)) return null;
+    public @Nullable JSObject BrowserViewFromUUID(@Nullable UUID uuid) {
+        if (uuid == null || !BrowserViewExists(uuid)) return null;
 
         JSObject browserView = new JSObject();
         browserView.put("uuid", uuid.toString());
         return browserView;
     }
 
+    public @Nullable WebView WebViewFromBrowserView(@Nullable JSObject browserView) {
+        UUID uuid = UUIDFromBrowserView(browserView);
+        return WebViewFromUUID(uuid);
+    }
+
+    public @Nullable WebView WebViewFromUUID(@Nullable UUID uuid) {
+        return browserViews.get(uuid);
+    }
+
     public @Nullable Boolean PreventNavigation(JSObject browserView, String url) {
         UUID uuid = UUIDFromBrowserView(browserView);
-        if (!BrowserViewExists(uuid) || url == null) return null;
+        String[] allowedNavigation = allowedNavigations.get(uuid);
+        if (!BrowserViewExists(uuid) || allowedNavigation == null || url == null) return null;
 
-        // TODO
+        // TODO: Check if external url
+        // TODO: Implement allowed navigation check
 
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         plugin.getContext().startActivity(browserIntent);
