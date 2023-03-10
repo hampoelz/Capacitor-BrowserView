@@ -91,8 +91,7 @@ public class BrowserViewPlugin extends Plugin {
         try {
             pluginSettings = new PluginSettings();
         } catch (JSONException ex) {
-            // TODO: custom reject message
-            call.reject(ex.toString());
+            call.reject("Failed to parse settings");
             return;
         }
 
@@ -152,7 +151,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromUUID(uuid);
 
         if (uuid == null || webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -169,7 +168,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -193,8 +192,7 @@ public class BrowserViewPlugin extends Plugin {
             }
 
             if (width == null || height == null || width < 0 || height < 0) {
-                // TODO: reject message
-                call.reject("");
+                call.reject("Required parameters 'width' and/or 'height' were not specified");
                 return;
             }
 
@@ -217,7 +215,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -227,8 +225,7 @@ public class BrowserViewPlugin extends Plugin {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) webView.getLayoutParams();
 
             if (layoutParams == null) {
-                // TODO: reject message
-                call.reject("");
+                call.reject("Failed to get BrowserView bounds");
                 return;
             }
 
@@ -248,7 +245,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -275,27 +272,19 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
 
         if (!implementation.BrowserViewExists(browserView)) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
         String url = call.getString("url");
 
         if (url == null) {
-            // TODO: reject message
-            call.reject("");
+            call.reject("Required parameter 'url' was not specified");
             return;
         }
 
         getActivity().runOnUiThread(() -> {
-            boolean result = implementation.LoadUrl(browserView, url);
-
-            if (!result) {
-                // TODO: reject message
-                call.reject("");
-                return;
-            }
-
+            implementation.LoadUrl(browserView, url);
             call.resolve();
         });
     }
@@ -306,7 +295,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -322,7 +311,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -338,7 +327,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -354,7 +343,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -370,7 +359,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -386,7 +375,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -402,7 +391,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -418,7 +407,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -434,7 +423,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -450,15 +439,14 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
         String userAgent = call.getString("userAgent");
 
         if (userAgent == null) {
-            // TODO: reject message
-            call.reject("");
+            call.reject("Required parameter 'userAgent' was not specified");
             return;
         }
 
@@ -475,7 +463,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -492,15 +480,14 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
         String userAgent = call.getString("userAgent");
 
         if (userAgent == null) {
-            // TODO: reject message
-            call.reject("");
+            call.reject("Required parameter 'userAgent' was not specified");
             return;
         }
 
@@ -518,15 +505,14 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
         String code = call.getString("code");
 
         if (code == null) {
-            // TODO: reject message
-            call.reject("");
+            call.reject("Required parameter 'code' was not specified");
             return;
         }
 
@@ -547,7 +533,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -565,7 +551,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -582,7 +568,7 @@ public class BrowserViewPlugin extends Plugin {
         UUID uuid = implementation.UUIDFromBrowserView(browserView);
 
         if (uuid == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -594,14 +580,7 @@ public class BrowserViewPlugin extends Plugin {
                 allowNavigation.add(allowNavigationArray.getString(i));
             }
 
-            boolean result = implementation.SetAllowedNavigation(browserView, allowNavigation.toArray(new String[0]));
-
-            if (!result) {
-                // TODO: reject message
-                call.reject("");
-                return;
-            }
-
+            implementation.SetAllowedNavigation(browserView, allowNavigation.toArray(new String[0]));
             call.resolve();
         } catch (JSONException ex) {
             call.reject(ex.toString());
@@ -616,7 +595,7 @@ public class BrowserViewPlugin extends Plugin {
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
         if (webView == null) {
-            call.reject("The specified BrowserView does not exist");
+            call.reject("Specified BrowserView does not exist");
             return;
         }
 
@@ -624,8 +603,7 @@ public class BrowserViewPlugin extends Plugin {
         JSArray args = call.getArray("args");
 
         if (eventName == null) {
-            // TODO: reject message
-            call.reject("");
+            call.reject("Required parameter 'eventName' was not specified");
             return;
         }
 

@@ -71,26 +71,22 @@ public class BrowserView {
         return browserViews.get(uuid);
     }
 
-    public boolean SetAllowedNavigation(JSObject browserView, String[] allowedNavigation) {
+    public void SetAllowedNavigation(JSObject browserView, String[] allowedNavigation) {
         UUID uuid = UUIDFromBrowserView(browserView);
-        if (uuid == null || allowedNavigation == null) return false;
+        if (uuid == null || allowedNavigation == null) return;
 
         allowedNavigations.put(uuid, HostMask.Parser.parse(allowedNavigation));
-
-        return true;
     }
 
-    public boolean LoadUrl(JSObject browserView, String url) {
+    public void LoadUrl(JSObject browserView, String url) {
         UUID uuid = UUIDFromBrowserView(browserView);
         WebView webView = WebViewFromUUID(uuid);
         String hostname = Uri.parse(url).getHost();
 
-        if (uuid == null || webView == null || url == null) return false;
+        if (uuid == null || webView == null || url == null) return;
 
         webView.loadUrl(url);
         currentHosts.put(uuid, hostname);
-
-        return true;
     }
 
     public @Nullable Boolean PreventNavigation(JSObject browserView, String url) {
