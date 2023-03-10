@@ -40,7 +40,6 @@ npx cap sync
 * [`executeJavaScript(...)`](#executejavascript)
 * [`setAllowMultipleWindows(...)`](#setallowmultiplewindows)
 * [`getAllowMultipleWindows(...)`](#getallowmultiplewindows)
-* [`setAllowedNavigation(...)`](#setallowednavigation)
 * [`getAllowedNavigation(...)`](#getallowednavigation)
 * [`sendMessage(...)`](#sendmessage)
 * [`addListener('new-window', ...)`](#addlistenernew-window)
@@ -355,19 +354,6 @@ getAllowMultipleWindows(options: BrowserViewOptions) => Promise<{ value: boolean
 | **`options`** | <code><a href="#browserviewoptions">BrowserViewOptions</a></code> |
 
 **Returns:** <code>Promise&lt;{ value: boolean; }&gt;</code>
-
---------------------
-
-
-### setAllowedNavigation(...)
-
-```typescript
-setAllowedNavigation(options: BrowserViewNavigationOptions) => void
-```
-
-| Param         | Type                                                                                  |
-| ------------- | ------------------------------------------------------------------------------------- |
-| **`options`** | <code><a href="#browserviewnavigationoptions">BrowserViewNavigationOptions</a></code> |
 
 --------------------
 
@@ -754,14 +740,6 @@ addListener(eventName: ChannelEventName<string>, listenerFunc: BrowserViewChanne
 | -------------------------- | --------------------------------------------------- | ----------------- |
 | **`browserView`**          | <code><a href="#browserview">BrowserView</a></code> |                   |
 | **`allowMultipleWindows`** | <code>boolean</code>                                | <code>true</code> |
-
-
-#### BrowserViewNavigationOptions
-
-| Prop                  | Type                                                |
-| --------------------- | --------------------------------------------------- |
-| **`browserView`**     | <code><a href="#browserview">BrowserView</a></code> |
-| **`allowNavigation`** | <code>string[]</code>                               |
 
 
 #### BrowserViewMessageOptions

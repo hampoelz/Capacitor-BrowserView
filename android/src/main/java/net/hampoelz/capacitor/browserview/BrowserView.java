@@ -97,11 +97,10 @@ public class BrowserView {
         UUID uuid = UUIDFromBrowserView(browserView);
         HostMask allowedNavigation = allowedNavigations.get(uuid);
 
-        if (uuid == null || url == null || allowedNavigation == null) return null;
+        if (uuid == null || url == null) return null;
 
-        String appUrl = currentHosts.get(uuid);
-
-        if ((appUrl != null && url.contains(appUrl)) || allowedNavigation.matches(Uri.parse(url).getHost())) return false;
+        String appHost = currentHosts.get(uuid);
+        if ((appHost != null && url.contains(appHost)) || (allowedNavigation != null && allowedNavigation.matches(Uri.parse(url).getHost()))) return false;
 
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         plugin.getContext().startActivity(browserIntent);

@@ -247,7 +247,6 @@ export interface BrowserViewPlugin {
   // electron:  breaking-changes#removed-webcontents-new-window-event
   //            web-contents#contentssetwindowopenhandlerhandler
   //            web-contents#event-will-navigate
-  setAllowedNavigation(options: BrowserViewNavigationOptions): void;
   getAllowedNavigation(options: BrowserViewOptions): Promise<{ value: string[] }>;
 
   //

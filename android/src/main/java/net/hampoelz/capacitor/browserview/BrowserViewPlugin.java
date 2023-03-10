@@ -608,25 +608,6 @@ public class BrowserViewPlugin extends Plugin {
         }
     }
 
-    @PluginMethod
-    public void getAllowedNavigation(PluginCall call) {
-        JSObject browserView = call.getObject("browserView");
-        UUID uuid = implementation.UUIDFromBrowserView(browserView);
-
-        if (uuid == null) {
-            call.reject("The specified BrowserView does not exist");
-            return;
-        }
-
-        List<String> allowNavigation = new ArrayList<>();
-
-        // TODO
-
-        JSArray allowNavigationArray = new JSArray(allowNavigation);
-
-        call.resolve(new JSObject().put("value", allowNavigationArray));
-    }
-
     // Bridge -------------------------------------------------------------------------------
 
     @PluginMethod
