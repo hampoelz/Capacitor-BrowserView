@@ -162,6 +162,8 @@ declare module '@capacitor/cli' {
 export interface BrowserViewPlugin {
   createBrowserView(options?: CreateBrowserViewOptions): Promise<{ value: BrowserView }>;
 
+  removeBrowserView(options: BrowserViewBoundsOptions): void;
+
   // android:   WebView#setLayoutParams
   //            ViewGroup.MarginLayoutParams
   // electron:  browser-view#viewsetboundsbounds-experimental

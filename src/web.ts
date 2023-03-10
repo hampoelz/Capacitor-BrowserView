@@ -10,6 +10,9 @@ export class BrowserViewWeb extends WebPlugin implements BrowserViewPlugin {
   createBrowserView(): Promise<{ value: BrowserView; }> {
     throw this.unavailableBrowserView();
   }
+  removeBrowserView(): void {
+    throw this.unavailableBrowserView();
+  }
   setBounds(): void {
     throw this.unavailableBrowserView();
   }

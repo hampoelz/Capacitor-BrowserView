@@ -272,4 +272,10 @@ public class BrowserView {
 
         return browserView;
     }
+
+    public void RemoveBrowserView(UUID uuid) {
+        browserViews.remove(uuid);
+        currentHosts.remove(uuid);
+        allowedNavigations.remove(uuid);
+    }
 }

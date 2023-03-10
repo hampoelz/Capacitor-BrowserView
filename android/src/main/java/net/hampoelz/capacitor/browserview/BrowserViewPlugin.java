@@ -145,6 +145,22 @@ public class BrowserViewPlugin extends Plugin {
         });
     }
 
+    @PluginMethod
+    public void removeBrowserView(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        UUID uuid = implementation.UUIDFromBrowserView(browserView);
+        WebView webView = implementation.WebViewFromUUID(uuid);
+
+        if (uuid == null || webView == null) {
+            call.reject("The specified BrowserView does not exist");
+            return;
+        }
+
+        getActivity().runOnUiThread(() -> rootView.removeView(webView));
+
+        implementation.RemoveBrowserView(uuid);
+    }
+
     // Visual -------------------------------------------------------------------------------
 
     @PluginMethod

@@ -20,6 +20,7 @@ npx cap sync
 <docgen-index>
 
 * [`createBrowserView(...)`](#createbrowserview)
+* [`removeBrowserView(...)`](#removebrowserview)
 * [`setBounds(...)`](#setbounds)
 * [`getBounds(...)`](#getbounds)
 * [`setBackgroundColor(...)`](#setbackgroundcolor)
@@ -78,6 +79,19 @@ createBrowserView(options?: CreateBrowserViewOptions | undefined) => Promise<{ v
 | **`options`** | <code><a href="#createbrowserviewoptions">CreateBrowserViewOptions</a></code> |
 
 **Returns:** <code>Promise&lt;{ value: <a href="#browserview">BrowserView</a>; }&gt;</code>
+
+--------------------
+
+
+### removeBrowserView(...)
+
+```typescript
+removeBrowserView(options: BrowserViewBoundsOptions) => void
+```
+
+| Param         | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#browserviewboundsoptions">BrowserViewBoundsOptions</a></code> |
 
 --------------------
 
