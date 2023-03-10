@@ -1,10 +1,12 @@
 package net.hampoelz.capacitor.browserview;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
@@ -14,6 +16,7 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginConfig;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.util.WebColor;
 
 import org.json.JSONException;
@@ -23,13 +26,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@CapacitorPlugin(name = "BrowserView")
+@CapacitorPlugin(
+    name = "BrowserView",
+    permissions = {@Permission(
+        alias = "network",
+        strings = {
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.INTERNET
+        }
+    )}
+)
 public class BrowserViewPlugin extends Plugin {
 
     private BrowserView implementation;
+    private ViewGroup rootView;
 
     public void load() {
         implementation = new BrowserView(this);
+        rootView = (ViewGroup) getActivity().getWindow().getDecorView().getRootView();
     }
 
     private class PluginSettings {
@@ -45,7 +59,10 @@ public class BrowserViewPlugin extends Plugin {
         public PluginSettings() throws JSONException {
             PluginConfig config = getConfig();
             JSONObject androidConfigJSON = config.getObject("android");
-            JSObject androidConfig = JSObject.fromJSONObject(androidConfigJSON);
+            JSObject androidConfig = new JSObject();
+            if (androidConfigJSON != null) {
+                androidConfig = JSObject.fromJSONObject(androidConfigJSON);
+            }
 
             String overrideUserAgentDefault = config.getString("overrideUserAgent");
             String appendUserAgentDefault = config.getString("appendUserAgent");
@@ -65,6 +82,7 @@ public class BrowserViewPlugin extends Plugin {
     //region PluginMethods
     //---------------------------------------------------------------------------------------
 
+    // TODO: create BrowserView class instead of using JSObject
     @PluginMethod
     @SuppressLint("SetJavaScriptEnabled")
     public void createBrowserView(PluginCall call) {
@@ -122,6 +140,7 @@ public class BrowserViewPlugin extends Plugin {
                 implementation.LoadUrl(browserView, pluginSettings.url);
             }
 
+            rootView.addView(webView);
             call.resolve(new JSObject().put("value", browserView));
         });
     }
@@ -139,38 +158,41 @@ public class BrowserViewPlugin extends Plugin {
         }
 
         JSObject bounds = call.getObject("bounds");
-        Integer x = bounds.getInteger("x");
-        Integer y = bounds.getInteger("y");
-        Integer width = bounds.getInteger("width");
-        Integer height = bounds.getInteger("height");
 
-        ViewGroup.LayoutParams defaultLayoutParams = webView.getLayoutParams();
+        float density = getActivity().getResources().getDisplayMetrics().density;
 
-        if (defaultLayoutParams != null) {
-            if (width == null) {
-                width = defaultLayoutParams.width;
+        getActivity().runOnUiThread(() -> {
+            FrameLayout.LayoutParams defaultLayoutParams = (FrameLayout.LayoutParams) webView.getLayoutParams();
+
+            Integer x = bounds.getInteger("x");
+            Integer y = bounds.getInteger("y");
+            Integer width = bounds.getInteger("width");
+            Integer height = bounds.getInteger("height");
+
+            if (defaultLayoutParams != null) {
+                if (width == null || width < 0)
+                    width = (int) (defaultLayoutParams.width / density);
+                if (height == null || height < 0)
+                    height = (int) (defaultLayoutParams.height / density);
             }
-            if (height == null) {
-                height = defaultLayoutParams.height;
+
+            if (width == null || height == null || width < 0 || height < 0) {
+                // TODO: reject message
+                call.reject("");
+                return;
             }
-        }
 
-        if (width == null || height == null) {
-            // TODO: reject message
-            call.reject("");
-            return;
-        }
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) (width * density), (int) (height * density));
 
-        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(width, height);
+            if (x != null && x >= 0)
+                layoutParams.leftMargin = (int) (x * density);
+            if (y != null && y >= 0)
+                layoutParams.topMargin = (int) (y * density);
 
-        if (x != null && x >= 0)
-            layoutParams.leftMargin = x;
-        if (y != null && y >= 0)
-            layoutParams.topMargin = y;
-
-        webView.setLayoutParams(layoutParams);
-
-        call.resolve();
+            webView.setLayoutParams(layoutParams);
+            webView.bringToFront();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -183,21 +205,25 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) webView.getLayoutParams();
+        float density = getActivity().getResources().getDisplayMetrics().density;
 
-        if (layoutParams == null) {
-            // TODO: reject message
-            call.reject("");
-            return;
-        }
+        getActivity().runOnUiThread(() -> {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) webView.getLayoutParams();
 
-        JSObject bounds = new JSObject();
-        bounds.put("x", layoutParams.leftMargin);
-        bounds.put("y", layoutParams.topMargin);
-        bounds.put("width", layoutParams.width);
-        bounds.put("height", layoutParams.height);
+            if (layoutParams == null) {
+                // TODO: reject message
+                call.reject("");
+                return;
+            }
 
-        call.resolve(new JSObject().put("value", bounds));
+            JSObject bounds = new JSObject();
+            bounds.put("x", (int) (layoutParams.leftMargin / density));
+            bounds.put("y", (int) (layoutParams.topMargin / density));
+            bounds.put("width", (int) (layoutParams.width / density));
+            bounds.put("height", (int) (layoutParams.height / density));
+
+            call.resolve(new JSObject().put("value", bounds));
+        });
     }
 
     @PluginMethod
@@ -212,16 +238,18 @@ public class BrowserViewPlugin extends Plugin {
 
         String color = call.getString("color");
 
-        try {
-            if (color != null) {
-                webView.setBackgroundColor(Color.parseColor(color));
+        getActivity().runOnUiThread(() -> {
+            try {
+                if (color != null) {
+                    webView.setBackgroundColor(Color.parseColor(color));
+                }
+            } catch (IllegalArgumentException ex) {
+                call.reject("WebView background color not applied");
+                return;
             }
-        } catch (IllegalArgumentException ex) {
-            call.reject("WebView background color not applied");
-            return;
-        }
 
-        call.resolve();
+            call.resolve();
+        });
     }
 
     // Actions ------------------------------------------------------------------------------
@@ -243,15 +271,17 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        boolean result = implementation.LoadUrl(browserView, url);
+        getActivity().runOnUiThread(() -> {
+            boolean result = implementation.LoadUrl(browserView, url);
 
-        if (!result) {
-            // TODO: reject message
-            call.reject("");
-            return;
-        }
+            if (!result) {
+                // TODO: reject message
+                call.reject("");
+                return;
+            }
 
-        call.resolve();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -264,9 +294,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        String url = webView.getUrl();
-
-        call.resolve(new JSObject().put("value", url));
+        getActivity().runOnUiThread(() -> {
+            String url = webView.getUrl();
+            call.resolve(new JSObject().put("value", url));
+        });
     }
 
     @PluginMethod
@@ -279,9 +310,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        String title = webView.getTitle();
-
-        call.resolve(new JSObject().put("value", title));
+        getActivity().runOnUiThread(() -> {
+            String title = webView.getTitle();
+            call.resolve(new JSObject().put("value", title));
+        });
     }
 
     @PluginMethod
@@ -294,9 +326,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        webView.stopLoading();
-
-        call.resolve();
+        getActivity().runOnUiThread(() -> {
+            webView.stopLoading();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -309,9 +342,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        webView.reload();
-
-        call.resolve();
+        getActivity().runOnUiThread(() -> {
+            webView.reload();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -324,9 +358,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        boolean canGoBack = webView.canGoBack();
-
-        call.resolve(new JSObject().put("value", canGoBack));
+        getActivity().runOnUiThread(() -> {
+            boolean canGoBack = webView.canGoBack();
+            call.resolve(new JSObject().put("value", canGoBack));
+        });
     }
 
     @PluginMethod
@@ -339,9 +374,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        boolean canGoForward = webView.canGoForward();
-
-        call.resolve(new JSObject().put("value", canGoForward));
+        getActivity().runOnUiThread(() -> {
+            boolean canGoForward = webView.canGoForward();
+            call.resolve(new JSObject().put("value", canGoForward));
+        });
     }
 
     @PluginMethod
@@ -354,9 +390,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        webView.clearHistory();
-
-        call.resolve();
+        getActivity().runOnUiThread(() -> {
+            webView.clearHistory();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -369,9 +406,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        webView.goBack();
-
-        call.resolve();
+        getActivity().runOnUiThread(() -> {
+            webView.goBack();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -384,9 +422,10 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        webView.goForward();
-
-        call.resolve();
+        getActivity().runOnUiThread(() -> {
+            webView.goForward();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -407,10 +446,11 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        WebSettings settings = webView.getSettings();
-        settings.setUserAgentString(userAgent);
-
-        call.resolve();
+        getActivity().runOnUiThread(() -> {
+            WebSettings settings = webView.getSettings();
+            settings.setUserAgentString(userAgent);
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -423,10 +463,11 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        WebSettings settings = webView.getSettings();
-        String userAgent = settings.getUserAgentString();
-
-        call.resolve(new JSObject().put("value", userAgent));
+        getActivity().runOnUiThread(() -> {
+            WebSettings settings = webView.getSettings();
+            String userAgent = settings.getUserAgentString();
+            call.resolve(new JSObject().put("value", userAgent));
+        });
     }
 
     @PluginMethod
@@ -447,11 +488,12 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        WebSettings settings = webView.getSettings();
-        String defaultUserAgent = settings.getUserAgentString();
-        settings.setUserAgentString(defaultUserAgent + " " + userAgent);
-
-        call.resolve();
+        getActivity().runOnUiThread(() -> {
+            WebSettings settings = webView.getSettings();
+            String defaultUserAgent = settings.getUserAgentString();
+            settings.setUserAgentString(defaultUserAgent + " " + userAgent);
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -472,13 +514,13 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        webView.evaluateJavascript(code, value -> {
+        getActivity().runOnUiThread(() -> webView.evaluateJavascript(code, value -> {
             if (value == null) {
                 call.resolve();
             } else {
                 call.resolve(new JSObject().put("value", value));
             }
-        });
+        }));
 
         // TODO: Note: call never resolves or rejects when no callback occurs
     }
@@ -511,10 +553,11 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        WebSettings settings = webView.getSettings();
-        boolean allowMultipleWindows = settings.supportMultipleWindows();
-
-        call.resolve(new JSObject().put("value", allowMultipleWindows));
+        getActivity().runOnUiThread(() -> {
+            WebSettings settings = webView.getSettings();
+            boolean allowMultipleWindows = settings.supportMultipleWindows();
+            call.resolve(new JSObject().put("value", allowMultipleWindows));
+        });
     }
 
     @PluginMethod
