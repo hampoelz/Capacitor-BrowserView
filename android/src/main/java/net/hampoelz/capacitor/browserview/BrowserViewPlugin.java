@@ -133,7 +133,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -178,7 +178,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -205,7 +205,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -259,7 +259,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -274,7 +274,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -289,7 +289,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -304,7 +304,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -319,7 +319,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -334,7 +334,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -349,7 +349,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -364,7 +364,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -379,7 +379,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -394,7 +394,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -418,7 +418,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -434,7 +434,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -459,7 +459,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -488,7 +488,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -506,7 +506,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -522,7 +522,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         UUID uuid = implementation.UUIDFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || uuid == null) {
+        if (uuid == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -554,7 +554,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         UUID uuid = implementation.UUIDFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || uuid == null) {
+        if (uuid == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -575,7 +575,7 @@ public class BrowserViewPlugin extends Plugin {
         JSObject browserView = call.getObject("browserView");
         WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (webView == null) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
