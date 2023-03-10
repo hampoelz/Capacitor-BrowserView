@@ -305,14 +305,14 @@ getUserAgent(options: BrowserViewOptions) => Promise<{ value: string; }>
 ### executeJavaScript(...)
 
 ```typescript
-executeJavaScript(options: BrowserViewExecuteOptions) => Promise<any>
+executeJavaScript(options: BrowserViewExecuteOptions) => void | Promise<{ value: string; }>
 ```
 
 | Param         | Type                                                                            |
 | ------------- | ------------------------------------------------------------------------------- |
 | **`options`** | <code><a href="#browserviewexecuteoptions">BrowserViewExecuteOptions</a></code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>void | Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
 
