@@ -110,13 +110,18 @@ public class BrowserViewPlugin extends Plugin {
                 Logger.debug("WebView background color not applied");
             }
 
-            if (pluginSettings.url != null) {
-                webView.loadUrl(pluginSettings.url);
-            }
-
             // TODO: Implement Capacitor <-> BrowserView Bridge
 
             JSObject browserView = implementation.CreateBrowserView(webView);
+
+            if (pluginSettings.allowNavigation != null) {
+                implementation.SetAllowedNavigation(browserView, pluginSettings.allowNavigation);
+            }
+
+            if (pluginSettings.url != null) {
+                implementation.LoadUrl(browserView, pluginSettings.url);
+            }
+
             call.resolve(new JSObject().put("value", browserView));
         });
     }
@@ -224,9 +229,8 @@ public class BrowserViewPlugin extends Plugin {
     @PluginMethod
     public void loadURL(PluginCall call) {
         JSObject browserView = call.getObject("browserView");
-        WebView webView = implementation.WebViewFromBrowserView(browserView);
 
-        if (!implementation.BrowserViewExists(browserView) || webView == null) {
+        if (!implementation.BrowserViewExists(browserView)) {
             call.reject("The specified BrowserView does not exist");
             return;
         }
@@ -239,7 +243,13 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        webView.loadUrl(url);
+        boolean result = implementation.LoadUrl(browserView, url);
+
+        if (!result) {
+            // TODO: reject message
+            call.reject("");
+            return;
+        }
 
         call.resolve();
     }
@@ -525,7 +535,13 @@ public class BrowserViewPlugin extends Plugin {
                 allowNavigation.add(allowNavigationArray.getString(i));
             }
 
-            // TODO
+            boolean result = implementation.SetAllowedNavigation(browserView, allowNavigation.toArray(new String[0]));
+
+            if (!result) {
+                // TODO: reject message
+                call.reject("");
+                return;
+            }
 
             call.resolve();
         } catch (JSONException ex) {

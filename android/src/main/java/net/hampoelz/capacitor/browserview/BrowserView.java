@@ -21,16 +21,16 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.getcapacitor.JSObject;
+import com.getcapacitor.util.HostMask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class BrowserView {
 
     private final Map<UUID, WebView> browserViews = new HashMap<>();
-    private final Map<UUID, String[]> allowedNavigations = new HashMap<>();
+    private final Map<UUID, String> currentHosts = new HashMap<>();
+    private final Map<UUID, HostMask> allowedNavigations = new HashMap<>();
     private final BrowserViewPlugin plugin;
 
     public BrowserView(BrowserViewPlugin plugin) {
@@ -71,18 +71,41 @@ public class BrowserView {
         return browserViews.get(uuid);
     }
 
+    public boolean SetAllowedNavigation(JSObject browserView, String[] allowedNavigation) {
+        UUID uuid = UUIDFromBrowserView(browserView);
+        if (uuid == null || allowedNavigation == null) return false;
+
+        allowedNavigations.put(uuid, HostMask.Parser.parse(allowedNavigation));
+
+        return true;
+    }
+
+    public boolean LoadUrl(JSObject browserView, String url) {
+        UUID uuid = UUIDFromBrowserView(browserView);
+        WebView webView = WebViewFromUUID(uuid);
+        String hostname = Uri.parse(url).getHost();
+
+        if (uuid == null || webView == null || url == null) return false;
+
+        webView.loadUrl(url);
+        currentHosts.put(uuid, hostname);
+
+        return true;
+    }
+
     public @Nullable Boolean PreventNavigation(JSObject browserView, String url) {
         UUID uuid = UUIDFromBrowserView(browserView);
-        String[] allowedNavigation = allowedNavigations.get(uuid);
-        if (!BrowserViewExists(uuid) || allowedNavigation == null || url == null) return null;
+        HostMask allowedNavigation = allowedNavigations.get(uuid);
 
-        // TODO: Check if external url
-        // TODO: Implement allowed navigation check
+        if (uuid == null || url == null || allowedNavigation == null) return null;
+
+        String appUrl = currentHosts.get(uuid);
+
+        if ((appUrl != null && url.contains(appUrl)) || allowedNavigation.matches(Uri.parse(url).getHost())) return false;
 
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         plugin.getContext().startActivity(browserIntent);
-
-        return false;
+        return true;
     }
 
     public JSObject CreateBrowserView(WebView webView) {
