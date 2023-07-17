@@ -168,7 +168,15 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        getActivity().runOnUiThread(() -> rootView.removeView(webView));
+        getActivity().runOnUiThread(() -> {
+            rootView.removeView(webView);
+            webView.clearHistory();
+            webView.loadUrl("about:blank");
+            webView.onPause();
+            webView.removeAllViews();
+            webView.destroyDrawingCache();
+            webView.destroy();
+        });
 
         implementation.RemoveBrowserView(uuid);
     }
