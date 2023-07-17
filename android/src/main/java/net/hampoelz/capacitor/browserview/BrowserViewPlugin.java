@@ -551,8 +551,10 @@ public class BrowserViewPlugin extends Plugin {
 
         boolean allowMultipleWindows = Boolean.TRUE.equals(call.getBoolean("allowMultipleWindows", true));
 
-        WebSettings settings = webView.getSettings();
-        settings.setSupportMultipleWindows(allowMultipleWindows);
+        getActivity().runOnUiThread(() -> {
+            WebSettings settings = webView.getSettings();
+            settings.setSupportMultipleWindows(allowMultipleWindows);
+        });
 
         call.resolve();
     }
