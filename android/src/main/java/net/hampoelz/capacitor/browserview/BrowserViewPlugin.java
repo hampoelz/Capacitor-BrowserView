@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
@@ -127,9 +128,19 @@ public class BrowserViewPlugin extends Plugin {
                 Logger.debug("WebView background color not applied");
             }
 
-            // TODO: Implement Capacitor <-> BrowserView Bridge
-
             JSObject browserView = implementation.CreateBrowserView(webView);
+
+            class WebViewBridge {
+                @JavascriptInterface
+                public void send(String eventName, String data) {
+                    onChannelReceive(browserView, eventName, data);
+                }
+            }
+
+            if (enableBridge) {
+                // TODO: Improve bridge module by invoking custom JS
+                webView.addJavascriptInterface(new WebViewBridge(), "bridge");
+            }
 
             if (pluginSettings.allowNavigation != null) {
                 implementation.SetAllowedNavigation(browserView, pluginSettings.allowNavigation);
@@ -607,12 +618,9 @@ public class BrowserViewPlugin extends Plugin {
             return;
         }
 
-        // Serialize data
-        JSObject data = new JSObject();
-        data.put("event", eventName);
-        data.put("payload", args.toString());
-
-        // TODO
+        getActivity().runOnUiThread(() -> {
+            webView.evaluateJavascript("window.dispatchEvent(new CustomEvent('channel-" + eventName + "', { detail: '" + args.toString() + "' }))", null);
+        });
 
         boolean result = false;
 
@@ -692,11 +700,22 @@ public class BrowserViewPlugin extends Plugin {
 
     // Bridge -------------------------------------------------------------------------------
 
-    public void onChannelReceive(JSObject browserView, JSONObject data) throws JSONException {
-        String eventName = data.getString("event");
-        String payload = data.getString("payload");
+    public void onChannelReceive(JSObject browserView, String eventName, String data) {
+        // Deserialize data
+        JSArray payloadArray;
+        try {
+            payloadArray = new JSArray(data);
+        } catch (JSONException e) {
+            payloadArray = new JSArray();
+            try {
+                JSObject payload = new JSObject(data);
+                payloadArray.put(payload);
+            } catch (JSONException ex) {
+                payloadArray.put(data);
+            }
+        }
 
-        notifyBrowserViewChannelListeners("channel-" + eventName, browserView, payload);
+        notifyBrowserViewChannelListeners("channel-" + eventName, browserView, payloadArray);
     }
 
     //---------------------------------------------------------------------------------------
@@ -793,18 +812,12 @@ public class BrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewChannelListeners(String eventName, JSObject browserView, String payload) throws JSONException {
+    public void notifyBrowserViewChannelListeners(String eventName, JSObject browserView, JSArray payloadArray) {
         if (browserView == null) return;
-
-        // Deserialize data
-        JSArray payloadArray = new JSArray(payload);
-
-        JSObject event = new JSObject();
-        event.put("args", payloadArray);
 
         JSObject args = new JSObject();
         args.put("browserView", browserView);
-        args.put("event", event);
+        args.put("args", payloadArray);
 
         notifyListeners(eventName, args);
     }
