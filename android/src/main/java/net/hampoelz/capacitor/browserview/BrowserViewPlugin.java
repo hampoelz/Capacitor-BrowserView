@@ -3,6 +3,7 @@ package net.hampoelz.capacitor.browserview;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.util.Base64;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
@@ -660,7 +661,6 @@ public class BrowserViewPlugin extends Plugin {
     }
 
     public void onPageFaviconUpdated(JSObject browserView, byte[] bytes) {
-        // TODO: Test byteArray vs String encodedIcon = Base64.encodeToString(icon, Base64.NO_WRAP);
         notifyBrowserViewIconListeners("page-favicon-updated", browserView, bytes);
     }
 
@@ -764,15 +764,11 @@ public class BrowserViewPlugin extends Plugin {
     public void notifyBrowserViewIconListeners(String eventName, JSObject browserView, byte[] icon) {
         if (browserView == null) return;
 
-        JSArray byteArray = new JSArray();
-
-        for (byte b : icon) {
-            byteArray.put(b);
-        }
+        String encoded = Base64.encodeToString(icon, Base64.NO_WRAP);
 
         JSObject args = new JSObject();
         args.put("browserView", browserView);
-        args.put("icon", byteArray);
+        args.put("icon", encoded);
 
         notifyListeners(eventName, args);
     }
