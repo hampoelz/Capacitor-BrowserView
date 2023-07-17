@@ -530,14 +530,8 @@ public class BrowserViewPlugin extends Plugin {
         }
 
         getActivity().runOnUiThread(() -> webView.evaluateJavascript(code, value -> {
-            if (value == null) {
-                call.resolve();
-            } else {
-                call.resolve(new JSObject().put("value", value));
-            }
+            call.resolve(new JSObject().put("value", value));
         }));
-
-        // TODO: Note: call never resolves or rejects when no callback occurs
     }
 
     @PluginMethod
