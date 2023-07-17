@@ -446,16 +446,56 @@ export interface Rectangle {
   height: number;
 }
 
-export type BrowserViewListener = (browserView: BrowserView) => void;
-export type BrowserViewUrlListener = (browserView: BrowserView, url: string) => void;
-export type BrowserViewIconListener = (browserView: BrowserView, icon: Int8Array) => void;
-export type BrowserViewTitleListener = (browserView: BrowserView, title: string) => void;
-export type BrowserViewErrorListener = (browserView: BrowserView, error: WebResourceError) => void;
-export type BrowserViewResponseListener = (browserView: BrowserView, url: string, errorResponse: WebResourceResponse) => void;
-export type BrowserViewRenderProcessGoneListener = (browserView: BrowserView, details: RenderProcessGoneDetail) => void;
-export type BrowserViewChannelListener = (browserView: BrowserView, event: ChannelListenerEvent) => void;
-
 export type ChannelEventName<TChannel extends string> = `channel-${TChannel}`;
+
+export type BrowserViewListener = (event: BrowserViewListenerEvent) => void;
+export type BrowserViewUrlListener = (event: BrowserViewUrlListenerEvent) => void;
+export type BrowserViewIconListener = (event: BrowserViewIconListenerEvent) => void;
+export type BrowserViewTitleListener = (event: BrowserViewTitleListenerEvent) => void;
+export type BrowserViewErrorListener = (event: BrowserViewErrorListenerEvent) => void;
+export type BrowserViewResponseListener = (event: BrowserViewResponseListenerEvent) => void;
+export type BrowserViewRenderProcessGoneListener = (event: BrowserViewRenderProcessGoneListenerEvent) => void;
+export type BrowserViewChannelListener = (event: BrowserViewChannelListenerEvent) => void;
+
+export interface BrowserViewListenerEvent {
+  browserView: BrowserView;
+}
+
+export interface BrowserViewUrlListenerEvent {
+  browserView: BrowserView;
+  url: string;
+}
+
+export interface BrowserViewIconListenerEvent {
+  browserView: BrowserView;
+  icon: Int8Array;
+}
+
+export interface BrowserViewTitleListenerEvent {
+  browserView: BrowserView;
+  title: string;
+}
+
+export interface BrowserViewErrorListenerEvent {
+  browserView: BrowserView;
+  error: WebResourceError;
+}
+
+export interface BrowserViewResponseListenerEvent {
+  browserView: BrowserView;
+  url: string;
+  errorResponse: WebResourceResponse;
+}
+
+export interface BrowserViewRenderProcessGoneListenerEvent {
+  browserView: BrowserView;
+  details: RenderProcessGoneDetail;
+}
+
+export interface BrowserViewChannelListenerEvent {
+  browserView: BrowserView;
+  args: any[]
+}
 
 export interface WebResourceError {
   errorCode: number;

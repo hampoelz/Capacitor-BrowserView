@@ -758,6 +758,29 @@ addListener(eventName: ChannelEventName<string>, listenerFunc: BrowserViewChanne
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
+#### BrowserViewUrlListenerEvent
+
+| Prop              | Type                                                |
+| ----------------- | --------------------------------------------------- |
+| **`browserView`** | <code><a href="#browserview">BrowserView</a></code> |
+| **`url`**         | <code>string</code>                                 |
+
+
+#### BrowserViewListenerEvent
+
+| Prop              | Type                                                |
+| ----------------- | --------------------------------------------------- |
+| **`browserView`** | <code><a href="#browserview">BrowserView</a></code> |
+
+
+#### BrowserViewIconListenerEvent
+
+| Prop              | Type                                                |
+| ----------------- | --------------------------------------------------- |
+| **`browserView`** | <code><a href="#browserview">BrowserView</a></code> |
+| **`icon`**        | <code><a href="#int8array">Int8Array</a></code>     |
+
+
 #### Int8Array
 
 A typed array of 8-bit integer values. The contents are initialized to 0. If the requested
@@ -833,6 +856,22 @@ buffer as needed.
 | **slice** | (begin: number, end?: number \| undefined) =&gt; <a href="#arraybuffer">ArrayBuffer</a> | Returns a section of an <a href="#arraybuffer">ArrayBuffer</a>. |
 
 
+#### BrowserViewTitleListenerEvent
+
+| Prop              | Type                                                |
+| ----------------- | --------------------------------------------------- |
+| **`browserView`** | <code><a href="#browserview">BrowserView</a></code> |
+| **`title`**       | <code>string</code>                                 |
+
+
+#### BrowserViewErrorListenerEvent
+
+| Prop              | Type                                                          |
+| ----------------- | ------------------------------------------------------------- |
+| **`browserView`** | <code><a href="#browserview">BrowserView</a></code>           |
+| **`error`**       | <code><a href="#webresourceerror">WebResourceError</a></code> |
+
+
 #### WebResourceError
 
 | Prop                   | Type                |
@@ -840,6 +879,15 @@ buffer as needed.
 | **`errorCode`**        | <code>number</code> |
 | **`errorDescription`** | <code>string</code> |
 | **`validatedURL`**     | <code>string</code> |
+
+
+#### BrowserViewResponseListenerEvent
+
+| Prop                | Type                                                                |
+| ------------------- | ------------------------------------------------------------------- |
+| **`browserView`**   | <code><a href="#browserview">BrowserView</a></code>                 |
+| **`url`**           | <code>string</code>                                                 |
+| **`errorResponse`** | <code><a href="#webresourceresponse">WebResourceResponse</a></code> |
 
 
 #### WebResourceResponse
@@ -850,6 +898,14 @@ buffer as needed.
 | **`httpStatusText`**   | <code>string</code> |
 
 
+#### BrowserViewRenderProcessGoneListenerEvent
+
+| Prop              | Type                                                                        |
+| ----------------- | --------------------------------------------------------------------------- |
+| **`browserView`** | <code><a href="#browserview">BrowserView</a></code>                         |
+| **`details`**     | <code><a href="#renderprocessgonedetail">RenderProcessGoneDetail</a></code> |
+
+
 #### RenderProcessGoneDetail
 
 | Prop          | Type                 |
@@ -857,11 +913,12 @@ buffer as needed.
 | **`crashed`** | <code>boolean</code> |
 
 
-#### ChannelListenerEvent
+#### BrowserViewChannelListenerEvent
 
-| Prop       | Type               |
-| ---------- | ------------------ |
-| **`args`** | <code>any[]</code> |
+| Prop              | Type                                                |
+| ----------------- | --------------------------------------------------- |
+| **`browserView`** | <code><a href="#browserview">BrowserView</a></code> |
+| **`args`**        | <code>any[]</code>                                  |
 
 
 ### Type Aliases
@@ -874,17 +931,17 @@ buffer as needed.
 
 #### BrowserViewUrlListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>, url: string): void</code>
+<code>(event: <a href="#browserviewurllistenerevent">BrowserViewUrlListenerEvent</a>): void</code>
 
 
 #### BrowserViewListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>): void</code>
+<code>(event: <a href="#browserviewlistenerevent">BrowserViewListenerEvent</a>): void</code>
 
 
 #### BrowserViewIconListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>, icon: <a href="#int8array">Int8Array</a>): void</code>
+<code>(event: <a href="#browserviewiconlistenerevent">BrowserViewIconListenerEvent</a>): void</code>
 
 
 #### ArrayBufferLike
@@ -894,26 +951,26 @@ buffer as needed.
 
 #### BrowserViewTitleListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>, title: string): void</code>
+<code>(event: <a href="#browserviewtitlelistenerevent">BrowserViewTitleListenerEvent</a>): void</code>
 
 
 #### BrowserViewErrorListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>, error: <a href="#webresourceerror">WebResourceError</a>): void</code>
+<code>(event: <a href="#browserviewerrorlistenerevent">BrowserViewErrorListenerEvent</a>): void</code>
 
 
 #### BrowserViewResponseListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>, url: string, errorResponse: <a href="#webresourceresponse">WebResourceResponse</a>): void</code>
+<code>(event: <a href="#browserviewresponselistenerevent">BrowserViewResponseListenerEvent</a>): void</code>
 
 
 #### BrowserViewRenderProcessGoneListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>, details: <a href="#renderprocessgonedetail">RenderProcessGoneDetail</a>): void</code>
+<code>(event: <a href="#browserviewrenderprocessgonelistenerevent">BrowserViewRenderProcessGoneListenerEvent</a>): void</code>
 
 
 #### BrowserViewChannelListener
 
-<code>(browserView: <a href="#browserview">BrowserView</a>, event: <a href="#channellistenerevent">ChannelListenerEvent</a>): void</code>
+<code>(event: <a href="#browserviewchannellistenerevent">BrowserViewChannelListenerEvent</a>): void</code>
 
 </docgen-api>
