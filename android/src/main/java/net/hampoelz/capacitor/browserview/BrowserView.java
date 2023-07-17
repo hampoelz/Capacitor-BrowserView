@@ -24,7 +24,10 @@ import com.getcapacitor.JSObject;
 import com.getcapacitor.util.HostMask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class BrowserView {
 
