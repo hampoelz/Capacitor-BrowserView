@@ -31,6 +31,7 @@ public class BrowserView {
     private final Map<UUID, WebView> browserViews = new HashMap<>();
     private final Map<UUID, String> currentHosts = new HashMap<>();
     private final Map<UUID, HostMask> allowedNavigations = new HashMap<>();
+    private final Map<UUID, List<String>> allowedNavigationsPlain = new HashMap<>();
     private final BrowserViewPlugin plugin;
 
     public BrowserView(BrowserViewPlugin plugin) {
@@ -71,11 +72,23 @@ public class BrowserView {
         return browserViews.get(uuid);
     }
 
-    public void SetAllowedNavigation(JSObject browserView, String[] allowedNavigation) {
+    public void SetAllowedNavigation(JSObject browserView, List<String> allowedNavigation) {
         UUID uuid = UUIDFromBrowserView(browserView);
         if (uuid == null || allowedNavigation == null) return;
 
-        allowedNavigations.put(uuid, HostMask.Parser.parse(allowedNavigation));
+        String[] allowedNavigationArray = new String[allowedNavigation.size()];
+        allowedNavigation.toArray(allowedNavigationArray);
+
+        allowedNavigations.put(uuid, HostMask.Parser.parse(allowedNavigationArray));
+        allowedNavigationsPlain.put(uuid, allowedNavigation);
+    }
+
+    public @Nullable List<String> GetAllowedNavigation(JSObject browserView) {
+        UUID uuid = UUIDFromBrowserView(browserView);
+        if (uuid == null) return null;
+
+        List<String> allowedNavigation = allowedNavigationsPlain.get(uuid);
+        return allowedNavigation;
     }
 
     public void LoadUrl(JSObject browserView, String url) {
@@ -272,5 +285,6 @@ public class BrowserView {
         browserViews.remove(uuid);
         currentHosts.remove(uuid);
         allowedNavigations.remove(uuid);
+        allowedNavigationsPlain.remove(uuid);
     }
 }

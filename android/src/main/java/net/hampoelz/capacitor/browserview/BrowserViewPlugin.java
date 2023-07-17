@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -143,7 +144,7 @@ public class BrowserViewPlugin extends Plugin {
             }
 
             if (pluginSettings.allowNavigation != null) {
-                implementation.SetAllowedNavigation(browserView, pluginSettings.allowNavigation);
+                implementation.SetAllowedNavigation(browserView, Arrays.asList(pluginSettings.allowNavigation));
             }
 
             if (pluginSettings.url != null) {
@@ -591,11 +592,26 @@ public class BrowserViewPlugin extends Plugin {
                 allowNavigation.add(allowNavigationArray.getString(i));
             }
 
-            implementation.SetAllowedNavigation(browserView, allowNavigation.toArray(new String[0]));
+            implementation.SetAllowedNavigation(browserView, allowNavigation);
             call.resolve();
         } catch (JSONException ex) {
             call.reject(ex.toString());
         }
+    }
+
+    @PluginMethod
+    public void getAllowedNavigation(PluginCall call) {
+        JSObject browserView = call.getObject("browserView");
+        UUID uuid = implementation.UUIDFromBrowserView(browserView);
+
+        if (uuid == null) {
+            call.reject("Specified BrowserView does not exist");
+            return;
+        }
+
+        List<String> allowNavigation = implementation.GetAllowedNavigation(browserView);
+        JSArray allowNavigationArray = new JSArray(allowNavigation);
+        call.resolve(new JSObject().put("value", allowNavigationArray));
     }
 
     // Bridge -------------------------------------------------------------------------------
