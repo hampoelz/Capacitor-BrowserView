@@ -1,34 +1,46 @@
 import type { CapacitorException} from '@capacitor/core';
 import { WebPlugin } from '@capacitor/core';
 
-import type { BrowserView, BrowserViewPlugin, Rectangle } from './definitions';
+import type {
+  BoundsResult,
+  UrlResult,
+  TitleResult,
+  CanGoBackResult,
+  CanGoForwardResult,
+  UserAgentResult,
+  CodeExecuteResult,
+  AllowMultipleWindowsResult,
+  AllowedNavigationResult
+} from './definitions';
+import type { BrowserViewUUID, CapacitorBrowserViewPlugin } from './implementation';
 
-export class BrowserViewWeb extends WebPlugin implements BrowserViewPlugin {
+export class CapacitorBrowserViewWeb extends WebPlugin implements CapacitorBrowserViewPlugin {
   protected unavailableBrowserView(): CapacitorException {
     return this.unavailable('WebViews are not available in browser.');
   }
-  createBrowserView(): Promise<{ value: BrowserView; }> {
+
+  create(): Promise<BrowserViewUUID> {
     throw this.unavailableBrowserView();
   }
-  removeBrowserView(): void {
+  destroy(): void {
     throw this.unavailableBrowserView();
   }
   setBounds(): void {
     throw this.unavailableBrowserView();
   }
-  getBounds(): Promise<{ value: Rectangle; }> {
+  getBounds(): Promise<BoundsResult> {
     throw this.unavailableBrowserView();
   }
   setBackgroundColor(): void {
     throw this.unavailableBrowserView();
   }
-  loadURL(): void {
+  loadUrl(): void {
     throw this.unavailableBrowserView();
   }
-  getURL(): Promise<{ value: string; }> {
+  getUrl(): Promise<UrlResult> {
     throw this.unavailableBrowserView();
   }
-  getTitle(): Promise<{ value: string; }> {
+  getTitle(): Promise<TitleResult> {
     throw this.unavailableBrowserView();
   }
   stop(): void {
@@ -37,10 +49,10 @@ export class BrowserViewWeb extends WebPlugin implements BrowserViewPlugin {
   reload(): void {
     throw this.unavailableBrowserView();
   }
-  canGoBack(): Promise<{ value: boolean; }> {
+  canGoBack(): Promise<CanGoBackResult> {
     throw this.unavailableBrowserView();
   }
-  canGoForward(): Promise<{ value: boolean; }> {
+  canGoForward(): Promise<CanGoForwardResult> {
     throw this.unavailableBrowserView();
   }
   clearHistory(): void {
@@ -58,25 +70,25 @@ export class BrowserViewWeb extends WebPlugin implements BrowserViewPlugin {
   appendUserAgent(): void {
     throw this.unavailableBrowserView();
   }
-  getUserAgent(): Promise<{ value: string; }> {
+  getUserAgent(): Promise<UserAgentResult> {
     throw this.unavailableBrowserView();
   }
-  executeJavaScript(): Promise<any> {
+  executeJavaScript(): Promise<CodeExecuteResult> {
     throw this.unavailableBrowserView();
   }
   setAllowMultipleWindows(): void {
     throw this.unavailableBrowserView();
   }
-  getAllowMultipleWindows(): Promise<{ value: boolean; }> {
+  getAllowMultipleWindows(): Promise<AllowMultipleWindowsResult> {
     throw this.unavailableBrowserView();
   }
   setAllowedNavigation(): void {
     throw this.unavailableBrowserView();
   }
-  getAllowedNavigation(): Promise<{ value: string[]; }> {
+  getAllowedNavigation(): Promise<AllowedNavigationResult> {
     throw this.unavailableBrowserView();
   }
-  sendMessage(): Promise<{ value: boolean; }> {
+  sendMessage(): void {
     throw this.unavailableBrowserView();
   }
 }

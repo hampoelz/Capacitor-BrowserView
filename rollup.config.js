@@ -4,7 +4,7 @@ export default {
     {
       file: 'dist/plugin.js',
       format: 'iife',
-      name: 'capacitorBrowserView',
+      name: 'capacitorCapacitorBrowserView',
       globals: {
         '@capacitor/core': 'capacitorExports',
       },
