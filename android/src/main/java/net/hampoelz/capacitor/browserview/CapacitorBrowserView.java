@@ -50,7 +50,7 @@ public class CapacitorBrowserView {
     public static class BrowserView extends WebView {
         public final String uuid;
         private String currentHost;
-        private String[] allowedNavigation;
+        private String[] allowedNavigation = new String[0];
 
         public BrowserView(String uuid, Context context) {
             super(context);
@@ -82,13 +82,11 @@ public class CapacitorBrowserView {
 
             if (currentHost != null && newHost.contains(currentHost)) return true;
 
-            if (allowedNavigation != null) {
-                for (final String regex : allowedNavigation) {
-                    final Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-                    final Matcher matcher = pattern.matcher(newHost);
-                    final boolean match = matcher.find();
-                    if (match) return true;
-                }
+            for (final String regex : allowedNavigation) {
+                final Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+                final Matcher matcher = pattern.matcher(newHost);
+                final boolean match = matcher.find();
+                if (match) return true;
             }
 
             return false;
