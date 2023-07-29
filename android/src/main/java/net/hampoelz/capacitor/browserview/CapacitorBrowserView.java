@@ -37,13 +37,13 @@ import java.util.regex.PatternSyntaxException;
 public class CapacitorBrowserView {
     private final ViewGroup rootView;
     private final Context context;
-    private final CapacitorBrowserViewPlugin.CallEvent callEvent;
+    private final CapacitorBrowserViewPlugin.PluginEventNotifier eventNotifier;
     private final Map<String, BrowserView> browserViews = new HashMap<>();
 
-    public CapacitorBrowserView(ViewGroup rootView, Context context, CapacitorBrowserViewPlugin.CallEvent callEvent) {
+    public CapacitorBrowserView(ViewGroup rootView, Context context, CapacitorBrowserViewPlugin.PluginEventNotifier eventNotifier) {
         this.rootView = rootView;
         this.context = context;
-        this.callEvent = callEvent;
+        this.eventNotifier = eventNotifier;
     }
 
     @SuppressLint("ViewConstructor")
@@ -125,7 +125,7 @@ public class CapacitorBrowserView {
                 final WebView.HitTestResult result = view.getHitTestResult();
                 final String url = result.getExtra();
 
-                callEvent.onNewWindow(uuid, url);
+                eventNotifier.newWindow(uuid, url);
 
                 if (url == null) return false;
 
@@ -138,7 +138,7 @@ public class CapacitorBrowserView {
             @Override
             public void onCloseWindow(WebView window) {
                 super.onCloseWindow(window);
-                callEvent.onCloseWindow(uuid);
+                eventNotifier.closeWindow(uuid);
             }
 
             @Override
@@ -150,25 +150,25 @@ public class CapacitorBrowserView {
                 final byte[] bytes = stream.toByteArray();
                 icon.recycle();
 
-                callEvent.onPageFaviconUpdated(uuid, bytes);
+                eventNotifier.pageFaviconUpdated(uuid, bytes);
             }
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                callEvent.onPageTitleUpdated(uuid, title);
+                eventNotifier.pageTitleUpdated(uuid, title);
             }
 
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {
                 super.onShowCustomView(view, callback);
-                callEvent.onEnterHtmlFullScreen(uuid);
+                eventNotifier.enterHtmlFullScreen(uuid);
             }
 
             @Override
             public void onHideCustomView() {
                 super.onHideCustomView();
-                callEvent.onLeaveHtmlFullScreen(uuid);
+                eventNotifier.leaveHtmlFullScreen(uuid);
             }
         });
 
@@ -190,7 +190,7 @@ public class CapacitorBrowserView {
                     preventDefault = !allowNavigation;
                 }
 
-                callEvent.onWillNavigate(uuid, url);
+                eventNotifier.willNavigate(uuid, url);
                 return preventDefault;
             }
 
@@ -213,30 +213,30 @@ public class CapacitorBrowserView {
                     preventDefault = !allowNavigation;
                 }
 
-                callEvent.onWillNavigate(uuid, url);
+                eventNotifier.willNavigate(uuid, url);
                 return preventDefault;
             }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                callEvent.onDidStartLoading(uuid);
+                eventNotifier.didStartLoading(uuid);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                callEvent.onDidFrameFinishLoad(uuid);
+                eventNotifier.didFrameFinishLoad(uuid);
 
                 if (browserView.getProgress() == 100) {
-                    callEvent.onDidFinishLoad(uuid);
+                    eventNotifier.didFinishLoad(uuid);
                 }
             }
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                callEvent.onDidFailLoad(uuid, errorCode, description, failingUrl);
+                eventNotifier.didFailLoad(uuid, errorCode, description, failingUrl);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -248,14 +248,14 @@ public class CapacitorBrowserView {
                 final String description = error.getDescription().toString();
                 final String failingUrl = request.getUrl().toString();
 
-                callEvent.onDidFailLoad(uuid, errorCode, description, failingUrl);
+                eventNotifier.didFailLoad(uuid, errorCode, description, failingUrl);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onPageCommitVisible(WebView view, String url) {
                 super.onPageCommitVisible(view, url);
-                callEvent.onDomReady(uuid);
+                eventNotifier.domReady(uuid);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -267,7 +267,7 @@ public class CapacitorBrowserView {
                 final int statusCode = errorResponse.getStatusCode();
                 final String reasonPhrase = errorResponse.getReasonPhrase();
 
-                callEvent.onHttpError(uuid, url, statusCode, reasonPhrase);
+                eventNotifier.httpError(uuid, url, statusCode, reasonPhrase);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -275,7 +275,7 @@ public class CapacitorBrowserView {
             public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
                 final boolean crashed = detail.didCrash();
 
-                callEvent.onRenderProcessGone(uuid, crashed);
+                eventNotifier.renderProcessGone(uuid, crashed);
                 return super.onRenderProcessGone(view, detail);
             }
         });
@@ -285,13 +285,13 @@ public class CapacitorBrowserView {
                 @RequiresApi(api = Build.VERSION_CODES.Q)
                 @Override
                 public void onRenderProcessUnresponsive(@NonNull WebView view, @Nullable WebViewRenderProcess renderer) {
-                    callEvent.onUnresponsive(uuid);
+                    eventNotifier.unresponsive(uuid);
                 }
 
                 @RequiresApi(api = Build.VERSION_CODES.Q)
                 @Override
                 public void onRenderProcessResponsive(@NonNull WebView view, @Nullable WebViewRenderProcess renderer) {
-                    callEvent.onResponsive(uuid);
+                    eventNotifier.responsive(uuid);
                 }
             });
         }

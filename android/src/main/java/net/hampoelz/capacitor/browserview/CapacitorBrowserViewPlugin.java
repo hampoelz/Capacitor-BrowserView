@@ -10,6 +10,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Nullable;
+
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Logger;
@@ -38,48 +40,52 @@ import java.util.List;
     )}
 )
 public class CapacitorBrowserViewPlugin extends Plugin {
-    private final CallEvent callEvent = new CallEvent();
+    private final PluginEventNotifier eventNotifier = new PluginEventNotifier();
     private CapacitorBrowserView implementation;
 
     public void load() {
         ViewGroup rootView = (ViewGroup) getActivity().getWindow().getDecorView().getRootView();
         Context context = getContext();
 
-        implementation = new CapacitorBrowserView(rootView, context, callEvent);
+        implementation = new CapacitorBrowserView(rootView, context, eventNotifier);
     }
 
     private class PluginSettings {
-        public final String url;
-        public final boolean allowMultipleWindows;
-        public final String[] allowNavigation;
-        public final boolean enableBridge;
-        public final String overrideUserAgent;
-        public final String appendUserAgent;
-        public final String backgroundColor;
-        public final boolean allowMixedContent;
+        protected @Nullable String url = null;
+        protected boolean allowMultipleWindows = true;
+        protected @Nullable String[] allowNavigation = null;
+        protected boolean enableBridge = false;
+        protected @Nullable String overrideUserAgent = null;
+        protected @Nullable String appendUserAgent = null;
+        protected @Nullable String backgroundColor = null;
+        protected boolean allowMixedContent = false;
+    }
 
-        public PluginSettings() throws JSONException {
-            PluginConfig config = getConfig();
-            JSONObject androidConfigJSON = config.getObject("android");
-            JSObject androidConfig = new JSObject();
-            
-            if (androidConfigJSON != null) {
-                androidConfig = JSObject.fromJSONObject(androidConfigJSON);
-            }
+    private PluginSettings readPluginSettings() throws JSONException {
+        PluginSettings settings = new PluginSettings();
 
-            String overrideUserAgentDefault = config.getString("overrideUserAgent");
-            String appendUserAgentDefault = config.getString("appendUserAgent");
-            String backgroundColorDefault = config.getString("backgroundColor");
+        PluginConfig config = getConfig();
+        JSONObject androidConfigJSON = config.getObject("android");
+        JSObject androidConfig = new JSObject();
 
-            url = config.getString("url");
-            allowMultipleWindows = config.getBoolean("allowMultipleWindows", true);
-            allowNavigation = config.getArray("allowNavigation");
-            enableBridge = config.getBoolean("enableBridge", false);
-            overrideUserAgent = androidConfig.getString("overrideUserAgent", overrideUserAgentDefault);
-            appendUserAgent = androidConfig.getString("appendUserAgent", appendUserAgentDefault);
-            backgroundColor = androidConfig.getString("backgroundColor", backgroundColorDefault);
-            allowMixedContent = Boolean.TRUE.equals(androidConfig.getBoolean("allowMixedContent", false));
+        if (androidConfigJSON != null) {
+            androidConfig = JSObject.fromJSONObject(androidConfigJSON);
         }
+
+        String overrideUserAgentDefault = config.getString("overrideUserAgent");
+        String appendUserAgentDefault = config.getString("appendUserAgent");
+        String backgroundColorDefault = config.getString("backgroundColor");
+
+        settings.url = config.getString("url");
+        settings.allowMultipleWindows = config.getBoolean("allowMultipleWindows", settings.allowMultipleWindows);
+        settings.allowNavigation = config.getArray("allowNavigation");
+        settings.enableBridge = config.getBoolean("enableBridge", settings.enableBridge);
+        settings.overrideUserAgent = androidConfig.getString("overrideUserAgent", overrideUserAgentDefault);
+        settings.appendUserAgent = androidConfig.getString("appendUserAgent", appendUserAgentDefault);
+        settings.backgroundColor = androidConfig.getString("backgroundColor", backgroundColorDefault);
+        settings.allowMixedContent = Boolean.TRUE.equals(androidConfig.getBoolean("allowMixedContent", settings.allowMixedContent));
+
+        return settings;
     }
 
     //region PluginMethods
@@ -91,7 +97,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final PluginSettings pluginSettings;
 
         try {
-            pluginSettings = new PluginSettings();
+            pluginSettings = readPluginSettings();
         } catch (JSONException ex) {
             call.reject("Failed to parse settings.");
             return;
@@ -140,7 +146,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
                 class WebViewBridge {
                     @JavascriptInterface
                     public void send(String eventName, String data) {
-                        callEvent.onChannelReceive(browserView.uuid, eventName, data);
+                        eventNotifier.channelReceive(browserView.uuid, eventName, data);
                     }
                 }
 
@@ -512,74 +518,74 @@ public class CapacitorBrowserViewPlugin extends Plugin {
     //region PluginEvents
     //---------------------------------------------------------------------------------------
 
-    public class CallEvent {
-        public void onNewWindow(String uuid, String url) {
+    protected class PluginEventNotifier {
+        protected void newWindow(String uuid, String url) {
             notifyBrowserViewUrlListeners("new-window", uuid, url);
         }
 
-        public void onCloseWindow(String uuid) {
+        protected void closeWindow(String uuid) {
             notifyBrowserViewListeners("close-window", uuid);
         }
 
-        public void onPageFaviconUpdated(String uuid, byte[] bytes) {
+        protected void pageFaviconUpdated(String uuid, byte[] bytes) {
             notifyBrowserViewIconListeners("page-favicon-updated", uuid, bytes);
         }
 
-        public void onPageTitleUpdated(String uuid, String title) {
+        protected void pageTitleUpdated(String uuid, String title) {
             notifyBrowserViewTitleListeners("page-title-updated", uuid, title);
         }
 
-        public void onEnterHtmlFullScreen(String uuid) {
+        protected void enterHtmlFullScreen(String uuid) {
             notifyBrowserViewListeners("enter-html-full-screen", uuid);
         }
 
-        public void onLeaveHtmlFullScreen(String uuid) {
+        protected void leaveHtmlFullScreen(String uuid) {
             notifyBrowserViewListeners("leave-html-full-screen", uuid);
         }
 
-        public void onWillNavigate(String uuid, String url) {
+        protected void willNavigate(String uuid, String url) {
             notifyBrowserViewUrlListeners("will-navigate", uuid, url);
         }
 
-        public void onDidStartLoading(String uuid) {
+        protected void didStartLoading(String uuid) {
             notifyBrowserViewListeners("did-start-loading", uuid);
         }
 
-        public void onDidFrameFinishLoad(String uuid) {
+        protected void didFrameFinishLoad(String uuid) {
             notifyBrowserViewListeners("did-frame-finish-load", uuid);
         }
 
-        public void onDidFinishLoad(String uuid) {
+        protected void didFinishLoad(String uuid) {
             notifyBrowserViewListeners("did-finish-load", uuid);
         }
 
-        public void onDidFailLoad(String uuid, int errorCode, String errorDescription, String validatedURL) {
+        protected void didFailLoad(String uuid, int errorCode, String errorDescription, String validatedURL) {
             notifyBrowserViewErrorListeners("did-fail-load", uuid, errorCode, errorDescription, validatedURL);
         }
 
-        public void onDomReady(String uuid) {
+        protected void domReady(String uuid) {
             notifyBrowserViewListeners("dom-ready", uuid);
         }
 
-        public void onHttpError(String uuid, String url, int httpResponseCode, String httpStatusText) {
+        protected void httpError(String uuid, String url, int httpResponseCode, String httpStatusText) {
             notifyBrowserViewResponseListeners("http-error", uuid, url, httpResponseCode, httpStatusText);
         }
 
-        public void onRenderProcessGone(String uuid, boolean crashed) {
+        protected void renderProcessGone(String uuid, boolean crashed) {
             notifyBrowserViewRenderProcessGoneListeners("render-process-gone", uuid, crashed);
         }
 
-        public void onUnresponsive(String uuid) {
+        protected void unresponsive(String uuid) {
             notifyBrowserViewListeners("unresponsive", uuid);
         }
 
-        public void onResponsive(String uuid) {
+        protected void responsive(String uuid) {
             notifyBrowserViewListeners("responsive", uuid);
         }
 
         // Bridge -------------------------------------------------------------------------------
 
-        public void onChannelReceive(String uuid, String eventName, String data) {
+        protected void channelReceive(String uuid, String eventName, String data) {
             // Deserialize data
             JSArray payloadArray;
             try {
@@ -604,14 +610,14 @@ public class CapacitorBrowserViewPlugin extends Plugin {
     //region PluginListeners
     //---------------------------------------------------------------------------------------
 
-    public void notifyBrowserViewListeners(String eventName, String uuid) {
+    private void notifyBrowserViewListeners(String eventName, String uuid) {
         final JSObject args = new JSObject();
         args.put("uuid", uuid);
 
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewUrlListeners(String eventName, String uuid, String url) {
+    private void notifyBrowserViewUrlListeners(String eventName, String uuid, String url) {
         final JSObject args = new JSObject();
         args.put("uuid", uuid);
         args.put("url", url);
@@ -619,7 +625,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewIconListeners(String eventName, String uuid, byte[] icon) {
+    private void notifyBrowserViewIconListeners(String eventName, String uuid, byte[] icon) {
         final String encoded = Base64.encodeToString(icon, Base64.NO_WRAP);
 
         final JSObject args = new JSObject();
@@ -629,7 +635,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewTitleListeners(String eventName, String uuid, String title) {
+    private void notifyBrowserViewTitleListeners(String eventName, String uuid, String title) {
         final JSObject args = new JSObject();
         args.put("uuid", uuid);
         args.put("title", title);
@@ -637,7 +643,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewErrorListeners(String eventName, String uuid, int errorCode, String errorDescription, String validatedURL) {
+    private void notifyBrowserViewErrorListeners(String eventName, String uuid, int errorCode, String errorDescription, String validatedURL) {
         final JSObject error = new JSObject();
         error.put("errorCode", errorCode);
         error.put("errorDescription", errorDescription);
@@ -650,7 +656,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewResponseListeners(String eventName, String uuid, String url, int httpResponseCode, String httpStatusText) {
+    private void notifyBrowserViewResponseListeners(String eventName, String uuid, String url, int httpResponseCode, String httpStatusText) {
         final JSObject errorResponse = new JSObject();
         errorResponse.put("httpResponseCode", httpResponseCode);
         errorResponse.put("httpStatusText", httpStatusText);
@@ -663,7 +669,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewRenderProcessGoneListeners(String eventName, String uuid, boolean crashed) {
+    private void notifyBrowserViewRenderProcessGoneListeners(String eventName, String uuid, boolean crashed) {
         final JSObject details = new JSObject();
         details.put("crashed", crashed);
 
@@ -674,7 +680,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    public void notifyBrowserViewChannelListeners(String eventName, String uuid, JSArray payloadArray) {
+    private void notifyBrowserViewChannelListeners(String eventName, String uuid, JSArray payloadArray) {
         final JSObject args = new JSObject();
         args.put("uuid", uuid);
         args.put("args", payloadArray);
