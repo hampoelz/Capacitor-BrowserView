@@ -145,17 +145,17 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             if (enableBridge) {
                 class WebViewBridge {
                     @JavascriptInterface
-                    public void send(String eventName, String data) {
-                        eventNotifier.channelReceive(browserView.uuid, eventName, data);
+                    public void send(String uuid, String eventName, String data) {
+                        eventNotifier.channelReceive(uuid, eventName, data);
                     }
                 }
 
-                // TODO: Improve bridge module by invoking custom JS
+                // TODO: Separate bridge code into files
                 // Current Bridge API:
                 //   bridge.send("event", JSON.stringify([ data ]))
                 //   window.addEventListener('channel-event', event => { data = JSON.parse(event.detail); })
 
-                browserView.addJavascriptInterface(new WebViewBridge(), "bridge");
+                browserView.addJavascriptInterface(new WebViewBridge(), "_capacitorBrowserViewBridge");
             }
 
             settings.setSupportMultipleWindows(allowMultipleWindows);
@@ -508,6 +508,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             args = new JSArray();
         }
 
+        // TODO: Separate bridge code into files
         final String dispatchEventCode = "window.dispatchEvent(new CustomEvent('channel-" + eventName + "', { detail: '" + args + "' }))";
         getActivity().runOnUiThread(() -> browserView.evaluateJavascript(dispatchEventCode, null));
     }

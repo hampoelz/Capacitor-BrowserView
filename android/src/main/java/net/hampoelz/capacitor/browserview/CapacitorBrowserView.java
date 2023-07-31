@@ -219,6 +219,24 @@ public class CapacitorBrowserView {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 eventNotifier.didStartLoading(uuid);
+
+                // TODO: Separate bridge code into files
+                final String bridge = String.format(
+                                 "window.CapacitorBrowserView = {"
+                        + "\n" + "  send: (eventName, ...args) => {"
+                        + "\n" + "    const data = JSON.stringify([ args ]);"
+                        + "\n" + "    _capacitorBrowserViewBridge.send('%s', eventName, data);"
+                        + "\n" + "  },"
+                        + "\n" + "  addListener: (eventName, callback) => {"
+                        + "\n" + "    window.addEventListener('channel-' + eventName, event => {"
+                        + "\n" + "      const data = JSON.parse(event.detail);"
+                        + "\n" + "      callback(data);"
+                        + "\n" + "    });"
+                        + "\n" + "  }"
+                        + "\n" + "};"
+                , uuid);
+
+                browserView.evaluateJavascript(bridge, null);
             }
 
             @Override
