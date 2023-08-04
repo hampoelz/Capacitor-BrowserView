@@ -49,6 +49,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         implementation = new CapacitorBrowserView(rootView, context, eventNotifier);
     }
 
+    /** @noinspection InnerClassMayBeStatic*/
     private class PluginSettings {
         protected @Nullable String url = null;
         protected boolean allowMultipleWindows = true;
