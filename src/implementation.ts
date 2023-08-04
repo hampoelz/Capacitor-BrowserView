@@ -118,6 +118,7 @@ export interface CapacitorBrowserViewPlugin {
 
 const CapacitorBrowserView = registerPlugin<CapacitorBrowserViewPlugin>('CapacitorBrowserView', {
     web: () => import('./web').then(m => new m.CapacitorBrowserViewWeb()),
+    electron: () => (window as any).CapacitorCustomPlatform.plugins.CapacitorBrowserView
 });
 
 export { CapacitorBrowserView }
