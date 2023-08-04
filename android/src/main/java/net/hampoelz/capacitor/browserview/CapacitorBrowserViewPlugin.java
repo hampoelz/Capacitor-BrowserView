@@ -137,7 +137,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
                 try {
                     browserView.setBackgroundColor(WebColor.parseColor(backgroundColor));
                 } catch (IllegalArgumentException ex) {
-                    Logger.debug("WebView background color not applied");
+                    Logger.debug("Capacitor-BrowserView", "BrowserView background color '" + backgroundColor + "' not applied");
                 }
             }
 
