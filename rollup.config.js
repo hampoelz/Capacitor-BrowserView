@@ -1,22 +1,35 @@
-export default {
-  input: 'dist/esm/index.js',
-  output: [
-    {
-      file: 'dist/plugin.js',
-      format: 'iife',
-      name: 'capacitorCapacitorBrowserView',
-      globals: {
-        '@capacitor/core': 'capacitorExports',
+export default [
+  {
+    input: 'dist/esm/index.js',
+    output: [
+      {
+        file: 'dist/plugin.js',
+        format: 'iife',
+        name: 'capacitorCapacitorBrowserView',
+        globals: {
+          '@capacitor/core': 'capacitorExports',
+        },
+        sourcemap: true,
+        inlineDynamicImports: true,
       },
-      sourcemap: true,
-      inlineDynamicImports: true,
-    },
-    {
-      file: 'dist/plugin.cjs.js',
-      format: 'cjs',
-      sourcemap: true,
-      inlineDynamicImports: true,
-    },
-  ],
-  external: ['@capacitor/core'],
-};
+      {
+        file: 'dist/plugin.cjs.js',
+        format: 'cjs',
+        sourcemap: true,
+        inlineDynamicImports: true,
+      },
+    ],
+    external: ['@capacitor/core'],
+  },
+  {
+    input: 'dist/esm/bridge.js',
+    output: [
+      {
+        file: 'android/src/main/res/raw/bridge.js',
+        format: 'iife',
+        sourcemap: 'inline',
+        inlineDynamicImports: true
+      },
+    ]
+  }
+];

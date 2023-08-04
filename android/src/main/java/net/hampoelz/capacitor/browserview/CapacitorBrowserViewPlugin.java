@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.Base64;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.widget.FrameLayout;
 
@@ -111,7 +110,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final String backgroundColor = call.getString("backgroundColor", pluginSettings.backgroundColor);
 
         getActivity().runOnUiThread(() -> {
-            final CapacitorBrowserView.BrowserView browserView = implementation.createBrowserView();
+            final CapacitorBrowserView.BrowserView browserView = implementation.createBrowserView(enableBridge);
             final WebSettings settings = browserView.getSettings();
 
             if (pluginSettings.allowMixedContent) {
@@ -140,22 +139,6 @@ public class CapacitorBrowserViewPlugin extends Plugin {
                 } catch (IllegalArgumentException ex) {
                     Logger.debug("WebView background color not applied");
                 }
-            }
-
-            if (enableBridge) {
-                class WebViewBridge {
-                    @JavascriptInterface
-                    public void send(String uuid, String eventName, String data) {
-                        eventNotifier.channelReceive(uuid, eventName, data);
-                    }
-                }
-
-                // TODO: Separate bridge code into files
-                // Current Bridge API:
-                //   bridge.send("event", JSON.stringify([ data ]))
-                //   window.addEventListener('channel-event', event => { data = JSON.parse(event.detail); })
-
-                browserView.addJavascriptInterface(new WebViewBridge(), "_capacitorBrowserViewBridge");
             }
 
             settings.setSupportMultipleWindows(allowMultipleWindows);
@@ -503,14 +486,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             return;
         }
 
-        JSArray args = call.getArray("args");
-        if (args == null) {
-            args = new JSArray();
-        }
-
-        // TODO: Separate bridge code into files
-        final String dispatchEventCode = "window.dispatchEvent(new CustomEvent('channel-" + eventName + "', { detail: '" + args + "' }))";
-        getActivity().runOnUiThread(() -> browserView.evaluateJavascript(dispatchEventCode, null));
+        getActivity().runOnUiThread(() -> implementation.sendMessage(call));
     }
 
     //---------------------------------------------------------------------------------------

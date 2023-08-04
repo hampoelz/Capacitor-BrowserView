@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -24,9 +25,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.getcapacitor.JSArray;
+import com.getcapacitor.Logger;
 import com.getcapacitor.PluginCall;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -101,8 +105,21 @@ public class CapacitorBrowserView {
         }
     }
 
+    private class NativeBridge {
+        private final String uuid;
+
+        public NativeBridge(String uuid) {
+            this.uuid = uuid;
+        }
+
+        @JavascriptInterface
+        public void send(String eventName, String data) {
+            eventNotifier.channelReceive(uuid, eventName, data);
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
-    public BrowserView createBrowserView() {
+    public BrowserView createBrowserView(Boolean _enableBridge) {
         final String uuid = UUID.randomUUID().toString();
 
         final BrowserView browserView = new BrowserView(uuid, context);
@@ -116,6 +133,22 @@ public class CapacitorBrowserView {
         settings.setDatabaseEnabled(true);
         settings.setAppCacheEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
+
+        String _bridgeCode = null;
+        try {
+            _bridgeCode = FileOperations.ReadRawFile(context, R.raw.bridge);
+        } catch (IOException ex) {
+            Logger.error("Capacitor-BrowserView","Failed to load the bridge module", ex);
+            _enableBridge = false;
+        }
+
+        final Boolean enableBridge = _enableBridge;
+        final String bridgeCode = _bridgeCode;
+
+        if (enableBridge) {
+            NativeBridge bridge = new NativeBridge(uuid);
+            browserView.addJavascriptInterface(bridge, "_capacitorBrowserViewNativeBridge");
+        }
 
         browserView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -218,25 +251,12 @@ public class CapacitorBrowserView {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+
+                if (enableBridge) {
+                    browserView.evaluateJavascript(bridgeCode, null);
+                }
+
                 eventNotifier.didStartLoading(uuid);
-
-                // TODO: Separate bridge code into files
-                final String bridge = String.format(
-                                 "window.CapacitorBrowserView = {"
-                        + "\n" + "  send: (eventName, ...args) => {"
-                        + "\n" + "    const data = JSON.stringify([ args ]);"
-                        + "\n" + "    _capacitorBrowserViewBridge.send('%s', eventName, data);"
-                        + "\n" + "  },"
-                        + "\n" + "  addListener: (eventName, callback) => {"
-                        + "\n" + "    window.addEventListener('channel-' + eventName, event => {"
-                        + "\n" + "      const data = JSON.parse(event.detail);"
-                        + "\n" + "      callback(data);"
-                        + "\n" + "    });"
-                        + "\n" + "  }"
-                        + "\n" + "};"
-                , uuid);
-
-                browserView.evaluateJavascript(bridge, null);
             }
 
             @Override
@@ -343,5 +363,16 @@ public class CapacitorBrowserView {
         browserView.destroy();
 
         browserViews.remove(uuid);
+    }
+
+    public void sendMessage(PluginCall call) {
+        final BrowserView browserView = getBrowserView(call);
+        final String eventName = call.getString("eventName");
+        final JSArray data = call.getArray("args", new JSArray());
+
+        if (browserView == null || eventName == null || data == null) return;
+
+        final String dispatchEventCode = "window.dispatchEvent(new CustomEvent('channel-" + eventName + "', { detail: '" + data + "' }))";
+        browserView.evaluateJavascript(dispatchEventCode, null);
     }
 }
