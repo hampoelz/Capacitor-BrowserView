@@ -80,9 +80,9 @@ public class CapacitorBrowserView {
         }
 
         public @Nullable Boolean allowNavigation(String url) {
-            if (url == null) return null;
-
             final String newHost = Uri.parse(url).getHost();
+
+            if (url == null || newHost == null) return null;
 
             if (currentHost != null && newHost.contains(currentHost)) return true;
 
@@ -97,9 +97,7 @@ public class CapacitorBrowserView {
         }
 
         @Override
-        public void loadUrl(String url) {
-            if (url == null) return;
-
+        public void loadUrl(@NonNull String url) {
             super.loadUrl(url);
             currentHost = Uri.parse(url).getHost();
         }
