@@ -282,7 +282,7 @@ myView.loadUrl({ url: "https://your_webpage.dev/" });
 * [`addListener('render-process-gone', ...)`](#addlistenerrender-process-gone)
 * [`addListener('unresponsive', ...)`](#addlistenerunresponsive)
 * [`addListener('responsive', ...)`](#addlistenerresponsive)
-* [`addListener(`channel-${string}`, ...)`](#addlistenerchannel-string)
+* [``addListener(`channel-${string}`, ...)``](#addlistenerchannel-string)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -823,7 +823,7 @@ addListener(eventName: 'responsive', listenerFunc: EmptyListenerCallback) => Pro
 --------------------
 
 
-### addListener(`channel-${string}`, ...)
+### addListener(\`channel-${string}\`, ...)
 
 ```typescript
 addListener(eventName: ChannelEventName<string>, listenerFunc: ChannelListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
@@ -831,7 +831,7 @@ addListener(eventName: ChannelEventName<string>, listenerFunc: ChannelListenerCa
 
 | Param              | Type                                                                        |
 | ------------------ | --------------------------------------------------------------------------- |
-| **`eventName`**    | <code>`channel-${string}`</code>                                            |
+| **`eventName`**    | <code>\`channel-${string}\`</code>                                            |
 | **`listenerFunc`** | <code><a href="#channellistenercallback">ChannelListenerCallback</a></code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
