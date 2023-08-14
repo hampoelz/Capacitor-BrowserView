@@ -5,11 +5,12 @@ declare module '@capacitor/cli' {
     /**
      * These config values are available:
      */
-    BrowserView?: {
+    CapacitorBrowserView?: {
       /**
        * Default external URL loaded in BrowserViews.
        * 
        * @since 1.0.0
+       * @example "https://capacitorjs.com/"
        */
       url?: string;
 
@@ -19,6 +20,7 @@ declare module '@capacitor/cli' {
        * 
        * @since 1.0.0
        * @default true
+       * @example false
        */
       allowMultipleWindows?: boolean;
 
@@ -30,6 +32,7 @@ declare module '@capacitor/cli' {
        * 
        * @since 1.0.0
        * @default []
+       * @example [ "capacitorjs\.com", "ionic\.io\/blog\/.*capacitor.*" ]
        */
       allowNavigation?: string[];
 
@@ -38,6 +41,7 @@ declare module '@capacitor/cli' {
        * 
        * @since 1.0.0
        * @default false
+       * @example true
        */
       enableBridge?: boolean;
 
@@ -45,6 +49,7 @@ declare module '@capacitor/cli' {
        * Default user agent for BrowserViews.
        *
        * @since 1.0.0
+       * @example "Mozilla/5.0 (CapacitorJS) CapacitorApp/1.0"
        */
       overrideUserAgent?: string;
       
@@ -54,6 +59,7 @@ declare module '@capacitor/cli' {
        * This is disregarded if `overrideUserAgent` is used.
        *
        * @since 1.0.0
+       * @example "CapacitorApp/1.0"
        */
       appendUserAgent?: string;
 
@@ -61,98 +67,103 @@ declare module '@capacitor/cli' {
        * Background color for BrowserViews.
        *
        * @since 1.0.0
+       * @example "#ffffff"
        */
       backgroundColor?: string;
 
-      android?: {
-        /**
-         * Default user agent for BrowserViews on Android.
-         * 
-         * Overrides global `overrideUserAgent` option.
-         * 
-         * @since 1.0.0
-         */
-        overrideUserAgent?: string;
+      /**
+       * Default user agent for BrowserViews on Android.
+       * 
+       * Overrides global `overrideUserAgent` option.
+       * 
+       * @since 1.0.0
+       * @example "Mozilla/5.0 (Android) CapacitorApp/1.0"
+       */
+      androidOverrideUserAgent?: string;
 
-        /**
-         * String to append to the original user agent for BrowserViews for Android.
-         * 
-         * Overrides global `appendUserAgent` option.
-         * 
-         * This is disregarded if `overrideUserAgent` is used.
-         * 
-         * @since 1.0.0
-         */
-        appendUserAgent?: string;
+      /**
+       * String to append to the original user agent for BrowserViews for Android.
+       * 
+       * Overrides global `appendUserAgent` option.
+       * 
+       * This is disregarded if `overrideUserAgent` is used.
+       * 
+       * @since 1.0.0
+       * @example "CapacitorApp/1.0 (Android)"
+       */
+      androidAppendUserAgent?: string;
 
-        /**
-         * Background color for BrowserViews for Android.
-         * 
-         * Overrides global `backgroundColor` option.
-         * 
-         * @since 1.0.0
-         */
-        backgroundColor?: string;
+      /**
+       * Background color for BrowserViews for Android.
+       * 
+       * Overrides global `backgroundColor` option.
+       * 
+       * @since 1.0.0
+       * @example "#ffffff"
+       */
+      androidBackgroundColor?: string;
 
-        /**
-         * Enable mixed content in the BrowserViews for Android.
-         * 
-         * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
-         * is disabled by default for security. During development, you may need to
-         * enable it to allow the BrowserViews to load files from different schemes.
-         * 
-         * **This is not intended for use in production.**
-         * 
-         * @since 1.0.0
-         * @default false
-         */
-        allowMixedContent?: boolean;
-      };
+      /**
+       * Enable mixed content in the BrowserViews for Android.
+       * 
+       * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
+       * is disabled by default for security. During development, you may need to
+       * enable it to allow the BrowserViews to load files from different schemes.
+       * 
+       * **This is not intended for use in production.**
+       * 
+       * @since 1.0.0
+       * @default false
+       * @example false
+       */
+      androidAllowMixedContent?: boolean;
 
-      electron?: {
-        /**
-         * Default user agent for BrowserViews on Electron.
-         * 
-         * Overrides global `overrideUserAgent` option.
-         * 
-         * @since 1.0.0
-         */
-        overrideUserAgent?: string;
+      /**
+       * Default user agent for BrowserViews on Electron.
+       * 
+       * Overrides global `overrideUserAgent` option.
+       * 
+       * @since 1.0.0
+       * @example "Mozilla/5.0 (Electron) CapacitorApp/1.0"
+       */
+      electronOverrideUserAgent?: string;
 
-        /**
-         * String to append to the original user agent for BrowserViews for Electron.
-         * 
-         * Overrides global `appendUserAgent` option.
-         * 
-         * This is disregarded if `overrideUserAgent` is used.
-         * 
-         * @since 1.0.0
-         */
-        appendUserAgent?: string;
+      /**
+       * String to append to the original user agent for BrowserViews for Electron.
+       * 
+       * Overrides global `appendUserAgent` option.
+       * 
+       * This is disregarded if `overrideUserAgent` is used.
+       * 
+       * @since 1.0.0
+       * @example "CapacitorApp/1.0 (Electron)"
+       */
+      electronAppendUserAgent?: string;
 
-        /**
-         * Background color for BrowserViews for Electron.
-         * 
-         * Overrides global `backgroundColor` option.
-         * 
-         * @since 1.0.0
-         */
-        backgroundColor?: string;
+      /**
+       * Background color for BrowserViews for Electron.
+       * 
+       * Overrides global `backgroundColor` option.
+       * 
+       * @since 1.0.0
+       * @example "#ffffff"
+       */
+      electronBackgroundColor?: string;
 
-        /**
-         * Enable mixed content in the BrowserViews for Electron.
-         * 
-         * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
-         * is disabled by default for security. During development, you may need to
-         * enable it to allow the BrowserViews to load files from different schemes.
-         * 
-         * **This is not intended for use in production.**
-         * 
-         * @since 1.0.0
-         * @default false
-         */
-        allowMixedContent?: boolean;
-      };
+      /**
+       * Enable mixed content in the BrowserViews for Electron.
+       * 
+       * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
+       * is disabled by default for security. During development, you may need to
+       * enable it to allow the BrowserViews to load files from different schemes.
+       * 
+       * **This is not intended for use in production.**
+       * 
+       * @since 1.0.0
+       * @default false
+       * @example false
+       */
+      electronAllowMixedContent?: boolean;
     };
   }
 }

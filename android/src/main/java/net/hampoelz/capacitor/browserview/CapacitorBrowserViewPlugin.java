@@ -65,12 +65,6 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         PluginSettings settings = new PluginSettings();
 
         PluginConfig config = getConfig();
-        JSONObject androidConfigJSON = config.getObject("android");
-        JSObject androidConfig = new JSObject();
-
-        if (androidConfigJSON != null) {
-            androidConfig = JSObject.fromJSONObject(androidConfigJSON);
-        }
 
         String overrideUserAgentDefault = config.getString("overrideUserAgent");
         String appendUserAgentDefault = config.getString("appendUserAgent");
@@ -80,10 +74,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         settings.allowMultipleWindows = config.getBoolean("allowMultipleWindows", settings.allowMultipleWindows);
         settings.allowNavigation = config.getArray("allowNavigation");
         settings.enableBridge = config.getBoolean("enableBridge", settings.enableBridge);
-        settings.overrideUserAgent = androidConfig.getString("overrideUserAgent", overrideUserAgentDefault);
-        settings.appendUserAgent = androidConfig.getString("appendUserAgent", appendUserAgentDefault);
-        settings.backgroundColor = androidConfig.getString("backgroundColor", backgroundColorDefault);
-        settings.allowMixedContent = Boolean.TRUE.equals(androidConfig.getBoolean("allowMixedContent", settings.allowMixedContent));
+        settings.overrideUserAgent = config.getString("androidOverrideUserAgent", overrideUserAgentDefault);
+        settings.appendUserAgent = config.getString("androidAppendUserAgent", appendUserAgentDefault);
+        settings.backgroundColor = config.getString("androidBackgroundColor", backgroundColorDefault);
+        settings.allowMixedContent = Boolean.TRUE.equals(config.getBoolean("androidAllowMixedContent", settings.allowMixedContent));
 
         return settings;
     }

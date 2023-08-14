@@ -82,17 +82,15 @@ export class CapacitorBrowserView extends EventEmitter {
     config = capacitorConfig?.plugins?.CapacitorBrowserView;
     //!-----------------------------------------------------------------
 
-    const electronConfig = config?.electron;
-
     const settings = new PluginSettings();
     settings.url = config?.url;
     settings.allowMultipleWindows = config?.allowMultipleWindows || settings.allowMultipleWindows;
     settings.allowNavigation = config?.allowNavigation;
     settings.enableBridge = config?.enableBridge || settings.enableBridge;
-    settings.overrideUserAgent = electronConfig?.overrideUserAgent || config?.overrideUserAgent;
-    settings.appendUserAgent = electronConfig?.appendUserAgent || config?.appendUserAgent;
-    settings.backgroundColor = electronConfig?.backgroundColor || config?.backgroundColor;
-    settings.allowMixedContent = electronConfig?.allowMixedContent || settings.allowMixedContent;
+    settings.overrideUserAgent = config?.electronOverrideUserAgent || config?.overrideUserAgent;
+    settings.appendUserAgent = config?.electronAppendUserAgent || config?.appendUserAgent;
+    settings.backgroundColor = config?.electronBackgroundColor || config?.backgroundColor;
+    settings.allowMixedContent = config?.electronAllowMixedContent || settings.allowMixedContent;
 
     return settings;
   }
