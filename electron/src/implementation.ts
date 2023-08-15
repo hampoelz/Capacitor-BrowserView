@@ -191,10 +191,6 @@ export class CapacitorBrowserViewImplementation {
             this.eventNotifier.didStartLoading(uuid);
         });
 
-        browserView.webContents.addListener('did-frame-finish-load', () => {
-            this.eventNotifier.didFrameFinishLoad(uuid);
-        });
-
         browserView.webContents.addListener('did-finish-load', () => {
             this.eventNotifier.didFinishLoad(uuid);
         });
@@ -207,7 +203,7 @@ export class CapacitorBrowserViewImplementation {
             this.eventNotifier.domReady(uuid);
         });
 
-        browserView.webContents.addListener('did-navigate', (_, url, httpResponseCode, httpStatusText) => {
+        browserView.webContents.addListener('did-frame-navigate', (_, url, httpResponseCode, httpStatusText) => {
             if (httpResponseCode >= 400) {
                 this.eventNotifier.httpError(uuid, url, httpResponseCode, httpStatusText);
             }

@@ -20,6 +20,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebViewRenderProcess;
 import android.webkit.WebViewRenderProcessClient;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -188,15 +189,41 @@ public class CapacitorBrowserView {
                 eventNotifier.pageTitleUpdated(uuid, title);
             }
 
+            View fullscreenBrowserView;
+            int originalSystemUiVisibility;
+
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {
                 super.onShowCustomView(view, callback);
+
+                fullscreenBrowserView = view;
+                originalSystemUiVisibility = rootView.getSystemUiVisibility();
+
+                browserView.setVisibility(View.GONE);
+                rootView.addView(fullscreenBrowserView, new FrameLayout.LayoutParams(-1, -1));
+                rootView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                );
+                fullscreenBrowserView.setVisibility(View.VISIBLE);
+                fullscreenBrowserView.requestFocus();
+
                 eventNotifier.enterHtmlFullScreen(uuid);
             }
 
             @Override
             public void onHideCustomView() {
                 super.onHideCustomView();
+
+                fullscreenBrowserView.setVisibility(View.GONE);
+                rootView.removeView(fullscreenBrowserView);
+                rootView.setSystemUiVisibility(originalSystemUiVisibility);
+                browserView.setVisibility(View.VISIBLE);
+
                 eventNotifier.leaveHtmlFullScreen(uuid);
             }
         });
@@ -260,7 +287,6 @@ public class CapacitorBrowserView {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                eventNotifier.didFrameFinishLoad(uuid);
 
                 if (browserView.getProgress() == 100) {
                     eventNotifier.didFinishLoad(uuid);

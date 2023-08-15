@@ -374,10 +374,6 @@ export class CapacitorBrowserView extends EventEmitter {
       this.notifyBrowserViewListeners("did-start-loading", uuid);
     },
 
-    didFrameFinishLoad: (uuid: string): void => {
-      this.notifyBrowserViewListeners("did-frame-finish-load", uuid);
-    },
-
     didFinishLoad: (uuid: string): void => {
       this.notifyBrowserViewListeners("did-finish-load", uuid);
     },

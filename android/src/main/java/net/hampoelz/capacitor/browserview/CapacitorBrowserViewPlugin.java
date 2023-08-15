@@ -523,10 +523,6 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             notifyBrowserViewListeners("did-start-loading", uuid);
         }
 
-        protected void didFrameFinishLoad(String uuid) {
-            notifyBrowserViewListeners("did-frame-finish-load", uuid);
-        }
-
         protected void didFinishLoad(String uuid) {
             notifyBrowserViewListeners("did-finish-load", uuid);
         }
