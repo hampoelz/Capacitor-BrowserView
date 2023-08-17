@@ -223,7 +223,7 @@ export interface BrowserViewInterface {
    * Whether links should be opened in the external browser or in the BrowserView itself can be set with
    * the method `BrowserView.setAllowMultipleWindows()` or with the global option `allowMultipleWindows`.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -241,7 +241,7 @@ export interface BrowserViewInterface {
    * and ensure that any URL or security indicator displayed is updated so that the user can tell that the page they were
    * interacting with has been closed.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -254,7 +254,7 @@ export interface BrowserViewInterface {
   /**
    * Calls `listenerFunc(data)` when the current page receives a new favicon.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -267,7 +267,7 @@ export interface BrowserViewInterface {
   /**
    * Calls `listenerFunc(data)` when the document title changes.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -282,7 +282,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** On Android this event requires API level 7 or higher to be fired.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -297,7 +297,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** On Android this event requires API level 7 or higher to be fired.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -319,7 +319,7 @@ export interface BrowserViewInterface {
    *
    * _On Android it may be called for subframes too._
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -337,7 +337,7 @@ export interface BrowserViewInterface {
    * call this only one time for the main frame. This also means that this callback will not be called when the contents of an
    * embedded frame changes.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -351,7 +351,7 @@ export interface BrowserViewInterface {
    * Calls `listenerFunc()` when the page has finished loading, i.e. the spinner of the tab has stopped spinning.
    * This does not guarantee that the next frame drawn by BrowserView will reflect the state of the DOM at this point.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -368,7 +368,7 @@ export interface BrowserViewInterface {
    *
    * The full list of error codes and their meaning is available [here](https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h).
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -387,7 +387,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** On Android this event requires API level 23 or higher to be fired.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -405,7 +405,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** On Android this event requires API level 23 or higher to be fired.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -434,7 +434,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** On Android this event requires API level 26 or higher to be fired.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -453,7 +453,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** On Android this event requires API level 29 or higher to be fired.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -468,7 +468,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** On Android this event requires API level 29 or higher to be fired.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0
@@ -483,7 +483,7 @@ export interface BrowserViewInterface {
    *
    * **Note:** This listener is only available if the bridge was enabled during the BrowserView creation or globally via the plugin configuration.
    *
-   * **Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+   * **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
    * Use [`removeListener(listenerFunc)`](#removelistener) instead.
    *
    * @since 1.0.0

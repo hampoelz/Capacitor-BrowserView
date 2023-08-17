@@ -14,6 +14,7 @@
 > - Features like IOS support will be added in the future.
 
 ### Supported Platforms
+
 - [x] Android
 - [ ] IOS _(coming soon)_
 - [x] Using the [`capacitor-community/electron` plugin](https://github.com/capacitor-community/electron):
@@ -72,7 +73,7 @@ myView.addListener('page-title-updated', event => {
 myView.destroy();
 ```
 
-For details about the communication between the capacitor layer and the loaded web page, see the [Bridge](#bridge) section.
+For details about the communication between the Capacitor layer and the loaded web page, see the [Bridge](#bridge) section.
 
 ## Configuration
 
@@ -90,7 +91,7 @@ These config values are available:
 | **`url`**                       | <code>string</code>                     | Default external URL loaded in BrowserViews.                                                                                                                                                                                                                                                                                                   |                    | 1.0.0 |
 | **`allowMultipleWindows`**      | <code>boolean</code>                    | Open links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ in the external browser instead of the BrowserViews.                                                                                               | <code>true</code>  | 1.0.0 |
 | **`allowNavigation`**           | <code>string[]</code>                   | Set regular expressions to which the BrowserViews can navigate additional. By default, all external URLs are opened in the external browser (not the BrowserView).                                                                                                                                                                             | <code>[]</code>    | 1.0.0 |
-| **`enableBridge`**              | <code>boolean</code>                    | Enable a bridge between the capacitor layer and the loaded web page.                                                                                                                                                                                                                                                                           | <code>false</code> | 1.0.0 |
+| **`enableBridge`**              | <code>boolean</code>                    | Enable a bridge between the Capacitor layer and the loaded web page.                                                                                                                                                                                                                                                                           | <code>false</code> | 1.0.0 |
 | **`overrideUserAgent`**         | <code>string</code>                     | Default user agent for BrowserViews.                                                                                                                                                                                                                                                                                                           |                    | 1.0.0 |
 | **`appendUserAgent`**           | <code>string</code>                     | String to append to the original user agent for BrowserViews. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                                                                              |                    | 1.0.0 |
 | **`backgroundColor`**           | <code><a href="#color">Color</a></code> | Default background color for BrowserViews.                                                                                                                                                                                                                                                                                                     |                    | 1.0.0 |
@@ -167,34 +168,34 @@ export default config;
 
 ## Bridge
 
-This extension includes a bridge between the capacitor layer and the loaded web page in the BrowserView(s).
+This extension includes a bridge between the Capacitor layer and the loaded web page in the BrowserView(s).
 However, this feature is disabled by default. It can be enabled either globally via the plugin configuration or for each BrowserView individually during its creation.
 
 If the bridge feature is enabled, the global object `window.CapacitorBrowserView` is available on web pages within the corresponding BrowserView.
 
 ### API
 
-The `window.CapacitorBrowserView` object provides a few methods so you can send messages from your web page to the capacitor layer.
-You can also receive replies from the capacitor layer.
+The `window.CapacitorBrowserView` object provides a few methods so you can send messages from your web page to the Capacitor layer.
+You can also receive replies from the Capacitor layer.
 
 It has the following methods to listen for events and send messages:
 
 * [`send(...)`](#capacitorbrowserviewsend)
 * [`addListener(string, ...)`](#capacitorbrowserviewaddlistenerstring)
 
-### CapacitorBrowserView.send()
+### CapacitorBrowserView.send(...)
 
 ```typescript
 send: (eventName: string, ...args: any[]) => void
 ```
 
-Sends a message to the capacitor layer via `eventName`, along with arguments.
+Sends a message to the Capacitor layer via `eventName`, along with arguments.
 Arguments will be serialized with JSON.
 
-| Param           | Type                | Description                          |
-| --------------- | ------------------- | ------------------------------------ |
-| **`eventName`** | <code>string</code> | The name of the event being send to. |
-| **`args`**      | <code>any[]</code>  | The Array of arguments to send.      |
+| Param           | Type                | Description                          | Since |
+| --------------- | ------------------- | ------------------------------------ | ----- |
+| **`eventName`** | <code>string</code> | The name of the event being send to. | 1.0.0 |
+| **`args`**      | <code>any[]</code>  | The Array of arguments to send.      | 1.0.0 |
 
 **Since:** 1.0.0
 
@@ -207,7 +208,7 @@ Arguments will be serialized with JSON.
 addListener: (eventName: string, callback: (args: any[]) => void) => void
 ```
 
-Listens to `eventName` and calls `callback(args...)` when a new message arrives from the capacitor layer.
+Listens to `eventName` and calls `callback(args...)` when a new message arrives from the Capacitor layer.
 
 | Param           | Type                               |
 | --------------- | ---------------------------------- |
@@ -218,9 +219,9 @@ Listens to `eventName` and calls `callback(args...)` when a new message arrives 
 callback: (args: any[]) => void
 ```
 
-| Param      | Type                | Description                      |
-| ---------- | ------------------- | -------------------------------- |
-| **`args`** | <code>any[]</code>  | The received array of arguments. |
+| Param      | Type                | Description                      | Since |
+| ---------- | ------------------- | -------------------------------- | ----- |
+| **`args`** | <code>any[]</code>  | The received array of arguments. | 1.0.0 |
 
 **Since:** 1.0.0
 
@@ -232,17 +233,17 @@ To use the bridge, you first need to modify your web page so that it can receive
 For example, you can add the following sample code to your web page.
 
 ```javascript
-// Listens to "msg-from-capacitor" from the capacitor layer.
+// Listens to "msg-from-capacitor" from the Capacitor layer.
 CapacitorBrowserView.addListener("msg-from-capacitor", args => {
     console.log('Message from Capacitor-App: ' + args);
 
-    // Send a message back to the capacitor layer.
+    // Send a message back to the Capacitor layer.
     CapacitorBrowserView.send("msg-from-web", "Replying to this message: " + args, "And optionally add further args");
 });
 ```
 
 After that, you need to set up a new BrowserView with an enabled Bridge.
-In addition, your capacitor app should also be able to receive messages and send a message to your website.
+In addition, your Capacitor app should also be able to receive messages and send a message to your website.
 Note that the web page must be loaded entirely before it can receive messages.
 This could look something like this:
 
@@ -734,7 +735,7 @@ a link with `target="_blank"`, shift+clicking on a link, or submitting a form wi
 Whether links should be opened in the external browser or in the BrowserView itself can be set with
 the method `BrowserView.setAllowMultipleWindows()` or with the global option `allowMultipleWindows`.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                    |
@@ -762,7 +763,7 @@ The application's implementation of this callback should remove the specific Bro
 and ensure that any URL or security indicator displayed is updated so that the user can tell that the page they were
 interacting with has been closed.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -785,7 +786,7 @@ addListener(eventName: 'page-favicon-updated', listenerFunc: BrowserViewListener
 
 Calls `listenerFunc(data)` when the current page receives a new favicon.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                      |
@@ -808,7 +809,7 @@ addListener(eventName: 'page-title-updated', listenerFunc: BrowserViewListenerCa
 
 Calls `listenerFunc(data)` when the document title changes.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -833,7 +834,7 @@ Calls `listenerFunc()` when the window enters a full-screen state triggered by H
 
 **Note:** On Android this event requires API level 7 or higher to be fired.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -858,7 +859,7 @@ Calls `listenerFunc()` when the window leaves a full-screen state triggered by H
 
 **Note:** On Android this event requires API level 7 or higher to be fired.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -890,7 +891,7 @@ updating the `window.location.hash`.
 
 _On Android it may be called for subframes too._
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                    |
@@ -918,7 +919,7 @@ On Android, this callback is called only once for each main frame load so a page
 call this only one time for the main frame. This also means that this callback will not be called when the contents of an
 embedded frame changes.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -942,7 +943,7 @@ addListener(eventName: 'did-finish-load', listenerFunc: BrowserViewListenerCallb
 Calls `listenerFunc()` when the page has finished loading, i.e. the spinner of the tab has stopped spinning.
 This does not guarantee that the next frame drawn by BrowserView will reflect the state of the DOM at this point.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -969,7 +970,7 @@ On Android at API level 23 or higher, this event is fired for any resource (ifra
 
 The full list of error codes and their meaning is available [here](https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h).
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -998,7 +999,7 @@ and as such you should expect that linked resources (for example, CSS and images
 
 **Note:** On Android this event requires API level 23 or higher to be fired.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -1026,7 +1027,7 @@ This callback will be called for any resource (iframe, image, etc.), not just fo
 
 **Note:** On Android this event requires API level 23 or higher to be fired.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                              |
@@ -1054,7 +1055,7 @@ Multiple BrowserView instances may be associated with a single render process.
 This callback will be called for each BrowserView that was affected.
 
 The application's implementation of this callback should only attempt to clean up the specific BrowserView,
-and should not assume that other BrowserView instances are affected. 
+and should not assume that other BrowserView instances are affected.
 
 The BrowserView can't be used, and should be removed from the application.
 
@@ -1065,7 +1066,7 @@ not just the specific BrowserView which loaded `chrome://crash`.
 
 **Note:** On Android this event requires API level 26 or higher to be fired.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                                                |
@@ -1094,7 +1095,7 @@ the renderer is considered to be unresponsive, and this callback will be called.
 
 **Note:** On Android this event requires API level 29 or higher to be fired.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -1119,7 +1120,7 @@ Calls `listenerFunc()` when the unresponsive renderer of the web page becomes re
 
 **Note:** On Android this event requires API level 29 or higher to be fired.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                        |
@@ -1144,7 +1145,7 @@ Listens to `eventName` and calls `listenerFunc(data)` when a new message arrives
 
 **Note:** This listener is only available if the bridge was enabled during the BrowserView creation or globally via the plugin configuration.
 
-**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+**Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
 | Param              | Type                                                                                                                                                            |
@@ -1201,7 +1202,7 @@ They override the global plugin configurations for this specific BrowserView.
 | -------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ----- |
 | **`url`**                  | <code>string</code>                     | Initial url that is loaded immediately after the BrowserView has been created.                                                                                                                                                                   |                    | 1.0.0 |
 | **`allowMultipleWindows`** | <code>boolean</code>                    | Open links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ in the external browser instead of the BrowserViews. | <code>true</code>  | 1.0.0 |
-| **`enableBridge`**         | <code>boolean</code>                    | Enable a bridge between the capacitor layer and the loaded web page.                                                                                                                                                                             | <code>false</code> | 1.0.0 |
+| **`enableBridge`**         | <code>boolean</code>                    | Enable a bridge between the Capacitor layer and the loaded web page.                                                                                                                                                                             | <code>false</code> | 1.0.0 |
 | **`overrideUserAgent`**    | <code>string</code>                     | Default user agent.                                                                                                                                                                                                                              |                    | 1.0.0 |
 | **`appendUserAgent`**      | <code>string</code>                     | String to append to the original user agent. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                 |                    | 1.0.0 |
 | **`backgroundColor`**      | <code><a href="#color">Color</a></code> | Default background color.                                                                                                                                                                                                                        |                    | 1.0.0 |

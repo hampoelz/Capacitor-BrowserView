@@ -43,7 +43,7 @@ declare module '@capacitor/cli' {
       allowNavigation?: string[];
 
       /**
-       * Enable a bridge between the capacitor layer and the loaded web page.
+       * Enable a bridge between the Capacitor layer and the loaded web page.
        *
        * @since 1.0.0
        * @default false
@@ -198,7 +198,7 @@ export interface CreateOptions {
   allowMultipleWindows?: boolean;
 
   /**
-   * Enable a bridge between the capacitor layer and the loaded web page.
+   * Enable a bridge between the Capacitor layer and the loaded web page.
    *
    * @since 1.0.0
    * @default false

@@ -69,7 +69,7 @@ export class CapacitorBrowserView extends EventEmitter {
     let config = this.config?.plugins?.CapacitorBrowserView;
 
     //!-------------------------- workaround ---------------------------
-    // the configuration exposed by the capacitor electron platform
+    // the configuration exposed by the capacitor-community/electron platform
     // is always empty for some reason
     const configPathBase = join(app.getAppPath(), 'capacitor.config.');
     const configPathExt =
