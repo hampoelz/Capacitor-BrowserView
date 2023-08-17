@@ -1,261 +1,169 @@
 import type { PluginListenerHandle } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
 
 import type {
   CreateOptions,
-  BoundsArgs,
-  BoundsResult,
-  ColorArgs,
-  UrlArgs,
-  UrlResult,
-  TitleResult,
-  CanGoBackResult,
-  CanGoForwardResult,
-  UserAgentArgs,
-  UserAgentResult,
-  CodeExecuteArgs,
-  CodeExecuteResult,
-  AllowMultipleWindowsArgs,
-  AllowMultipleWindowsResult,
-  AllowedNavigationArgs,
-  AllowedNavigationResult,
-  MessageArgs,
-  ListenerCallback,
-  EmptyListenerCallback,
-  UrlListenerCallback,
-  IconListenerCallback,
-  TitleListenerCallback,
-  ErrorListenerCallback,
-  ResponseListenerCallback,
-  RenderProcessGoneListenerCallback,
-  ChannelListenerCallback,
-  ChannelEventName,
+  EmptyPayloadData,
+  BoundsPayloadData,
+  ColorPayloadData,
+  UrlPayloadData,
+  IconPayloadData,
+  TitlePayloadData,
+  CanGoBackPayloadData,
+  CanGoForwardPayloadData,
+  UserAgentPayloadData,
+  CodeExecutePayloadData,
+  CodeExecuteResultData,
+  AllowMultipleWindowsPayloadData,
+  AllowedNavigationPayloadData,
+  ErrorPayloadData,
+  ResponsePayloadData,
+  RenderProcessGonePayloadData,
+  MessageChannelPayloadData,
+  MessageChannelCallbackData,
+  BrowserViewListenerCallback
 } from './definitions'
-import type { BrowserViewListenerEvent, BrowserViewUUID } from './implementation';
+import type { BrowserViewCallbackData, BrowserViewUUID } from './implementation';
 import { CapacitorBrowserView  } from './implementation';
 
 export interface BrowserViewInterface {
   create(options?: CreateOptions): Promise<BrowserView>;
 
-  destroy(): void;
+  destroy(): Promise<void>;
 
-  // android:   WebView#setLayoutParams
-  //            ViewGroup.MarginLayoutParams
-  // electron:  browser-view#viewsetboundsbounds-experimental
-  setBounds(args: BoundsArgs): void;
+  setBounds(args: BoundsPayloadData): Promise<void>;
 
-  // android:   WebView#getLayoutParams
-  //            ViewGroup.MarginLayoutParams
-  // electron:  browser-view#viewgetbounds-experimental
-  getBounds(): Promise<BoundsResult>;
+  getBounds(): Promise<BoundsPayloadData>;
 
-  // android:   WebView#setBackgroundColor
-  // electron:  browser-view#viewsetbackgroundcolorcolor-experimental
-  setBackgroundColor(args: ColorArgs): void;
+  setBackgroundColor(args: ColorPayloadData): Promise<void>;
 
-  // android:   WebView#loadUrl
-  // electron:  web-contents#contentsloadurlurl-options
-  loadUrl(args: UrlArgs): void;
+  loadUrl(args: UrlPayloadData): Promise<void>;
 
-  // android:   WebView#getUrl
-  // electron:  web-contents#contentsgeturl
-  getUrl(): Promise<UrlResult>;
+  getUrl(): Promise<UrlPayloadData>;
 
-  // android:   WebView#getTitle
-  // electron:  web-contents#contentsgettitle
-  getTitle(): Promise<TitleResult>;
+  getTitle(): Promise<TitlePayloadData>;
 
-  // android:   WebView#stopLoading
-  // electron:  web-contents#contentsstop
-  stop(): void;
+  stop(): Promise<void>;
 
-  // android:   WebView#reload
-  // electron:  web-contents#contentsreload
-  reload(): void;
+  reload(): Promise<void>;
 
-  // android:   WebView#canGoBack
-  // electron:  web-contents#contentscangoback
-  canGoBack(): Promise<CanGoBackResult>
+  canGoBack(): Promise<CanGoBackPayloadData>
 
-  // android:   WebView#canGoForward
-  // electron:  web-contents#contentscangoforward
-  canGoForward(): Promise<CanGoForwardResult>
+  canGoForward(): Promise<CanGoForwardPayloadData>
 
-  // android:   WebView#clearHistory
-  // electron:  web-contents#contentsclearhistory
-  clearHistory(): void;
+  clearHistory(): Promise<void>;
 
-  // android:   WebView#goBack
-  // electron:  web-contents#contentsgoback
-  goBack(): void;
+  goBack(): Promise<void>;
 
-  // android:   WebView#goForward
-  // electron:  web-contents#contentsgoforward
-  goForward(): void;
+  goForward(): Promise<void>;
 
-  // android:   WebSettings#setUserAgentString
-  // electron:  web-contents#contentssetuseragentuseragent
-  setUserAgent(args: UserAgentArgs): void;
+  setUserAgent(args: UserAgentPayloadData): Promise<void>;
 
-  // android:   WebSettings#getUserAgentString
-  //            WebSettings#setUserAgentString
-  // electron:  web-contents#contentsgetuseragent
-  //            web-contents#contentssetuseragentuseragent
-  appendUserAgent(args: UserAgentArgs): void;
+  appendUserAgent(args: UserAgentPayloadData): Promise<void>;
 
-  // android:   WebSettings#getUserAgentString
-  // electron:  web-contents#contentsgetuseragent
-  getUserAgent(): Promise<UserAgentResult>;
+  getUserAgent(): Promise<UserAgentPayloadData>;
 
-  // android:   WebView#evaluateJavascript
-  // electron:  web-contents#contentsexecutejavascriptcode-usergesture
-  executeJavaScript(args: CodeExecuteArgs): Promise<CodeExecuteResult>;
+  executeJavaScript(args: CodeExecutePayloadData): Promise<CodeExecuteResultData>;
 
-  // android:   WebSettings#setSupportMultipleWindows
-  // electron:  breaking-changes#removed-webcontents-new-window-event
-  //            web-contents#contentssetwindowopenhandlerhandler
-  setAllowMultipleWindows(args: AllowMultipleWindowsArgs): void;
-  getAllowMultipleWindows(): Promise<AllowMultipleWindowsResult>;
+  setAllowMultipleWindows(args: AllowMultipleWindowsPayloadData): Promise<void>;
+  
+  getAllowMultipleWindows(): Promise<AllowMultipleWindowsPayloadData>;
 
-  // android:   WebChromeClient#onCreateWindow
-  //            WebViewClient#shouldOverrideUrlLoading
-  // electron:  breaking-changes#removed-webcontents-new-window-event
-  //            web-contents#contentssetwindowopenhandlerhandler
-  //            web-contents#event-will-navigate
-  setAllowedNavigation(args: AllowedNavigationArgs): void;
-  getAllowedNavigation(): Promise<AllowedNavigationResult>;
+  setAllowedNavigation(args: AllowedNavigationPayloadData): Promise<void>;
+  
+  getAllowedNavigation(): Promise<AllowedNavigationPayloadData>;
 
-  //
-  sendMessage(args: MessageArgs): void;
+  sendMessage(args: MessageChannelPayloadData): Promise<void>;
 
-  // android:   WebChromeClient#onCreateWindow
-  // electron:  breaking-changes#removed-webcontents-new-window-event
-  //            web-contents#contentssetwindowopenhandlerhandler
   addListener(
     eventName: 'new-window',
-    listenerFunc: UrlListenerCallback
+    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebChromeClient#onCloseWindow
-  // electron:  web-contents#event-destroyed
   addListener(
     eventName: 'close-window',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebChromeClient#onReceivedIcon
-  // electron:  web-contents#event-page-favicon-updated
   addListener(
     eventName: 'page-favicon-updated',
-    listenerFunc: IconListenerCallback
+    listenerFunc: BrowserViewListenerCallback<IconPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebChromeClient#onReceivedTitle
-  // electron:  web-contents#event-page-title-updated
   addListener(
     eventName: 'page-title-updated',
-    listenerFunc: TitleListenerCallback
+    listenerFunc: BrowserViewListenerCallback<TitlePayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebChromeClient#onShowCustomView
-  //            requires min level 7
-  // electron:  web-contents#event-enter-html-full-screen
   addListener(
     eventName: 'enter-html-full-screen',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebChromeClient#onHideCustomView
-  //            requires min level 7
-  // electron:  web-contents#event-leave-html-full-screen
   addListener(
     eventName: 'leave-html-full-screen',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewClient#shouldOverrideUrlLoading
-  // electron:  web-contents#event-will-navigate
   addListener(
     eventName: 'will-navigate',
-    listenerFunc: UrlListenerCallback
+    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android    WebViewClient#onPageStarted
-  // electron:  web-contents#event-did-start-loading
   addListener(
     eventName: 'did-start-loading',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewClient#onPageFinished
-  // electron:  web-contents#event-did-frame-finish-load
-  addListener(
-    eventName: 'did-frame-finish-load',
-    listenerFunc: EmptyListenerCallback
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
-
-  // android:   WebViewClient#onPageFinished
-  // electron:  web-contents#event-did-finish-load
   addListener(
     eventName: 'did-finish-load',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewClient#onReceivedError
-  // electron:  web-contents#event-did-fail-load
   addListener(
     eventName: 'did-fail-load',
-    listenerFunc: ErrorListenerCallback
+    listenerFunc: BrowserViewListenerCallback<ErrorPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewClient#
-  // !          requires min level 23
-  // electron:  web-contents#event-dom-ready
   addListener(
     eventName: 'dom-ready',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewClient#onReceivedHttpError
-  // !          requires min level 23
-  // electron:  web-contents#event-did-navigate
-  // !          using httpResponseCode
   addListener(
     eventName: 'http-error',
-    listenerFunc: ResponseListenerCallback
+    listenerFunc: BrowserViewListenerCallback<ResponsePayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewClient#onRenderProcessGone
-  // !          requires min level 26
-  // electron:  web-contents#event-render-process-gone
   addListener(
     eventName: 'render-process-gone',
-    listenerFunc: RenderProcessGoneListenerCallback
+    listenerFunc: BrowserViewListenerCallback<RenderProcessGonePayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewRenderProcessClient#onRenderProcessUnresponsive
-  // !          requires min level 29
-  // electron:  web-contents#event-unresponsive
   addListener(
     eventName: 'unresponsive',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  // android:   WebViewRenderProcessClient#onRenderProcessResponsive
-  // !          requires min level 29
-  // electron:  web-contents#event-responsive
   addListener(
     eventName: 'responsive',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  //
-  addListener(
-    eventName: ChannelEventName<string>,
-    listenerFunc: ChannelListenerCallback
+  addMessageListener(
+    eventName: string,
+    listenerFunc: BrowserViewListenerCallback<MessageChannelCallbackData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  removeListener(
+    listenerHandle: PluginListenerHandle
+  ): Promise<void>;
+
+  removeAllListeners(): Promise<void>;
 }
 
 export class BrowserView implements BrowserViewInterface {
+  private readonly listenerHandleList: (Promise<PluginListenerHandle> & PluginListenerHandle)[] = [];
   private readonly browserViewUUID: BrowserViewUUID;
 
   constructor(browserViewUUID: BrowserViewUUID) {
@@ -271,189 +179,210 @@ export class BrowserView implements BrowserViewInterface {
     return BrowserView.create(options);
   }
 
-  destroy(): void {
-    CapacitorBrowserView.destroy(this.browserViewUUID);
+  destroy(): Promise<void> {
+    return CapacitorBrowserView.destroy(this.browserViewUUID);
   }
 
-  setBounds(args: BoundsArgs): void {
-    CapacitorBrowserView.setBounds({ ...this.browserViewUUID, ...args });
+  setBounds(args: BoundsPayloadData): Promise<void> {
+    return CapacitorBrowserView.setBounds({ ...this.browserViewUUID, ...args });
   }
 
-  getBounds(): Promise<BoundsResult> {
+  getBounds(): Promise<BoundsPayloadData> {
     return CapacitorBrowserView.getBounds(this.browserViewUUID);
   }
 
-  setBackgroundColor(args: ColorArgs): void {
-    CapacitorBrowserView.setBackgroundColor({ ...this.browserViewUUID, ...args });
+  setBackgroundColor(args: ColorPayloadData): Promise<void> {
+    return CapacitorBrowserView.setBackgroundColor({ ...this.browserViewUUID, ...args });
   }
 
-  loadUrl(args: UrlArgs): void {
-    CapacitorBrowserView.loadUrl({ ...this.browserViewUUID, ...args });
+  loadUrl(args: UrlPayloadData): Promise<void> {
+    return CapacitorBrowserView.loadUrl({ ...this.browserViewUUID, ...args });
   }
 
-  getUrl(): Promise<UrlResult> {
+  getUrl(): Promise<UrlPayloadData> {
     return CapacitorBrowserView.getUrl(this.browserViewUUID);
   }
 
-  getTitle(): Promise<TitleResult> {
+  getTitle(): Promise<TitlePayloadData> {
     return CapacitorBrowserView.getTitle(this.browserViewUUID);
   }
 
-  stop(): void {
-    CapacitorBrowserView.stop(this.browserViewUUID);
+  stop(): Promise<void> {
+    return CapacitorBrowserView.stop(this.browserViewUUID);
   }
 
-  reload(): void {
-    CapacitorBrowserView.reload(this.browserViewUUID);
+  reload(): Promise<void> {
+    return CapacitorBrowserView.reload(this.browserViewUUID);
   }
 
-  canGoBack(): Promise<CanGoBackResult> {
+  canGoBack(): Promise<CanGoBackPayloadData> {
     return CapacitorBrowserView.canGoBack(this.browserViewUUID);
   }
 
-  canGoForward(): Promise<CanGoForwardResult> {
+  canGoForward(): Promise<CanGoForwardPayloadData> {
     return CapacitorBrowserView.canGoForward(this.browserViewUUID);
   }
 
-  clearHistory(): void {
-    CapacitorBrowserView.clearHistory(this.browserViewUUID);
+  clearHistory(): Promise<void> {
+    return CapacitorBrowserView.clearHistory(this.browserViewUUID);
   }
 
-  goBack(): void {
-    CapacitorBrowserView.goBack(this.browserViewUUID);
+  goBack(): Promise<void> {
+    return CapacitorBrowserView.goBack(this.browserViewUUID);
   }
 
-  goForward(): void {
-    CapacitorBrowserView.goForward(this.browserViewUUID);
+  goForward(): Promise<void> {
+    return CapacitorBrowserView.goForward(this.browserViewUUID);
   }
 
-  setUserAgent(args: UserAgentArgs): void {
-    CapacitorBrowserView.setUserAgent({ ...this.browserViewUUID, ...args });
+  setUserAgent(args: UserAgentPayloadData): Promise<void> {
+    return CapacitorBrowserView.setUserAgent({ ...this.browserViewUUID, ...args });
   }
 
-  appendUserAgent(args: UserAgentArgs): void {
-    CapacitorBrowserView.appendUserAgent({ ...this.browserViewUUID, ...args });
+  appendUserAgent(args: UserAgentPayloadData): Promise<void> {
+    return CapacitorBrowserView.appendUserAgent({ ...this.browserViewUUID, ...args });
   }
 
-  getUserAgent(): Promise<UserAgentResult> {
+  getUserAgent(): Promise<UserAgentPayloadData> {
     return CapacitorBrowserView.getUserAgent(this.browserViewUUID);
   }
 
-  executeJavaScript(args: CodeExecuteArgs): Promise<CodeExecuteResult> {
+  executeJavaScript(args: CodeExecutePayloadData): Promise<CodeExecuteResultData> {
     return CapacitorBrowserView.executeJavaScript({ ...this.browserViewUUID, ...args });
   }
 
-  setAllowMultipleWindows(args: AllowMultipleWindowsArgs): void {
-    CapacitorBrowserView.setAllowMultipleWindows({ ...this.browserViewUUID, ...args });
+  setAllowMultipleWindows(args: AllowMultipleWindowsPayloadData): Promise<void> {
+    return CapacitorBrowserView.setAllowMultipleWindows({ ...this.browserViewUUID, ...args });
   }
 
-  getAllowMultipleWindows(): Promise<AllowMultipleWindowsResult> {
+  getAllowMultipleWindows(): Promise<AllowMultipleWindowsPayloadData> {
     return CapacitorBrowserView.getAllowMultipleWindows(this.browserViewUUID);
   }
 
-  setAllowedNavigation(args: AllowedNavigationArgs): void {
-    CapacitorBrowserView.setAllowedNavigation({ ...this.browserViewUUID, ...args });
+  setAllowedNavigation(args: AllowedNavigationPayloadData): Promise<void> {
+    return CapacitorBrowserView.setAllowedNavigation({ ...this.browserViewUUID, ...args });
   }
 
-  getAllowedNavigation(): Promise<AllowedNavigationResult> {
+  getAllowedNavigation(): Promise<AllowedNavigationPayloadData> {
     return CapacitorBrowserView.getAllowedNavigation(this.browserViewUUID);
   }
 
-  sendMessage(args: MessageArgs): void {
-    CapacitorBrowserView.sendMessage({ ...this.browserViewUUID, ...args });
+  sendMessage(args: MessageChannelPayloadData): Promise<void> {
+    return CapacitorBrowserView.sendMessage({ ...this.browserViewUUID, ...args });
   }
 
   addListener(
     eventName: 'new-window',
-    listenerFunc: UrlListenerCallback
+    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'close-window',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'page-favicon-updated',
-    listenerFunc: IconListenerCallback
+    listenerFunc: BrowserViewListenerCallback<IconPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'page-title-updated',
-    listenerFunc: TitleListenerCallback
+    listenerFunc: BrowserViewListenerCallback<TitlePayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'enter-html-full-screen',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'leave-html-full-screen',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'will-navigate',
-    listenerFunc: UrlListenerCallback
+    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'did-start-loading',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'did-frame-finish-load',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'did-finish-load',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'did-fail-load',
-    listenerFunc: ErrorListenerCallback
+    listenerFunc: BrowserViewListenerCallback<ErrorPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'dom-ready',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'http-error',
-    listenerFunc: ResponseListenerCallback
+    listenerFunc: BrowserViewListenerCallback<ResponsePayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'render-process-gone',
-    listenerFunc: RenderProcessGoneListenerCallback
+    listenerFunc: BrowserViewListenerCallback<RenderProcessGonePayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'unresponsive',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
     eventName: 'responsive',
-    listenerFunc: EmptyListenerCallback
+    listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
-    eventName: ChannelEventName<string>,
-    listenerFunc: ChannelListenerCallback
+    eventName: string,
+    listenerFunc: BrowserViewListenerCallback<MessageChannelCallbackData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
-  addListener(eventName: any, listenerFunc: ListenerCallback<any>): Promise<PluginListenerHandle> & PluginListenerHandle {
-    return CapacitorBrowserView.addListener(eventName, (event: BrowserViewListenerEvent<unknown>) => {
+  addListener(eventName: any, listenerFunc: BrowserViewListenerCallback<any>): Promise<PluginListenerHandle> & PluginListenerHandle {
+    const listenerHandle = CapacitorBrowserView.addListener(eventName, (event: BrowserViewCallbackData<unknown>) => {
       const { uuid, ...data } = event;
       if (this.browserViewUUID.uuid === uuid) {
         listenerFunc(data);
       }
     });
+
+    this.listenerHandleList.push(listenerHandle);
+    return listenerHandle;
+  }
+
+  addMessageListener(eventName: string, listenerFunc: BrowserViewListenerCallback<MessageChannelCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle {
+    return this.addListener(`channel-${eventName}`, listenerFunc);
+  }
+
+  removeListener(listenerHandle: PluginListenerHandle): Promise<void> {
+    if (Capacitor.getPlatform() === "electron") {
+      return (CapacitorBrowserView as any).removeListener(listenerHandle);
+    }
+
+    return listenerHandle.remove();
+  }
+
+  async removeAllListeners(): Promise<void> {
+    for (const listenerHandle of this.listenerHandleList) {
+      this.removeListener(await listenerHandle);
+    }
   }
 }

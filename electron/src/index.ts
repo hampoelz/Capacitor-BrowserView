@@ -5,15 +5,15 @@ import { join } from 'path';
 
 import type {
   CreateOptions,
-  BoundsResult,
-  UrlResult,
-  TitleResult,
-  CanGoBackResult,
-  CanGoForwardResult,
-  UserAgentResult,
-  CodeExecuteResult,
-  AllowMultipleWindowsResult,
-  AllowedNavigationResult,
+  BoundsPayloadData,
+  UrlPayloadData,
+  TitlePayloadData,
+  CanGoBackPayloadData,
+  CanGoForwardPayloadData,
+  UserAgentPayloadData,
+  CodeExecuteResultData,
+  AllowMultipleWindowsPayloadData,
+  AllowedNavigationPayloadData,
   WebResourceError,
   WebResourceResponse,
   RenderProcessGoneDetail
@@ -29,14 +29,14 @@ import type {
   BrowserViewAllowMultipleWindowsArgs,
   BrowserViewAllowedNavigationArgs,
   BrowserViewMessageArgs,
-  BrowserViewEmptyListenerEvent,
-  BrowserViewUrlListenerEvent,
-  BrowserViewIconListenerEvent,
-  BrowserViewTitleListenerEvent,
-  BrowserViewErrorListenerEvent,
-  BrowserViewResponseListenerEvent,
-  BrowserViewRenderProcessGoneListenerEvent,
-  BrowserViewChannelListenerEvent
+  BrowserViewEmptyCallbackData,
+  BrowserViewUrlCallbackData,
+  BrowserViewIconCallbackData,
+  BrowserViewTitleCallbackData,
+  BrowserViewErrorCallbackData,
+  BrowserViewResponseCallbackData,
+  BrowserViewRenderProcessGoneCallbackData,
+  BrowserViewChannelCallbackData
 } from '../../src/implementation'
 
 import { CapacitorBrowserViewImplementation } from './implementation';
@@ -141,11 +141,11 @@ export class CapacitorBrowserView extends EventEmitter {
     return { uuid: browserView.uuid };
   }
 
-  destroy(args: BrowserViewEmptyArgs): void {
+  async destroy(args: BrowserViewEmptyArgs): Promise<void> {
     this.implementation.destroyBrowserView(args);
   }
 
-  setBounds(args: BrowserViewBoundsArgs): void {
+  async setBounds(args: BrowserViewBoundsArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
 
     const bounds = args.bounds;
@@ -166,7 +166,7 @@ export class CapacitorBrowserView extends EventEmitter {
     browserView.setBounds({ x, y, width, height });
   }
 
-  async getBounds(args: BrowserViewEmptyArgs): Promise<BoundsResult> {
+  async getBounds(args: BrowserViewEmptyArgs): Promise<BoundsPayloadData> {
     const browserView = this.implementation.getBrowserView(args);
     const bounds = browserView.getBounds();
 
@@ -177,7 +177,7 @@ export class CapacitorBrowserView extends EventEmitter {
     return { bounds };
   }
 
-  setBackgroundColor(args: BrowserViewColorArgs): void {
+  async setBackgroundColor(args: BrowserViewColorArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
 
     const color = args.color;
@@ -188,7 +188,7 @@ export class CapacitorBrowserView extends EventEmitter {
     browserView.setBackgroundColor(color);
   }
 
-  loadUrl(args: BrowserViewUrlArgs): void {
+  async loadUrl(args: BrowserViewUrlArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
 
     const url = args.url;
@@ -199,56 +199,56 @@ export class CapacitorBrowserView extends EventEmitter {
     browserView.loadURL(url);
   }
 
-  async getUrl(args: BrowserViewEmptyArgs): Promise<UrlResult> {
+  async getUrl(args: BrowserViewEmptyArgs): Promise<UrlPayloadData> {
     const browserView = this.implementation.getBrowserView(args);
     const url = browserView.webContents.getURL();
     return { url };
   }
 
-  async getTitle(args: BrowserViewEmptyArgs): Promise<TitleResult> {
+  async getTitle(args: BrowserViewEmptyArgs): Promise<TitlePayloadData> {
     const browserView = this.implementation.getBrowserView(args);
     const title = browserView.webContents.getTitle();
     return { title };
   }
 
-  stop(args: BrowserViewEmptyArgs): void {
+  async stop(args: BrowserViewEmptyArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
     browserView.webContents.stop();
   }
 
-  reload(args: BrowserViewEmptyArgs): void {
+  async reload(args: BrowserViewEmptyArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
     browserView.webContents.reload();
   }
 
-  async canGoBack(args: BrowserViewEmptyArgs): Promise<CanGoBackResult> {
+  async canGoBack(args: BrowserViewEmptyArgs): Promise<CanGoBackPayloadData> {
     const browserView = this.implementation.getBrowserView(args);
     const canGoBack = browserView.webContents.canGoBack();
     return { canGoBack };
   }
 
-  async canGoForward(args: BrowserViewEmptyArgs): Promise<CanGoForwardResult> {
+  async canGoForward(args: BrowserViewEmptyArgs): Promise<CanGoForwardPayloadData> {
     const browserView = this.implementation.getBrowserView(args);
     const canGoForward = browserView.webContents.canGoForward();
     return { canGoForward };
   }
 
-  clearHistory(args: BrowserViewEmptyArgs): void {
+  async clearHistory(args: BrowserViewEmptyArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
     browserView.webContents.clearHistory();
   }
 
-  goBack(args: BrowserViewEmptyArgs): void {
+  async goBack(args: BrowserViewEmptyArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
     browserView.webContents.goBack();
   }
 
-  goForward(args: BrowserViewEmptyArgs): void {
+  async goForward(args: BrowserViewEmptyArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
     browserView.webContents.goForward();
   }
 
-  setUserAgent(args: BrowserViewUserAgentArgs): void {
+  async setUserAgent(args: BrowserViewUserAgentArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
 
     const userAgent = args.userAgent;
@@ -259,7 +259,7 @@ export class CapacitorBrowserView extends EventEmitter {
     browserView.webContents.setUserAgent(userAgent);
   }
 
-  appendUserAgent(args: BrowserViewUserAgentArgs): void {
+  async appendUserAgent(args: BrowserViewUserAgentArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
 
     const userAgent = args.userAgent;
@@ -271,13 +271,13 @@ export class CapacitorBrowserView extends EventEmitter {
     browserView.webContents.setUserAgent(defaultUserAgent + " " + userAgent);
   }
 
-  async getUserAgent(args: BrowserViewEmptyArgs): Promise<UserAgentResult> {
+  async getUserAgent(args: BrowserViewEmptyArgs): Promise<UserAgentPayloadData> {
     const browserView = this.implementation.getBrowserView(args);
     const userAgent = browserView.webContents.getUserAgent();
     return { userAgent };
   }
 
-  async executeJavaScript(args: BrowserViewCodeExecuteArgs): Promise<CodeExecuteResult> {
+  async executeJavaScript(args: BrowserViewCodeExecuteArgs): Promise<CodeExecuteResultData> {
     const browserView = this.implementation.getBrowserView(args);
 
     const code = args.code;
@@ -289,7 +289,7 @@ export class CapacitorBrowserView extends EventEmitter {
     return { result };
   }
 
-  setAllowMultipleWindows(args: BrowserViewAllowMultipleWindowsArgs): void {
+  async setAllowMultipleWindows(args: BrowserViewAllowMultipleWindowsArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
 
     const allowMultipleWindows = true === args.allowMultipleWindows;
@@ -297,7 +297,7 @@ export class CapacitorBrowserView extends EventEmitter {
     browserView.setAllowMultipleWindows(allowMultipleWindows);
   }
 
-  async getAllowMultipleWindows(args: BrowserViewEmptyArgs): Promise<AllowMultipleWindowsResult> {
+  async getAllowMultipleWindows(args: BrowserViewEmptyArgs): Promise<AllowMultipleWindowsPayloadData> {
     const browserView = this.implementation.getBrowserView(args);
 
     const allowMultipleWindows = browserView.getAllowMultipleWindows();
@@ -305,7 +305,7 @@ export class CapacitorBrowserView extends EventEmitter {
     return { allowMultipleWindows };
   }
 
-  setAllowedNavigation(args: BrowserViewAllowedNavigationArgs): void {
+  async setAllowedNavigation(args: BrowserViewAllowedNavigationArgs): Promise<void> {
     const browserView = this.implementation.getBrowserView(args);
 
     const allowedNavigation = args.allowedNavigation;
@@ -316,13 +316,13 @@ export class CapacitorBrowserView extends EventEmitter {
     browserView.setAllowedNavigation(allowedNavigation);
   }
 
-  async getAllowedNavigation(args: BrowserViewEmptyArgs): Promise<AllowedNavigationResult> {
+  async getAllowedNavigation(args: BrowserViewEmptyArgs): Promise<AllowedNavigationPayloadData> {
     const browserView = this.implementation.getBrowserView(args);
     const allowedNavigation = browserView.getAllowedNavigation();
     return { allowedNavigation };
   }
 
-  sendMessage(args: BrowserViewMessageArgs): void {
+  async sendMessage(args: BrowserViewMessageArgs): Promise<void> {
     const eventName = args.eventName;
     if (eventName === undefined) {
       throw new Error("Required parameter 'eventName' was not specified");
@@ -334,6 +334,8 @@ export class CapacitorBrowserView extends EventEmitter {
 
     this.implementation.sendMessage(args);
   }
+
+  // removeAllListeners() method is missing (https://github.com/capacitor-community/electron/pull/185)
 
   //---------------------------------------------------------------------------------------
   //#endregion
@@ -416,7 +418,7 @@ export class CapacitorBrowserView extends EventEmitter {
         payloadArray = [data]
       }
 
-      this.notifyBrowserViewChannelListeners("channel-" + eventName, uuid, payloadArray);
+      this.notifyBrowserViewChannelListeners(`channel-${eventName}`, uuid, payloadArray);
     }
   }
 
@@ -427,45 +429,45 @@ export class CapacitorBrowserView extends EventEmitter {
   //---------------------------------------------------------------------------------------
 
   private notifyBrowserViewListeners(eventName: string, uuid: string): void {
-    const args: BrowserViewEmptyListenerEvent = { uuid };
+    const args: BrowserViewEmptyCallbackData = { uuid };
     this.emit(eventName, args);
   }
 
   private notifyBrowserViewUrlListeners(eventName: string, uuid: string, url: string): void {
-    const args: BrowserViewUrlListenerEvent = { uuid, url };
+    const args: BrowserViewUrlCallbackData = { uuid, url };
     this.emit(eventName, args);
   }
 
   private notifyBrowserViewIconListeners(eventName: string, uuid: string, icon: string): void {
-    const args: BrowserViewIconListenerEvent = { uuid, icon };
+    const args: BrowserViewIconCallbackData = { uuid, icon };
     this.emit(eventName, args);
   }
 
   private notifyBrowserViewTitleListeners(eventName: string, uuid: string, title: string): void {
-    const args: BrowserViewTitleListenerEvent = { uuid, title };
+    const args: BrowserViewTitleCallbackData = { uuid, title };
     this.emit(eventName, args);
   }
 
   private notifyBrowserViewErrorListeners(eventName: string, uuid: string, errorCode: number, errorDescription: string, validatedURL: string): void {
     const error: WebResourceError = { errorCode, errorDescription, validatedURL };
-    const args: BrowserViewErrorListenerEvent = { uuid, error };
+    const args: BrowserViewErrorCallbackData = { uuid, error };
     this.emit(eventName, args);
   }
 
   private notifyBrowserViewResponseListeners(eventName: string, uuid: string, url: string, httpResponseCode: number, httpStatusText: string): void {
     const errorResponse: WebResourceResponse = { httpResponseCode, httpStatusText };
-    const args: BrowserViewResponseListenerEvent = { uuid, url, errorResponse };
+    const args: BrowserViewResponseCallbackData = { uuid, url, errorResponse };
     this.emit(eventName, args);
   }
 
   private notifyBrowserViewRenderProcessGoneListeners(eventName: string, uuid: string, crashed: boolean): void {
     const details: RenderProcessGoneDetail = { crashed };
-    const args: BrowserViewRenderProcessGoneListenerEvent = { uuid, details };
+    const args: BrowserViewRenderProcessGoneCallbackData = { uuid, details };
     this.emit(eventName, args);
   }
 
   private notifyBrowserViewChannelListeners(eventName: string, uuid: string, payloadArray: any[]): void {
-    const args: BrowserViewChannelListenerEvent = { uuid, args: payloadArray };
+    const args: BrowserViewChannelCallbackData = { uuid, args: payloadArray };
     this.emit(eventName, args);
   }
 

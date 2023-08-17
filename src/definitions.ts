@@ -69,7 +69,7 @@ declare module '@capacitor/cli' {
        * @since 1.0.0
        * @example "#ffffff"
        */
-      backgroundColor?: string;
+      backgroundColor?: Color;
 
       /**
        * Default user agent for BrowserViews on Android.
@@ -101,7 +101,7 @@ declare module '@capacitor/cli' {
        * @since 1.0.0
        * @example "#ffffff"
        */
-      androidBackgroundColor?: string;
+      androidBackgroundColor?: Color;
 
       /**
        * Enable mixed content in the BrowserViews for Android.
@@ -148,7 +148,7 @@ declare module '@capacitor/cli' {
        * @since 1.0.0
        * @example "#ffffff"
        */
-      electronBackgroundColor?: string;
+      electronBackgroundColor?: Color;
 
       /**
        * Enable mixed content in the BrowserViews for Electron.
@@ -185,126 +185,90 @@ export interface CreateOptions {
 
   appendUserAgent?: string;
   
-  backgroundColor?: string;
+  backgroundColor?: Color;
 }
 
-export interface BoundsArgs {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface EmptyPayloadData { }
+
+export interface BoundsPayloadData {
   bounds: Rectangle;
 }
 
-export interface ColorArgs {
-  color: string;
+export interface ColorPayloadData {
+  color: Color;
 }
 
-export interface UrlArgs {
+export interface UrlPayloadData {
   url: string;
 }
 
-export interface UserAgentArgs {
-  userAgent: string;
+export interface IconPayloadData {
+  icon: string;
 }
 
-export interface CodeExecuteArgs {
-  code: string;
-}
-
-export interface AllowMultipleWindowsArgs {
-  allowMultipleWindows: boolean;
-}
-
-export interface AllowedNavigationArgs {
-  allowedNavigation: string[];
-}
-
-export interface MessageArgs {
-  eventName: ChannelEventName<string>;
-  args: any[];
-}
-
-export interface BoundsResult {
-  bounds: Rectangle
-}
-
-export interface UrlResult {
-  url: string;
-}
-
-export interface TitleResult {
+export interface TitlePayloadData {
   title: string;
 }
 
-export interface CanGoBackResult {
+export interface CanGoBackPayloadData {
   canGoBack: boolean;
 }
 
-export interface CanGoForwardResult {
+export interface CanGoForwardPayloadData {
   canGoForward: boolean;
 }
 
-export interface UserAgentResult {
+export interface UserAgentPayloadData {
   userAgent: string;
 }
 
-export interface CodeExecuteResult {
+export interface CodeExecutePayloadData {
+  code: string;
+}
+
+export interface CodeExecuteResultData {
   result: any
 }
 
-export interface AllowMultipleWindowsResult {
+export interface AllowMultipleWindowsPayloadData {
   allowMultipleWindows: boolean;
 }
 
-export interface AllowedNavigationResult {
-  allowedNavigation: string[]
+export interface AllowedNavigationPayloadData {
+  allowedNavigation: string[];
 }
 
-export type ChannelEventName<TChannel extends string> = `channel-${TChannel}`;
+export interface ErrorPayloadData {
+  error: WebResourceError;
+}
+
+export interface ResponsePayloadData {
+  url: string;
+  errorResponse: WebResourceResponse;
+}
+
+export interface RenderProcessGonePayloadData {
+  details: RenderProcessGoneDetail;
+}
+
+export interface MessageChannelPayloadData {
+  eventName: string;
+
+  args: any[];
+}
+
+export interface MessageChannelCallbackData {
+  args: any[]
+}
+
+export type BrowserViewListenerCallback<T> = (data: T) => void;
 
 export interface Rectangle {
   x: number;
   y: number;
   width: number;
   height: number;
-}
-
-export type ListenerCallback<T> = (data: T) => void;
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type EmptyListenerCallback = ListenerCallback<{}>
-export type UrlListenerCallback = ListenerCallback<UrlCallbackData>;
-export type IconListenerCallback = ListenerCallback<IconCallbackData>;
-export type TitleListenerCallback = ListenerCallback<TitleCallbackData>;
-export type ErrorListenerCallback = ListenerCallback<ErrorCallbackData>;
-export type ResponseListenerCallback = ListenerCallback<ResponseCallbackData>;
-export type RenderProcessGoneListenerCallback = ListenerCallback<RenderProcessGoneCallbackData>;
-export type ChannelListenerCallback = ListenerCallback<ChannelCallbackData>;
-
-export interface UrlCallbackData {
-  url: string;
-}
-
-export interface IconCallbackData {
-  icon: string;
-}
-
-export interface TitleCallbackData {
-  title: string;
-}
-
-export interface ErrorCallbackData {
-  error: WebResourceError;
-}
-
-export interface ResponseCallbackData {
-  url: string;
-  errorResponse: WebResourceResponse;
-}
-
-export interface RenderProcessGoneCallbackData {
-  details: RenderProcessGoneDetail;
-}
-
-export interface ChannelCallbackData {
-  args: any[]
 }
 
 export interface WebResourceError {
@@ -321,3 +285,5 @@ export interface WebResourceResponse {
 export interface RenderProcessGoneDetail {
   crashed: boolean;
 }
+
+export type Color = `#${string}` | 'red' | 'blue' | 'green' | 'black' | 'white' | 'gray' | 'cyan' | 'magenta' | 'yellow' | 'darkgray' | 'lightgrey' | 'aqua' | 'fuchsia' | 'lime' | 'maroon' | 'navy' | 'olive' | 'purple' | 'silver' | 'teal';

@@ -2,15 +2,15 @@ import type { CapacitorException} from '@capacitor/core';
 import { WebPlugin } from '@capacitor/core';
 
 import type {
-  BoundsResult,
-  UrlResult,
-  TitleResult,
-  CanGoBackResult,
-  CanGoForwardResult,
-  UserAgentResult,
-  CodeExecuteResult,
-  AllowMultipleWindowsResult,
-  AllowedNavigationResult
+  BoundsPayloadData,
+  UrlPayloadData,
+  TitlePayloadData,
+  CanGoBackPayloadData,
+  CanGoForwardPayloadData,
+  UserAgentPayloadData,
+  CodeExecuteResultData,
+  AllowMultipleWindowsPayloadData,
+  AllowedNavigationPayloadData
 } from './definitions';
 import type { BrowserViewUUID, CapacitorBrowserViewPlugin } from './implementation';
 
@@ -22,73 +22,73 @@ export class CapacitorBrowserViewWeb extends WebPlugin implements CapacitorBrows
   create(): Promise<BrowserViewUUID> {
     throw this.unavailableBrowserView();
   }
-  destroy(): void {
+  destroy(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  setBounds(): void {
+  setBounds(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  getBounds(): Promise<BoundsResult> {
+  getBounds(): Promise<BoundsPayloadData> {
     throw this.unavailableBrowserView();
   }
-  setBackgroundColor(): void {
+  setBackgroundColor(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  loadUrl(): void {
+  loadUrl(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  getUrl(): Promise<UrlResult> {
+  getUrl(): Promise<UrlPayloadData> {
     throw this.unavailableBrowserView();
   }
-  getTitle(): Promise<TitleResult> {
+  getTitle(): Promise<TitlePayloadData> {
     throw this.unavailableBrowserView();
   }
-  stop(): void {
+  stop(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  reload(): void {
+  reload(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  canGoBack(): Promise<CanGoBackResult> {
+  canGoBack(): Promise<CanGoBackPayloadData> {
     throw this.unavailableBrowserView();
   }
-  canGoForward(): Promise<CanGoForwardResult> {
+  canGoForward(): Promise<CanGoForwardPayloadData> {
     throw this.unavailableBrowserView();
   }
-  clearHistory(): void {
+  clearHistory(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  goBack(): void {
+  goBack(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  goForward(): void {
+  goForward(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  setUserAgent(): void {
+  setUserAgent(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  appendUserAgent(): void {
+  appendUserAgent(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  getUserAgent(): Promise<UserAgentResult> {
+  getUserAgent(): Promise<UserAgentPayloadData> {
     throw this.unavailableBrowserView();
   }
-  executeJavaScript(): Promise<CodeExecuteResult> {
+  executeJavaScript(): Promise<CodeExecuteResultData> {
     throw this.unavailableBrowserView();
   }
-  setAllowMultipleWindows(): void {
+  setAllowMultipleWindows(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  getAllowMultipleWindows(): Promise<AllowMultipleWindowsResult> {
+  getAllowMultipleWindows(): Promise<AllowMultipleWindowsPayloadData> {
     throw this.unavailableBrowserView();
   }
-  setAllowedNavigation(): void {
+  setAllowedNavigation(): Promise<void> {
     throw this.unavailableBrowserView();
   }
-  getAllowedNavigation(): Promise<AllowedNavigationResult> {
+  getAllowedNavigation(): Promise<AllowedNavigationPayloadData> {
     throw this.unavailableBrowserView();
   }
-  sendMessage(): void {
+  sendMessage(): Promise<void> {
     throw this.unavailableBrowserView();
   }
 }

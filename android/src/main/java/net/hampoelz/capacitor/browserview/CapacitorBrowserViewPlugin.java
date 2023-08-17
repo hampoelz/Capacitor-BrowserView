@@ -20,10 +20,8 @@ import com.getcapacitor.PluginConfig;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
-import com.getcapacitor.util.WebColor;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -130,7 +128,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
 
             if (backgroundColor != null) {
                 try {
-                    browserView.setBackgroundColor(WebColor.parseColor(backgroundColor));
+                    browserView.setBackgroundColor(Color.parseColor(backgroundColor));
                 } catch (IllegalArgumentException ex) {
                     Logger.debug("Capacitor-BrowserView", "BrowserView background color '" + backgroundColor + "' not applied");
                 }
@@ -148,7 +146,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
 
     @PluginMethod
     public void destroy(PluginCall call) {
-        getActivity().runOnUiThread(() -> implementation.destroyBrowserView(call));
+        getActivity().runOnUiThread(() -> {
+            implementation.destroyBrowserView(call);
+            call.resolve();
+        });
     }
 
     // Visual -------------------------------------------------------------------------------
@@ -183,6 +184,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
 
             browserView.setLayoutParams(layoutParams);
             browserView.bringToFront();
+            call.resolve();
         });
     }
 
@@ -225,6 +227,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         getActivity().runOnUiThread(() -> {
             try {
                 browserView.setBackgroundColor(Color.parseColor(color));
+                call.resolve();
             } catch (Exception ex) {
                 call.reject("WebView background color is invalid.");
             }
@@ -244,7 +247,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             return;
         }
 
-        getActivity().runOnUiThread(() -> browserView.loadUrl(url));
+        getActivity().runOnUiThread(() -> {
+            browserView.loadUrl(url);
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -274,7 +280,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final CapacitorBrowserView.BrowserView browserView = implementation.getBrowserView(call);
         if (browserView == null) return;
 
-        getActivity().runOnUiThread(browserView::stopLoading);
+        getActivity().runOnUiThread(() -> {
+            browserView.stopLoading();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -282,7 +291,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final CapacitorBrowserView.BrowserView browserView = implementation.getBrowserView(call);
         if (browserView == null) return;
 
-        getActivity().runOnUiThread(browserView::reload);
+        getActivity().runOnUiThread(() -> {
+            browserView.reload();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -312,7 +324,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final CapacitorBrowserView.BrowserView browserView = implementation.getBrowserView(call);
         if (browserView == null) return;
 
-        getActivity().runOnUiThread(browserView::clearHistory);
+        getActivity().runOnUiThread(() -> {
+            browserView.clearHistory();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -320,7 +335,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final CapacitorBrowserView.BrowserView browserView = implementation.getBrowserView(call);
         if (browserView == null) return;
 
-        getActivity().runOnUiThread(browserView::goBack);
+        getActivity().runOnUiThread(() -> {
+            browserView.goBack();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -328,7 +346,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final CapacitorBrowserView.BrowserView browserView = implementation.getBrowserView(call);
         if (browserView == null) return;
 
-        getActivity().runOnUiThread(browserView::goForward);
+        getActivity().runOnUiThread(() -> {
+            browserView.goForward();
+            call.resolve();
+        });
     }
 
     @PluginMethod
@@ -345,6 +366,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         getActivity().runOnUiThread(() -> {
             final WebSettings settings = browserView.getSettings();
             settings.setUserAgentString(userAgent);
+            call.resolve();
         });
     }
 
@@ -363,6 +385,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             final WebSettings settings = browserView.getSettings();
             final String defaultUserAgent = settings.getUserAgentString();
             settings.setUserAgentString(defaultUserAgent + " " + userAgent);
+            call.resolve();
         });
     }
 
@@ -412,6 +435,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         getActivity().runOnUiThread(() -> {
             final WebSettings settings = browserView.getSettings();
             settings.setSupportMultipleWindows(allowMultipleWindows);
+            call.resolve();
         });
     }
 
@@ -451,6 +475,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
 
         try {
             browserView.setAllowedNavigation(allowedNavigationArray);
+            call.resolve();
         } catch (Exception ex) {
             call.reject(ex.toString());
         }
@@ -481,7 +506,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             return;
         }
 
-        getActivity().runOnUiThread(() -> implementation.sendMessage(call));
+        getActivity().runOnUiThread(() -> {
+            implementation.sendMessage(call);
+            call.resolve();
+        });
     }
 
     //---------------------------------------------------------------------------------------
