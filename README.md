@@ -23,7 +23,7 @@
 
 ## Install
 
-**You've to use Capacitor v3 or newer. This project isn't compatible with lower versions of Capacitor.**
+**You've to use Capacitor v5 or newer. This project isn't compatible with lower versions of Capacitor.**
 
 ```bash
 npm install https://github.com/hampoelz/capacitor-browserview

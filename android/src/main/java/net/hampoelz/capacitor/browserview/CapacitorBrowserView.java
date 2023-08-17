@@ -126,11 +126,10 @@ public class CapacitorBrowserView {
 
         browserViews.put(uuid, browserView);
 
-        settings.setJavaScriptEnabled(true);
+        settings.setDatabaseEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setGeolocationEnabled(true);
-        settings.setDatabaseEnabled(true);
-        settings.setAppCacheEnabled(true);
+        settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         String _bridgeCode = null;
