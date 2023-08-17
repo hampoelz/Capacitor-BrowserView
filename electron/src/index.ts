@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow } from 'electron';
 import { EventEmitter } from 'events';
 import { existsSync } from 'fs';
 import { join } from 'path';
@@ -37,7 +37,7 @@ import type {
   BrowserViewResponseCallbackData,
   BrowserViewRenderProcessGoneCallbackData,
   BrowserViewChannelCallbackData
-} from '../../src/implementation'
+} from '../../src/implementation';
 
 import { CapacitorBrowserViewImplementation } from './implementation';
 
@@ -57,7 +57,7 @@ export class CapacitorBrowserView extends EventEmitter {
   private implementation: CapacitorBrowserViewImplementation;
 
   constructor(config?: Record<string, any>) {
-    super()
+    super();
 
     const browserWindow = BrowserWindow.getAllWindows()[0];
 
@@ -65,7 +65,7 @@ export class CapacitorBrowserView extends EventEmitter {
     this.implementation = new CapacitorBrowserViewImplementation(browserWindow, this.PluginEventNotifier);
   }
 
-  private async readPluginSettings(): Promise<(PluginSettings | undefined)> {
+  private async readPluginSettings(): Promise<PluginSettings | undefined> {
     let config = this.config?.plugins?.CapacitorBrowserView;
 
     //!-------------------------- workaround ---------------------------
@@ -100,7 +100,7 @@ export class CapacitorBrowserView extends EventEmitter {
 
   async create(options?: CreateOptions | undefined): Promise<BrowserViewUUID> {
     const pluginSettings = await this.readPluginSettings();
-    
+
     const url = options?.url || pluginSettings?.url;
     const allowMultipleWindows = options?.allowMultipleWindows || pluginSettings?.allowMultipleWindows;
     const enableBridge = options?.enableBridge || pluginSettings?.enableBridge;
@@ -117,7 +117,7 @@ export class CapacitorBrowserView extends EventEmitter {
 
     if (overrideUserAgent == undefined && appendUserAgent !== undefined) {
       const defaultUserAgent = browserView.webContents.getUserAgent();
-      browserView.webContents.setUserAgent(defaultUserAgent + " " + appendUserAgent);
+      browserView.webContents.setUserAgent(defaultUserAgent + ' ' + appendUserAgent);
     } else if (overrideUserAgent !== undefined) {
       browserView.webContents.setUserAgent(overrideUserAgent);
     }
@@ -131,7 +131,7 @@ export class CapacitorBrowserView extends EventEmitter {
     }
 
     if (pluginSettings?.allowNavigation !== undefined) {
-      browserView.setAllowedNavigation(pluginSettings.allowNavigation)
+      browserView.setAllowedNavigation(pluginSettings.allowNavigation);
     }
 
     if (url !== undefined) {
@@ -171,7 +171,7 @@ export class CapacitorBrowserView extends EventEmitter {
     const bounds = browserView.getBounds();
 
     if (!bounds) {
-      throw new Error("Failed to get BrowserView bounds.");
+      throw new Error('Failed to get BrowserView bounds.');
     }
 
     return { bounds };
@@ -268,7 +268,7 @@ export class CapacitorBrowserView extends EventEmitter {
     }
 
     const defaultUserAgent = browserView.webContents.getUserAgent();
-    browserView.webContents.setUserAgent(defaultUserAgent + " " + userAgent);
+    browserView.webContents.setUserAgent(defaultUserAgent + ' ' + userAgent);
   }
 
   async getUserAgent(args: BrowserViewEmptyArgs): Promise<UserAgentPayloadData> {
@@ -345,77 +345,77 @@ export class CapacitorBrowserView extends EventEmitter {
 
   protected PluginEventNotifier = {
     newWindow: (uuid: string, url: string): void => {
-      this.notifyBrowserViewUrlListeners("new-window", uuid, url);
+      this.notifyBrowserViewUrlListeners('new-window', uuid, url);
     },
 
     closeWindow: (uuid: string): void => {
-      this.notifyBrowserViewListeners("close-window", uuid);
+      this.notifyBrowserViewListeners('close-window', uuid);
     },
 
     pageFaviconUpdated: (uuid: string, base64: string): void => {
-      this.notifyBrowserViewIconListeners("page-favicon-updated", uuid, base64);
+      this.notifyBrowserViewIconListeners('page-favicon-updated', uuid, base64);
     },
 
     pageTitleUpdated: (uuid: string, title: string): void => {
-      this.notifyBrowserViewTitleListeners("page-title-updated", uuid, title);
+      this.notifyBrowserViewTitleListeners('page-title-updated', uuid, title);
     },
 
     enterHtmlFullScreen: (uuid: string): void => {
-      this.notifyBrowserViewListeners("enter-html-full-screen", uuid);
+      this.notifyBrowserViewListeners('enter-html-full-screen', uuid);
     },
 
     leaveHtmlFullScreen: (uuid: string): void => {
-      this.notifyBrowserViewListeners("leave-html-full-screen", uuid);
+      this.notifyBrowserViewListeners('leave-html-full-screen', uuid);
     },
 
     willNavigate: (uuid: string, url: string): void => {
-      this.notifyBrowserViewUrlListeners("will-navigate", uuid, url);
+      this.notifyBrowserViewUrlListeners('will-navigate', uuid, url);
     },
 
     didStartLoading: (uuid: string): void => {
-      this.notifyBrowserViewListeners("did-start-loading", uuid);
+      this.notifyBrowserViewListeners('did-start-loading', uuid);
     },
 
     didFinishLoad: (uuid: string): void => {
-      this.notifyBrowserViewListeners("did-finish-load", uuid);
+      this.notifyBrowserViewListeners('did-finish-load', uuid);
     },
 
     didFailLoad: (uuid: string, errorCode: number, errorDescription: string, validatedURL: string): void => {
-      this.notifyBrowserViewErrorListeners("did-fail-load", uuid, errorCode, errorDescription, validatedURL);
+      this.notifyBrowserViewErrorListeners('did-fail-load', uuid, errorCode, errorDescription, validatedURL);
     },
 
     domReady: (uuid: string): void => {
-      this.notifyBrowserViewListeners("dom-ready", uuid);
+      this.notifyBrowserViewListeners('dom-ready', uuid);
     },
 
     httpError: (uuid: string, url: string, httpResponseCode: number, httpStatusText: string): void => {
-      this.notifyBrowserViewResponseListeners("http-error", uuid, url, httpResponseCode, httpStatusText);
+      this.notifyBrowserViewResponseListeners('http-error', uuid, url, httpResponseCode, httpStatusText);
     },
 
     renderProcessGone: (uuid: string, crashed: boolean): void => {
-      this.notifyBrowserViewRenderProcessGoneListeners("render-process-gone", uuid, crashed);
+      this.notifyBrowserViewRenderProcessGoneListeners('render-process-gone', uuid, crashed);
     },
 
     unresponsive: (uuid: string): void => {
-      this.notifyBrowserViewListeners("unresponsive", uuid);
+      this.notifyBrowserViewListeners('unresponsive', uuid);
     },
 
     responsive: (uuid: string): void => {
-      this.notifyBrowserViewListeners("responsive", uuid);
+      this.notifyBrowserViewListeners('responsive', uuid);
     },
 
     // Bridge -------------------------------------------------------------------------------
 
     channelReceive: (uuid: string, eventName: string, data: string): void => {
       // Deserialize data
-      let payloadArray = []
+      let payloadArray = [];
       try {
-        payloadArray = JSON.parse(data)
+        payloadArray = JSON.parse(data);
         if (!Array.isArray(payloadArray)) {
-          payloadArray = [payloadArray]
+          payloadArray = [payloadArray];
         }
       } catch {
-        payloadArray = [data]
+        payloadArray = [data];
       }
 
       this.notifyBrowserViewChannelListeners(`channel-${eventName}`, uuid, payloadArray);

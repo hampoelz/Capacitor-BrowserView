@@ -1,4 +1,4 @@
-import type { CapacitorException} from '@capacitor/core';
+import type { CapacitorException } from '@capacitor/core';
 import { WebPlugin } from '@capacitor/core';
 
 import type {

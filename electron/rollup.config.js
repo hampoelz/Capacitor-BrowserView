@@ -6,10 +6,19 @@ export default [
         file: 'electron/dist/plugin.js',
         format: 'cjs',
         sourcemap: 'inline',
-        inlineDynamicImports: true
+        inlineDynamicImports: true,
       },
     ],
-    external: ['@capacitor/core', 'electron', 'crypto', 'events', 'http', 'https', 'path', 'fs']
+    external: [
+      '@capacitor/core',
+      'electron',
+      'crypto',
+      'events',
+      'http',
+      'https',
+      'path',
+      'fs',
+    ],
   },
   {
     input: 'electron/build/electron/src/bridge.js',
@@ -18,9 +27,9 @@ export default [
         file: 'electron/dist/bridge.js',
         format: 'cjs',
         sourcemap: 'inline',
-        inlineDynamicImports: true
+        inlineDynamicImports: true,
       },
     ],
-    external: ['electron']
-  }
+    external: ['electron'],
+  },
 ];

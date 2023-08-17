@@ -8,9 +8,7 @@ import android.util.Base64;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.widget.FrameLayout;
-
 import androidx.annotation.Nullable;
-
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Logger;
@@ -20,23 +18,16 @@ import com.getcapacitor.PluginConfig;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
-
-import org.json.JSONException;
-
 import java.util.Arrays;
 import java.util.List;
+import org.json.JSONException;
 
 @CapacitorPlugin(
     name = "CapacitorBrowserView",
-    permissions = {@Permission(
-        alias = "network",
-        strings = {
-            Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.INTERNET
-        }
-    )}
+    permissions = { @Permission(alias = "network", strings = { Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET }) }
 )
 public class CapacitorBrowserViewPlugin extends Plugin {
+
     private final PluginEventNotifier eventNotifier = new PluginEventNotifier();
     private CapacitorBrowserView implementation;
 
@@ -49,13 +40,26 @@ public class CapacitorBrowserViewPlugin extends Plugin {
 
     /** @noinspection InnerClassMayBeStatic*/
     private class PluginSettings {
-        protected @Nullable String url = null;
+
+        @Nullable
+        protected String url = null;
+
         protected boolean allowMultipleWindows = true;
-        protected @Nullable String[] allowNavigation = null;
+
+        @Nullable
+        protected String[] allowNavigation = null;
+
         protected boolean enableBridge = false;
-        protected @Nullable String overrideUserAgent = null;
-        protected @Nullable String appendUserAgent = null;
-        protected @Nullable String backgroundColor = null;
+
+        @Nullable
+        protected String overrideUserAgent = null;
+
+        @Nullable
+        protected String appendUserAgent = null;
+
+        @Nullable
+        protected String backgroundColor = null;
+
         protected boolean allowMixedContent = false;
     }
 
@@ -465,7 +469,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         final String[] allowedNavigationArray = new String[allowedNavigation.length()];
 
         try {
-            for(int i = 0; i < allowedNavigation.length(); i++) {
+            for (int i = 0; i < allowedNavigation.length(); i++) {
                 allowedNavigationArray[i] = allowedNavigation.getString(i);
             }
         } catch (JSONException ex) {
@@ -519,6 +523,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
     //---------------------------------------------------------------------------------------
 
     protected class PluginEventNotifier {
+
         protected void newWindow(String uuid, String url) {
             notifyBrowserViewUrlListeners("new-window", uuid, url);
         }

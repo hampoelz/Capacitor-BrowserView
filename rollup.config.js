@@ -28,8 +28,8 @@ export default [
         file: 'android/src/main/res/raw/bridge.js',
         format: 'iife',
         sourcemap: 'inline',
-        inlineDynamicImports: true
+        inlineDynamicImports: true,
       },
-    ]
-  }
+    ],
+  },
 ];

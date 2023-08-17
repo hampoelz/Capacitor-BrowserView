@@ -21,15 +21,12 @@ import android.webkit.WebViewClient;
 import android.webkit.WebViewRenderProcess;
 import android.webkit.WebViewRenderProcessClient;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.getcapacitor.JSArray;
 import com.getcapacitor.Logger;
 import com.getcapacitor.PluginCall;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,6 +37,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class CapacitorBrowserView {
+
     private final ViewGroup rootView;
     private final Context context;
     private final CapacitorBrowserViewPlugin.PluginEventNotifier eventNotifier;
@@ -53,6 +51,7 @@ public class CapacitorBrowserView {
 
     @SuppressLint("ViewConstructor")
     public static class BrowserView extends WebView {
+
         public final String uuid;
         private String currentHost;
         private String[] allowedNavigation = new String[0];
@@ -105,6 +104,7 @@ public class CapacitorBrowserView {
     }
 
     private class NativeBridge {
+
         private final String uuid;
 
         public NativeBridge(String uuid) {
@@ -136,7 +136,7 @@ public class CapacitorBrowserView {
         try {
             _bridgeCode = FileOperations.ReadRawFile(context, R.raw.bridge);
         } catch (IOException ex) {
-            Logger.error("Capacitor-BrowserView","Failed to load the bridge module", ex);
+            Logger.error("Capacitor-BrowserView", "Failed to load the bridge module", ex);
             _enableBridge = false;
         }
 
@@ -148,211 +148,217 @@ public class CapacitorBrowserView {
             browserView.addJavascriptInterface(bridge, "_capacitorBrowserViewNativeBridge");
         }
 
-        browserView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-                final WebView.HitTestResult result = view.getHitTestResult();
-                final String url = result.getExtra();
+        browserView.setWebChromeClient(
+            new WebChromeClient() {
+                @Override
+                public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+                    final WebView.HitTestResult result = view.getHitTestResult();
+                    final String url = result.getExtra();
 
-                eventNotifier.newWindow(uuid, url);
+                    eventNotifier.newWindow(uuid, url);
 
-                if (url == null) return false;
+                    if (url == null) return false;
 
-                final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                context.startActivity(browserIntent);
-
-                return false;
-            }
-
-            @Override
-            public void onCloseWindow(WebView window) {
-                super.onCloseWindow(window);
-                eventNotifier.closeWindow(uuid);
-            }
-
-            @Override
-            public void onReceivedIcon(WebView view, Bitmap icon) {
-                super.onReceivedIcon(view, icon);
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                final byte[] bytes = stream.toByteArray();
-                icon.recycle();
-
-                eventNotifier.pageFaviconUpdated(uuid, bytes);
-            }
-
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                eventNotifier.pageTitleUpdated(uuid, title);
-            }
-
-            View fullscreenBrowserView;
-            int originalSystemUiVisibility;
-
-            @Override
-            public void onShowCustomView(View view, CustomViewCallback callback) {
-                super.onShowCustomView(view, callback);
-
-                fullscreenBrowserView = view;
-                originalSystemUiVisibility = rootView.getSystemUiVisibility();
-
-                browserView.setVisibility(View.GONE);
-                rootView.addView(fullscreenBrowserView, new FrameLayout.LayoutParams(-1, -1));
-                rootView.setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                );
-                fullscreenBrowserView.setVisibility(View.VISIBLE);
-                fullscreenBrowserView.requestFocus();
-
-                eventNotifier.enterHtmlFullScreen(uuid);
-            }
-
-            @Override
-            public void onHideCustomView() {
-                super.onHideCustomView();
-
-                fullscreenBrowserView.setVisibility(View.GONE);
-                rootView.removeView(fullscreenBrowserView);
-                rootView.setSystemUiVisibility(originalSystemUiVisibility);
-                browserView.setVisibility(View.VISIBLE);
-
-                eventNotifier.leaveHtmlFullScreen(uuid);
-            }
-        });
-
-        browserView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                final Boolean allowNavigation = browserView.allowNavigation(url);
-
-                if (Boolean.FALSE.equals(allowNavigation)) {
                     final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     context.startActivity(browserIntent);
+
+                    return false;
                 }
 
-                boolean preventDefault;
-
-                if (allowNavigation == null) {
-                    preventDefault = super.shouldOverrideUrlLoading(view, url);
-                } else {
-                    preventDefault = !allowNavigation;
+                @Override
+                public void onCloseWindow(WebView window) {
+                    super.onCloseWindow(window);
+                    eventNotifier.closeWindow(uuid);
                 }
 
-                eventNotifier.willNavigate(uuid, url);
-                return preventDefault;
-            }
+                @Override
+                public void onReceivedIcon(WebView view, Bitmap icon) {
+                    super.onReceivedIcon(view, icon);
 
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                final String url = request.getUrl().toString();
-                final Boolean allowNavigation = browserView.allowNavigation(url);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    final byte[] bytes = stream.toByteArray();
+                    icon.recycle();
 
-                if (Boolean.FALSE.equals(allowNavigation)) {
-                    final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    context.startActivity(browserIntent);
+                    eventNotifier.pageFaviconUpdated(uuid, bytes);
                 }
 
-                boolean preventDefault;
-
-                if (allowNavigation == null) {
-                    preventDefault = super.shouldOverrideUrlLoading(view, url);
-                } else {
-                    preventDefault = !allowNavigation;
+                @Override
+                public void onReceivedTitle(WebView view, String title) {
+                    super.onReceivedTitle(view, title);
+                    eventNotifier.pageTitleUpdated(uuid, title);
                 }
 
-                eventNotifier.willNavigate(uuid, url);
-                return preventDefault;
-            }
+                View fullscreenBrowserView;
+                int originalSystemUiVisibility;
 
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
+                @Override
+                public void onShowCustomView(View view, CustomViewCallback callback) {
+                    super.onShowCustomView(view, callback);
 
-                if (enableBridge) {
-                    browserView.evaluateJavascript(bridgeCode, null);
+                    fullscreenBrowserView = view;
+                    originalSystemUiVisibility = rootView.getSystemUiVisibility();
+
+                    browserView.setVisibility(View.GONE);
+                    rootView.addView(fullscreenBrowserView, new FrameLayout.LayoutParams(-1, -1));
+                    rootView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    );
+                    fullscreenBrowserView.setVisibility(View.VISIBLE);
+                    fullscreenBrowserView.requestFocus();
+
+                    eventNotifier.enterHtmlFullScreen(uuid);
                 }
 
-                eventNotifier.didStartLoading(uuid);
-            }
+                @Override
+                public void onHideCustomView() {
+                    super.onHideCustomView();
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
+                    fullscreenBrowserView.setVisibility(View.GONE);
+                    rootView.removeView(fullscreenBrowserView);
+                    rootView.setSystemUiVisibility(originalSystemUiVisibility);
+                    browserView.setVisibility(View.VISIBLE);
 
-                if (browserView.getProgress() == 100) {
-                    eventNotifier.didFinishLoad(uuid);
+                    eventNotifier.leaveHtmlFullScreen(uuid);
                 }
             }
+        );
 
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                eventNotifier.didFailLoad(uuid, errorCode, description, failingUrl);
+        browserView.setWebViewClient(
+            new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    final Boolean allowNavigation = browserView.allowNavigation(url);
+
+                    if (Boolean.FALSE.equals(allowNavigation)) {
+                        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        context.startActivity(browserIntent);
+                    }
+
+                    boolean preventDefault;
+
+                    if (allowNavigation == null) {
+                        preventDefault = super.shouldOverrideUrlLoading(view, url);
+                    } else {
+                        preventDefault = !allowNavigation;
+                    }
+
+                    eventNotifier.willNavigate(uuid, url);
+                    return preventDefault;
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    final String url = request.getUrl().toString();
+                    final Boolean allowNavigation = browserView.allowNavigation(url);
+
+                    if (Boolean.FALSE.equals(allowNavigation)) {
+                        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        context.startActivity(browserIntent);
+                    }
+
+                    boolean preventDefault;
+
+                    if (allowNavigation == null) {
+                        preventDefault = super.shouldOverrideUrlLoading(view, url);
+                    } else {
+                        preventDefault = !allowNavigation;
+                    }
+
+                    eventNotifier.willNavigate(uuid, url);
+                    return preventDefault;
+                }
+
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+
+                    if (enableBridge) {
+                        browserView.evaluateJavascript(bridgeCode, null);
+                    }
+
+                    eventNotifier.didStartLoading(uuid);
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+
+                    if (browserView.getProgress() == 100) {
+                        eventNotifier.didFinishLoad(uuid);
+                    }
+                }
+
+                @Override
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                    super.onReceivedError(view, errorCode, description, failingUrl);
+                    eventNotifier.didFailLoad(uuid, errorCode, description, failingUrl);
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                    super.onReceivedError(view, request, error);
+
+                    final int errorCode = error.getErrorCode();
+                    final String description = error.getDescription().toString();
+                    final String failingUrl = request.getUrl().toString();
+
+                    eventNotifier.didFailLoad(uuid, errorCode, description, failingUrl);
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onPageCommitVisible(WebView view, String url) {
+                    super.onPageCommitVisible(view, url);
+                    eventNotifier.domReady(uuid);
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                    super.onReceivedHttpError(view, request, errorResponse);
+
+                    final String url = request.getUrl().toString();
+                    final int statusCode = errorResponse.getStatusCode();
+                    final String reasonPhrase = errorResponse.getReasonPhrase();
+
+                    eventNotifier.httpError(uuid, url, statusCode, reasonPhrase);
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+                    final boolean crashed = detail.didCrash();
+
+                    eventNotifier.renderProcessGone(uuid, crashed);
+                    return super.onRenderProcessGone(view, detail);
+                }
             }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-
-                final int errorCode = error.getErrorCode();
-                final String description = error.getDescription().toString();
-                final String failingUrl = request.getUrl().toString();
-
-                eventNotifier.didFailLoad(uuid, errorCode, description, failingUrl);
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onPageCommitVisible(WebView view, String url) {
-                super.onPageCommitVisible(view, url);
-                eventNotifier.domReady(uuid);
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                super.onReceivedHttpError(view, request, errorResponse);
-
-                final String url = request.getUrl().toString();
-                final int statusCode = errorResponse.getStatusCode();
-                final String reasonPhrase = errorResponse.getReasonPhrase();
-
-                eventNotifier.httpError(uuid, url, statusCode, reasonPhrase);
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
-                final boolean crashed = detail.didCrash();
-
-                eventNotifier.renderProcessGone(uuid, crashed);
-                return super.onRenderProcessGone(view, detail);
-            }
-        });
+        );
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            browserView.setWebViewRenderProcessClient(new WebViewRenderProcessClient() {
-                @RequiresApi(api = Build.VERSION_CODES.Q)
-                @Override
-                public void onRenderProcessUnresponsive(@NonNull WebView view, @Nullable WebViewRenderProcess renderer) {
-                    eventNotifier.unresponsive(uuid);
-                }
+            browserView.setWebViewRenderProcessClient(
+                new WebViewRenderProcessClient() {
+                    @RequiresApi(api = Build.VERSION_CODES.Q)
+                    @Override
+                    public void onRenderProcessUnresponsive(@NonNull WebView view, @Nullable WebViewRenderProcess renderer) {
+                        eventNotifier.unresponsive(uuid);
+                    }
 
-                @RequiresApi(api = Build.VERSION_CODES.Q)
-                @Override
-                public void onRenderProcessResponsive(@NonNull WebView view, @Nullable WebViewRenderProcess renderer) {
-                    eventNotifier.responsive(uuid);
+                    @RequiresApi(api = Build.VERSION_CODES.Q)
+                    @Override
+                    public void onRenderProcessResponsive(@NonNull WebView view, @Nullable WebViewRenderProcess renderer) {
+                        eventNotifier.responsive(uuid);
+                    }
                 }
-            });
+            );
         }
 
         rootView.addView(browserView);

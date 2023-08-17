@@ -1,15 +1,14 @@
 package net.hampoelz.capacitor.browserview;
 
 import android.content.Context;
-
 import androidx.annotation.RawRes;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class FileOperations {
+
     public static String ReadRawFile(Context context, @RawRes int id) throws IOException {
         StringBuilder builder = new StringBuilder();
 
