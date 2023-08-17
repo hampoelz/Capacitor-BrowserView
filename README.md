@@ -79,25 +79,29 @@ For details about the communication between the capacitor layer and the loaded w
 <docgen-config>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
+The following configurations are applied globally to all BrowserViews.
+However, most of them can be overridden individually when a
+BrowserView is created or changed later via methods.
+
 These config values are available:
 
-| Prop                            | Type                  | Description                                                                                                                                                                                                                                                                                                                                    | Default            | Since |
-| ------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----- |
-| **`url`**                       | <code>string</code>   | Default external URL loaded in BrowserViews.                                                                                                                                                                                                                                                                                                   |                    | 1.0.0 |
-| **`allowMultipleWindows`**      | <code>boolean</code>  | Open links that request a new tab or window _(`target="_blank"`)_ in the external browser instead of the BrowserViews.                                                                                                                                                                                                                         | <code>true</code>  | 1.0.0 |
-| **`allowNavigation`**           | <code>string[]</code> | Set additional URLs the BrowserViews can navigate to. By default, all external URLs are opened in the external browser (not the BrowserView).                                                                                                                                                                                                  | <code>[]</code>    | 1.0.0 |
-| **`enableBridge`**              | <code>boolean</code>  | TODO                                                                                                                                                                                                                                                                                                                                           | <code>false</code> | 1.0.0 |
-| **`overrideUserAgent`**         | <code>string</code>   | Default user agent for BrowserViews.                                                                                                                                                                                                                                                                                                           |                    | 1.0.0 |
-| **`appendUserAgent`**           | <code>string</code>   | String to append to the original user agent for BrowserViews. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                                                                              |                    | 1.0.0 |
-| **`backgroundColor`**           | <code>string</code>   | Background color for BrowserViews.                                                                                                                                                                                                                                                                                                             |                    | 1.0.0 |
-| **`androidOverrideUserAgent`**  | <code>string</code>   | Default user agent for BrowserViews on Android. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                   |                    | 1.0.0 |
-| **`androidAppendUserAgent`**    | <code>string</code>   | String to append to the original user agent for BrowserViews for Android. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                       |                    | 1.0.0 |
-| **`androidBackgroundColor`**    | <code>string</code>   | Background color for BrowserViews for Android. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                                      |                    | 1.0.0 |
-| **`androidAllowMixedContent`**  | <code>boolean</code>  | Enable mixed content in the BrowserViews for Android. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, you may need to enable it to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.**  | <code>false</code> | 1.0.0 |
-| **`electronOverrideUserAgent`** | <code>string</code>   | Default user agent for BrowserViews on Electron. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                  |                    | 1.0.0 |
-| **`electronAppendUserAgent`**   | <code>string</code>   | String to append to the original user agent for BrowserViews for Electron. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                      |                    | 1.0.0 |
-| **`electronBackgroundColor`**   | <code>string</code>   | Background color for BrowserViews for Electron. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                                     |                    | 1.0.0 |
-| **`electronAllowMixedContent`** | <code>boolean</code>  | Enable mixed content in the BrowserViews for Electron. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, you may need to enable it to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.** | <code>false</code> | 1.0.0 |
+| Prop                            | Type                                    | Description                                                                                                                                                                                                                                                                                                                                    | Default            | Since |
+| ------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----- |
+| **`url`**                       | <code>string</code>                     | Default external URL loaded in BrowserViews.                                                                                                                                                                                                                                                                                                   |                    | 1.0.0 |
+| **`allowMultipleWindows`**      | <code>boolean</code>                    | Open links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ in the external browser instead of the BrowserViews.                                                                                               | <code>true</code>  | 1.0.0 |
+| **`allowNavigation`**           | <code>string[]</code>                   | Set regular expressions to which the BrowserViews can navigate additional. By default, all external URLs are opened in the external browser (not the BrowserView).                                                                                                                                                                             | <code>[]</code>    | 1.0.0 |
+| **`enableBridge`**              | <code>boolean</code>                    | Enable a bridge between the capacitor layer and the loaded web page.                                                                                                                                                                                                                                                                           | <code>false</code> | 1.0.0 |
+| **`overrideUserAgent`**         | <code>string</code>                     | Default user agent for BrowserViews.                                                                                                                                                                                                                                                                                                           |                    | 1.0.0 |
+| **`appendUserAgent`**           | <code>string</code>                     | String to append to the original user agent for BrowserViews. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                                                                              |                    | 1.0.0 |
+| **`backgroundColor`**           | <code><a href="#color">Color</a></code> | Default background color for BrowserViews.                                                                                                                                                                                                                                                                                                     |                    | 1.0.0 |
+| **`androidOverrideUserAgent`**  | <code>string</code>                     | Default user agent for BrowserViews on Android. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                   |                    | 1.0.0 |
+| **`androidAppendUserAgent`**    | <code>string</code>                     | String to append to the original user agent for BrowserViews for Android. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                       |                    | 1.0.0 |
+| **`androidBackgroundColor`**    | <code><a href="#color">Color</a></code> | Default background color for BrowserViews for Android. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                              |                    | 1.0.0 |
+| **`androidAllowMixedContent`**  | <code>boolean</code>                    | Enable mixed content in the BrowserViews for Android. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, you may need to enable it to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.**  | <code>false</code> | 1.0.0 |
+| **`electronOverrideUserAgent`** | <code>string</code>                     | Default user agent for BrowserViews on Electron. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                  |                    | 1.0.0 |
+| **`electronAppendUserAgent`**   | <code>string</code>                     | String to append to the original user agent for BrowserViews for Electron. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                      |                    | 1.0.0 |
+| **`electronBackgroundColor`**   | <code><a href="#color">Color</a></code> | Default background color for BrowserViews for Electron. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                             |                    | 1.0.0 |
+| **`electronAllowMixedContent`** | <code>boolean</code>                    | Enable mixed content in the BrowserViews for Electron. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, you may need to enable it to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.** | <code>false</code> | 1.0.0 |
 
 ### Examples
 
@@ -166,7 +170,7 @@ export default config;
 This extension includes a bridge between the capacitor layer and the loaded web page in the BrowserView(s).
 However, this feature is disabled by default. It can be enabled either globally via the plugin configuration or for each BrowserView individually during its creation.
 
-If the bridge feature is enabled, the `window.CapacitorBrowserView` object is available on web pages within the corresponding BrowserView.
+If the bridge feature is enabled, the global object `window.CapacitorBrowserView` is available on web pages within the corresponding BrowserView.
 
 ### API
 
@@ -175,23 +179,52 @@ You can also receive replies from the capacitor layer.
 
 It has the following methods to listen for events and send messages:
 
-#### `CapacitorBrowserView.send(eventName, ...args)`
+* [`send(...)`](#capacitorbrowserviewsend)
+* [`addListener(string, ...)`](#capacitorbrowserviewaddlistenerstring)
 
-* `eventName` String
-* `...args` any[]
+### CapacitorBrowserView.send()
 
-Send a message to the capacitor layer via `eventName`, along with
-arguments. Arguments will be serialized with JSON.
+```typescript
+send: (eventName: string, ...args: any[]) => void
+```
 
-#### `CapacitorBrowserView.addListener(eventName, callback)`
+Sends a message to the capacitor layer via `eventName`, along with arguments.
+Arguments will be serialized with JSON.
 
-* `eventName` String
-* `listener` Function
-  * `...args` any[]
+| Param           | Type                | Description                          |
+| --------------- | ------------------- | ------------------------------------ |
+| **`eventName`** | <code>string</code> | The name of the event being send to. |
+| **`args`**      | <code>any[]</code>  | The Array of arguments to send.      |
 
-Listens to `eventName`, when a new message arrives `listener` would be called with
-`listener(args...)`.
+**Since:** 1.0.0
 
+--------------------
+
+
+### CapacitorBrowserView.addListener(string, ...)
+
+```typescript
+addListener: (eventName: string, callback: (args: any[]) => void) => void
+```
+
+Listens to `eventName` and calls `callback(args...)` when a new message arrives from the capacitor layer.
+
+| Param           | Type                               |
+| --------------- | ---------------------------------- |
+| **`eventName`** | <code>string</code>                |
+| **`callback`**  | <code>(args: any[]) => void</code> |
+
+```typescript
+callback: (args: any[]) => void
+```
+
+| Param      | Type                | Description                      |
+| ---------- | ------------------- | -------------------------------- |
+| **`args`** | <code>any[]</code>  | The received array of arguments. |
+
+**Since:** 1.0.0
+
+--------------------
 
 ### Example
 
@@ -200,11 +233,11 @@ For example, you can add the following sample code to your web page.
 
 ```javascript
 // Listens to "msg-from-capacitor" from the capacitor layer.
-CapacitorBrowserView.addListener("msg-from-capacitor", message => {
-    console.log('Message from Capacitor-App: ' + message);
+CapacitorBrowserView.addListener("msg-from-capacitor", args => {
+    console.log('Message from Capacitor-App: ' + args);
 
     // Send a message back to the capacitor layer.
-    CapacitorBrowserView.send("msg-from-web", "Replying to this message: " + message, "And optionally add further args");
+    CapacitorBrowserView.send("msg-from-web", "Replying to this message: " + args, "And optionally add further args");
 });
 ```
 
@@ -220,8 +253,8 @@ const myView = await BrowserView.create({ enableBridge: true });
 myView.setBounds({ bounds: { x: 0, y: 0, width: 300, height: 600 } });
 
 // Listens to "msg-from-web" from the web page.
-myView.addListener('channel-msg-from-web', event => {
-    console.log("Message from web page: ", event.args);
+myView.addMessageListener('msg-from-web', data => {
+    console.log("Message from web page: ", data.args);
 });
 
 // Wait for the web page to finish loading.
@@ -239,6 +272,10 @@ myView.loadUrl({ url: "https://your_webpage.dev/" });
 ```
 
 ## API
+
+A `BrowserView` can be used to embed additional web content into your Capacitor-App. It is like a child window, except that it is positioned relative to its owning window. 
+
+It has the following methods:
 
 <docgen-index>
 
@@ -274,7 +311,6 @@ myView.loadUrl({ url: "https://your_webpage.dev/" });
 * [`addListener('leave-html-full-screen', ...)`](#addlistenerleave-html-full-screen)
 * [`addListener('will-navigate', ...)`](#addlistenerwill-navigate)
 * [`addListener('did-start-loading', ...)`](#addlistenerdid-start-loading)
-* [`addListener('did-frame-finish-load', ...)`](#addlistenerdid-frame-finish-load)
 * [`addListener('did-finish-load', ...)`](#addlistenerdid-finish-load)
 * [`addListener('did-fail-load', ...)`](#addlistenerdid-fail-load)
 * [`addListener('dom-ready', ...)`](#addlistenerdom-ready)
@@ -282,7 +318,9 @@ myView.loadUrl({ url: "https://your_webpage.dev/" });
 * [`addListener('render-process-gone', ...)`](#addlistenerrender-process-gone)
 * [`addListener('unresponsive', ...)`](#addlistenerunresponsive)
 * [`addListener('responsive', ...)`](#addlistenerresponsive)
-* [``addListener(`channel-${string}`, ...)``](#addlistenerchannel-string)
+* [`addMessageListener(...)`](#addmessagelistener)
+* [`removeListener(...)`](#removelistener)
+* [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -297,11 +335,15 @@ myView.loadUrl({ url: "https://your_webpage.dev/" });
 create(options?: CreateOptions | undefined) => Promise<BrowserView>
 ```
 
+Creates a new BrowserView with properties as set by the `options`.
+
 | Param         | Type                                                    |
 | ------------- | ------------------------------------------------------- |
 | **`options`** | <code><a href="#createoptions">CreateOptions</a></code> |
 
-**Returns:** <code>Promise&lt;BrowserView&gt;</code>
+**Returns:** <code>Promise<BrowserView></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -309,8 +351,13 @@ create(options?: CreateOptions | undefined) => Promise<BrowserView>
 ### destroy()
 
 ```typescript
-destroy() => void
+destroy() => Promise<void>
 ```
+
+Removes the BrowserView from you App and destroys its internal state.
+No other methods may be called on this BrowserView after destroy.
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -318,12 +365,16 @@ destroy() => void
 ### setBounds(...)
 
 ```typescript
-setBounds(args: BoundsArgs) => void
+setBounds(args: BoundsPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                              |
-| ---------- | ------------------------------------------------- |
-| **`args`** | <code><a href="#boundsargs">BoundsArgs</a></code> |
+Resizes and moves the view to the supplied bounds relative to the window.
+
+| Param      | Type                                                            |
+| ---------- | --------------------------------------------------------------- |
+| **`args`** | <code><a href="#boundspayloaddata">BoundsPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -331,10 +382,14 @@ setBounds(args: BoundsArgs) => void
 ### getBounds()
 
 ```typescript
-getBounds() => Promise<BoundsResult>
+getBounds() => Promise<BoundsPayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#boundsresult">BoundsResult</a>&gt;</code>
+Gets the bounds of the view relative to the window.
+
+**Returns:** <code>Promise<<a href="#boundspayloaddata">BoundsPayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -342,12 +397,16 @@ getBounds() => Promise<BoundsResult>
 ### setBackgroundColor(...)
 
 ```typescript
-setBackgroundColor(args: ColorArgs) => void
+setBackgroundColor(args: ColorPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                            |
-| ---------- | ----------------------------------------------- |
-| **`args`** | <code><a href="#colorargs">ColorArgs</a></code> |
+Sets the background color for this view.
+
+| Param      | Type                                                          |
+| ---------- | ------------------------------------------------------------- |
+| **`args`** | <code><a href="#colorpayloaddata">ColorPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -355,12 +414,17 @@ setBackgroundColor(args: ColorArgs) => void
 ### loadUrl(...)
 
 ```typescript
-loadUrl(args: UrlArgs) => void
+loadUrl(args: UrlPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                        |
-| ---------- | ------------------------------------------- |
-| **`args`** | <code><a href="#urlargs">UrlArgs</a></code> |
+Loads the given url in the view.
+The url must contain the protocol prefix, e.g. the `https://`.
+
+| Param      | Type                                                      |
+| ---------- | --------------------------------------------------------- |
+| **`args`** | <code><a href="#urlpayloaddata">UrlPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -368,10 +432,16 @@ loadUrl(args: UrlArgs) => void
 ### getUrl()
 
 ```typescript
-getUrl() => Promise<UrlResult>
+getUrl() => Promise<UrlPayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#urlresult">UrlResult</a>&gt;</code>
+Gets the url of the current page.
+This is not always the same as the url passed to `BrowserView.addListener('will-navigate', callback)`
+because although the load for that url has begun, the current page may not have changed.
+
+**Returns:** <code>Promise<<a href="#urlpayloaddata">UrlPayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -379,10 +449,15 @@ getUrl() => Promise<UrlResult>
 ### getTitle()
 
 ```typescript
-getTitle() => Promise<TitleResult>
+getTitle() => Promise<TitlePayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#titleresult">TitleResult</a>&gt;</code>
+Gets the title of the current page.
+This is the title of the current page until `BrowserView.addListener('page-title-updated', callback)` is called.
+
+**Returns:** <code>Promise<<a href="#titlepayloaddata">TitlePayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -390,8 +465,12 @@ getTitle() => Promise<TitleResult>
 ### stop()
 
 ```typescript
-stop() => void
+stop() => Promise<void>
 ```
+
+Stops any pending navigation.
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -399,8 +478,12 @@ stop() => void
 ### reload()
 
 ```typescript
-reload() => void
+reload() => Promise<void>
 ```
+
+Reloads the current web page.
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -408,10 +491,14 @@ reload() => void
 ### canGoBack()
 
 ```typescript
-canGoBack() => Promise<CanGoBackResult>
+canGoBack() => Promise<CanGoBackPayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#cangobackresult">CanGoBackResult</a>&gt;</code>
+Gets whether the browser can go back to previous web page.
+
+**Returns:** <code>Promise<<a href="#cangobackpayloaddata">CanGoBackPayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -419,10 +506,14 @@ canGoBack() => Promise<CanGoBackResult>
 ### canGoForward()
 
 ```typescript
-canGoForward() => Promise<CanGoForwardResult>
+canGoForward() => Promise<CanGoForwardPayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#cangoforwardresult">CanGoForwardResult</a>&gt;</code>
+Gets whether the browser can go forward to next web page.
+
+**Returns:** <code>Promise<<a href="#cangoforwardpayloaddata">CanGoForwardPayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -430,8 +521,12 @@ canGoForward() => Promise<CanGoForwardResult>
 ### clearHistory()
 
 ```typescript
-clearHistory() => void
+clearHistory() => Promise<void>
 ```
+
+Clears the internal back/forward navigation history list.
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -439,8 +534,12 @@ clearHistory() => void
 ### goBack()
 
 ```typescript
-goBack() => void
+goBack() => Promise<void>
 ```
+
+Makes the browser go back a web page.
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -448,8 +547,12 @@ goBack() => void
 ### goForward()
 
 ```typescript
-goForward() => void
+goForward() => Promise<void>
 ```
+
+Makes the browser go forward a web page.
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -457,12 +560,20 @@ goForward() => void
 ### setUserAgent(...)
 
 ```typescript
-setUserAgent(args: UserAgentArgs) => void
+setUserAgent(args: UserAgentPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                                    |
-| ---------- | ------------------------------------------------------- |
-| **`args`** | <code><a href="#useragentargs">UserAgentArgs</a></code> |
+Overrides the user-agent string for this web page.
+If the string empty, the system default value will be used.
+
+**Note:** Starting from Android KitKat (4.4), changing the user-agent while
+loading a web page causes the BrowserView to initiate loading once again.
+
+| Param      | Type                                                                  |
+| ---------- | --------------------------------------------------------------------- |
+| **`args`** | <code><a href="#useragentpayloaddata">UserAgentPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -470,12 +581,19 @@ setUserAgent(args: UserAgentArgs) => void
 ### appendUserAgent(...)
 
 ```typescript
-appendUserAgent(args: UserAgentArgs) => void
+appendUserAgent(args: UserAgentPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                                    |
-| ---------- | ------------------------------------------------------- |
-| **`args`** | <code><a href="#useragentargs">UserAgentArgs</a></code> |
+Appends the specified user-agent to the current user-agent string for this web page.
+
+**Note:** Starting from Android KitKat (4.4), changing the user-agent while
+loading a web page causes the BrowserView to initiate loading once again.
+
+| Param      | Type                                                                  |
+| ---------- | --------------------------------------------------------------------- |
+| **`args`** | <code><a href="#useragentpayloaddata">UserAgentPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -483,10 +601,14 @@ appendUserAgent(args: UserAgentArgs) => void
 ### getUserAgent()
 
 ```typescript
-getUserAgent() => Promise<UserAgentResult>
+getUserAgent() => Promise<UserAgentPayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#useragentresult">UserAgentResult</a>&gt;</code>
+Gets the user-agent string for this web page.
+
+**Returns:** <code>Promise<<a href="#useragentpayloaddata">UserAgentPayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -494,14 +616,19 @@ getUserAgent() => Promise<UserAgentResult>
 ### executeJavaScript(...)
 
 ```typescript
-executeJavaScript(args: CodeExecuteArgs) => Promise<CodeExecuteResult>
+executeJavaScript(args: CodeExecutePayloadData) => Promise<CodeExecuteResultData>
 ```
 
-| Param      | Type                                                        |
-| ---------- | ----------------------------------------------------------- |
-| **`args`** | <code><a href="#codeexecuteargs">CodeExecuteArgs</a></code> |
+Asynchronously evaluates JavaScript in the context of the currently displayed page.
+Returns a promise that resolves with the result of the executed code.
 
-**Returns:** <code>Promise&lt;<a href="#codeexecuteresult">CodeExecuteResult</a>&gt;</code>
+| Param      | Type                                                                      |
+| ---------- | ------------------------------------------------------------------------- |
+| **`args`** | <code><a href="#codeexecutepayloaddata">CodeExecutePayloadData</a></code> |
+
+**Returns:** <code>Promise<<a href="#codeexecuteresultdata">CodeExecuteResultData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -509,12 +636,19 @@ executeJavaScript(args: CodeExecuteArgs) => Promise<CodeExecuteResult>
 ### setAllowMultipleWindows(...)
 
 ```typescript
-setAllowMultipleWindows(args: AllowMultipleWindowsArgs) => void
+setAllowMultipleWindows(args: AllowMultipleWindowsPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                                                          |
-| ---------- | ----------------------------------------------------------------------------- |
-| **`args`** | <code><a href="#allowmultiplewindowsargs">AllowMultipleWindowsArgs</a></code> |
+Sets whether the BrowserView supports multiple windows.
+If set to true, links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`,
+shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ open in the external browser
+instead of the BrowserView.
+
+| Param      | Type                                                                                        |
+| ---------- | ------------------------------------------------------------------------------------------- |
+| **`args`** | <code><a href="#allowmultiplewindowspayloaddata">AllowMultipleWindowsPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -522,10 +656,14 @@ setAllowMultipleWindows(args: AllowMultipleWindowsArgs) => void
 ### getAllowMultipleWindows()
 
 ```typescript
-getAllowMultipleWindows() => Promise<AllowMultipleWindowsResult>
+getAllowMultipleWindows() => Promise<AllowMultipleWindowsPayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#allowmultiplewindowsresult">AllowMultipleWindowsResult</a>&gt;</code>
+Gets whether the BrowserView supports multiple windows.
+
+**Returns:** <code>Promise<<a href="#allowmultiplewindowspayloaddata">AllowMultipleWindowsPayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -533,12 +671,19 @@ getAllowMultipleWindows() => Promise<AllowMultipleWindowsResult>
 ### setAllowedNavigation(...)
 
 ```typescript
-setAllowedNavigation(args: AllowedNavigationArgs) => void
+setAllowedNavigation(args: AllowedNavigationPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                                                    |
-| ---------- | ----------------------------------------------------------------------- |
-| **`args`** | <code><a href="#allowednavigationargs">AllowedNavigationArgs</a></code> |
+Sets regular expressions to which the BrowserView can navigate additional.
+
+By default, all external URLs are opened in the external browser (not
+the BrowserView).
+
+| Param      | Type                                                                                  |
+| ---------- | ------------------------------------------------------------------------------------- |
+| **`args`** | <code><a href="#allowednavigationpayloaddata">AllowedNavigationPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -546,10 +691,14 @@ setAllowedNavigation(args: AllowedNavigationArgs) => void
 ### getAllowedNavigation()
 
 ```typescript
-getAllowedNavigation() => Promise<AllowedNavigationResult>
+getAllowedNavigation() => Promise<AllowedNavigationPayloadData>
 ```
 
-**Returns:** <code>Promise&lt;<a href="#allowednavigationresult">AllowedNavigationResult</a>&gt;</code>
+Gets the list of regular expressions that the BrowserView can additional navigate to.
+
+**Returns:** <code>Promise<<a href="#allowednavigationpayloaddata">AllowedNavigationPayloadData</a>></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -557,12 +706,18 @@ getAllowedNavigation() => Promise<AllowedNavigationResult>
 ### sendMessage(...)
 
 ```typescript
-sendMessage(args: MessageArgs) => void
+sendMessage(args: MessageChannelPayloadData) => Promise<void>
 ```
 
-| Param      | Type                                                |
-| ---------- | --------------------------------------------------- |
-| **`args`** | <code><a href="#messageargs">MessageArgs</a></code> |
+Sends a message to the current page in the BrowserView.
+
+**Note:** This method is only available if the bridge was enabled during the BrowserView creation or globally via the plugin configuration.
+
+| Param      | Type                                                                            |
+| ---------- | ------------------------------------------------------------------------------- |
+| **`args`** | <code><a href="#messagechannelpayloaddata">MessageChannelPayloadData</a></code> |
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -570,15 +725,26 @@ sendMessage(args: MessageArgs) => void
 ### addListener('new-window', ...)
 
 ```typescript
-addListener(eventName: 'new-window', listenerFunc: UrlListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'new-window', listenerFunc: BrowserViewListenerCallback<UrlPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                |
-| ------------------ | ------------------------------------------------------------------- |
-| **`eventName`**    | <code>'new-window'</code>                                           |
-| **`listenerFunc`** | <code><a href="#urllistenercallback">UrlListenerCallback</a></code> |
+Calls `listenerFunc(data)` when the current page request a new tab or window, e.g. by `window.open()`,
+a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+Whether links should be opened in the external browser or in the BrowserView itself can be set with
+the method `BrowserView.setAllowMultipleWindows()` or with the global option `allowMultipleWindows`.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                    |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'new-window'</code>                                                                                                               |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#urlpayloaddata">UrlPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -586,15 +752,27 @@ addListener(eventName: 'new-window', listenerFunc: UrlListenerCallback) => Promi
 ### addListener('close-window', ...)
 
 ```typescript
-addListener(eventName: 'close-window', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'close-window', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'close-window'</code>                                             |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the browser has stopped any loading in this window
+and has removed any cross-scripting ability in javascript.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+The application's implementation of this callback should remove the specific BrowserView if this is not already done
+and ensure that any URL or security indicator displayed is updated so that the user can tell that the page they were
+interacting with has been closed.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'close-window'</code>                                                                                                                 |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -602,15 +780,22 @@ addListener(eventName: 'close-window', listenerFunc: EmptyListenerCallback) => P
 ### addListener('page-favicon-updated', ...)
 
 ```typescript
-addListener(eventName: 'page-favicon-updated', listenerFunc: IconListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'page-favicon-updated', listenerFunc: BrowserViewListenerCallback<IconPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                  |
-| ------------------ | --------------------------------------------------------------------- |
-| **`eventName`**    | <code>'page-favicon-updated'</code>                                   |
-| **`listenerFunc`** | <code><a href="#iconlistenercallback">IconListenerCallback</a></code> |
+Calls `listenerFunc(data)` when the current page receives a new favicon.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                      |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'page-favicon-updated'</code>                                                                                                       |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#iconpayloaddata">IconPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -618,15 +803,22 @@ addListener(eventName: 'page-favicon-updated', listenerFunc: IconListenerCallbac
 ### addListener('page-title-updated', ...)
 
 ```typescript
-addListener(eventName: 'page-title-updated', listenerFunc: TitleListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'page-title-updated', listenerFunc: BrowserViewListenerCallback<TitlePayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'page-title-updated'</code>                                       |
-| **`listenerFunc`** | <code><a href="#titlelistenercallback">TitleListenerCallback</a></code> |
+Calls `listenerFunc(data)` when the document title changes.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'page-title-updated'</code>                                                                                                           |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#titlepayloaddata">TitlePayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -634,15 +826,24 @@ addListener(eventName: 'page-title-updated', listenerFunc: TitleListenerCallback
 ### addListener('enter-html-full-screen', ...)
 
 ```typescript
-addListener(eventName: 'enter-html-full-screen', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'enter-html-full-screen', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'enter-html-full-screen'</code>                                   |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the window enters a full-screen state triggered by HTML API.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Note:** On Android this event requires API level 7 or higher to be fired.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'enter-html-full-screen'</code>                                                                                                       |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -650,15 +851,24 @@ addListener(eventName: 'enter-html-full-screen', listenerFunc: EmptyListenerCall
 ### addListener('leave-html-full-screen', ...)
 
 ```typescript
-addListener(eventName: 'leave-html-full-screen', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'leave-html-full-screen', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'leave-html-full-screen'</code>                                   |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the window leaves a full-screen state triggered by HTML API.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Note:** On Android this event requires API level 7 or higher to be fired.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'leave-html-full-screen'</code>                                                                                                       |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -666,15 +876,31 @@ addListener(eventName: 'leave-html-full-screen', listenerFunc: EmptyListenerCall
 ### addListener('will-navigate', ...)
 
 ```typescript
-addListener(eventName: 'will-navigate', listenerFunc: UrlListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'will-navigate', listenerFunc: BrowserViewListenerCallback<UrlPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                |
-| ------------------ | ------------------------------------------------------------------- |
-| **`eventName`**    | <code>'will-navigate'</code>                                        |
-| **`listenerFunc`** | <code><a href="#urllistenercallback">UrlListenerCallback</a></code> |
+Calls `listenerFunc(data)` when a user or the page wants to start navigation on the main frame.
+It can happen when the `window.location` object is changed or a user clicks a link in the page.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+This event will not emit when the navigation is started programmatically with APIs
+like `BrowserView.loadUrl()` and `BrowserView.goBack()` or for POST requests.
+
+It is also not emitted for in-page navigations, such as clicking anchor links or
+updating the `window.location.hash`.
+
+_On Android it may be called for subframes too._
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                    |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'will-navigate'</code>                                                                                                            |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#urlpayloaddata">UrlPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -682,31 +908,27 @@ addListener(eventName: 'will-navigate', listenerFunc: UrlListenerCallback) => Pr
 ### addListener('did-start-loading', ...)
 
 ```typescript
-addListener(eventName: 'did-start-loading', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'did-start-loading', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'did-start-loading'</code>                                        |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the page has started loading.
+Corresponds to the points in time when the spinner of the tab started spinning.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+On Android, this callback is called only once for each main frame load so a page with iframes or framesets will
+call this only one time for the main frame. This also means that this callback will not be called when the contents of an
+embedded frame changes.
 
---------------------
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'did-start-loading'</code>                                                                                                            |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
 
-### addListener('did-frame-finish-load', ...)
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
-```typescript
-addListener(eventName: 'did-frame-finish-load', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
-```
-
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'did-frame-finish-load'</code>                                    |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
-
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Since:** 1.0.0
 
 --------------------
 
@@ -714,15 +936,23 @@ addListener(eventName: 'did-frame-finish-load', listenerFunc: EmptyListenerCallb
 ### addListener('did-finish-load', ...)
 
 ```typescript
-addListener(eventName: 'did-finish-load', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'did-finish-load', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'did-finish-load'</code>                                          |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the page has finished loading, i.e. the spinner of the tab has stopped spinning.
+This does not guarantee that the next frame drawn by BrowserView will reflect the state of the DOM at this point.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'did-finish-load'</code>                                                                                                              |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -730,15 +960,26 @@ addListener(eventName: 'did-finish-load', listenerFunc: EmptyListenerCallback) =
 ### addListener('did-fail-load', ...)
 
 ```typescript
-addListener(eventName: 'did-fail-load', listenerFunc: ErrorListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'did-fail-load', listenerFunc: BrowserViewListenerCallback<ErrorPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'did-fail-load'</code>                                            |
-| **`listenerFunc`** | <code><a href="#errorlistenercallback">ErrorListenerCallback</a></code> |
+Calls `listenerFunc(data)` when the page failed to load. These errors usually indicate inability to connect to the server.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+On Android at API level 23 or higher, this event is fired for any resource (iframe, image, etc.), not just for the main page.
+
+The full list of error codes and their meaning is available [here](https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h).
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'did-fail-load'</code>                                                                                                                |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#errorpayloaddata">ErrorPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -746,15 +987,28 @@ addListener(eventName: 'did-fail-load', listenerFunc: ErrorListenerCallback) => 
 ### addListener('dom-ready', ...)
 
 ```typescript
-addListener(eventName: 'dom-ready', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'dom-ready', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'dom-ready'</code>                                                |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the document in the top-level frame is loaded.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+This callback is called when the body of the HTTP response has started loading, is reflected in the DOM,
+and will be visible in subsequent draws. This callback occurs early in the document loading process,
+and as such you should expect that linked resources (for example, CSS and images) may not be available.
+
+**Note:** On Android this event requires API level 23 or higher to be fired.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'dom-ready'</code>                                                                                                                    |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -762,15 +1016,27 @@ addListener(eventName: 'dom-ready', listenerFunc: EmptyListenerCallback) => Prom
 ### addListener('http-error', ...)
 
 ```typescript
-addListener(eventName: 'http-error', listenerFunc: ResponseListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'http-error', listenerFunc: BrowserViewListenerCallback<ResponsePayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                          |
-| ------------------ | ----------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'http-error'</code>                                                     |
-| **`listenerFunc`** | <code><a href="#responselistenercallback">ResponseListenerCallback</a></code> |
+Calls `listenerFunc(data)` when an HTTP error has been received from the server while loading a resource.
+HTTP errors have status codes >= 400.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+This callback will be called for any resource (iframe, image, etc.), not just for the main page.
+
+**Note:** On Android this event requires API level 23 or higher to be fired.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                              |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'http-error'</code>                                                                                                                         |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#responsepayloaddata">ResponsePayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -778,15 +1044,38 @@ addListener(eventName: 'http-error', listenerFunc: ResponseListenerCallback) => 
 ### addListener('render-process-gone', ...)
 
 ```typescript
-addListener(eventName: 'render-process-gone', listenerFunc: RenderProcessGoneListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'render-process-gone', listenerFunc: BrowserViewListenerCallback<RenderProcessGonePayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                                            |
-| ------------------ | ----------------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'render-process-gone'</code>                                                              |
-| **`listenerFunc`** | <code><a href="#renderprocessgonelistenercallback">RenderProcessGoneListenerCallback</a></code> |
+Calls `listenerFunc(data)` when the renderer process unexpectedly disappears.
+This is normally because it was crashed or killed.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+Multiple BrowserView instances may be associated with a single render process.
+This callback will be called for each BrowserView that was affected.
+
+The application's implementation of this callback should only attempt to clean up the specific BrowserView,
+and should not assume that other BrowserView instances are affected. 
+
+The BrowserView can't be used, and should be removed from the application.
+
+To cause an render process crash for test purpose, the application can
+call `BrowserView.loadUrl("chrome://crash")` on the BrowserView.
+Note that multiple BrowserView instances may be affected if they share a render process,
+not just the specific BrowserView which loaded `chrome://crash`.
+
+**Note:** On Android this event requires API level 26 or higher to be fired.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                                                |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'render-process-gone'</code>                                                                                                                                  |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#renderprocessgonepayloaddata">RenderProcessGonePayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -794,15 +1083,28 @@ addListener(eventName: 'render-process-gone', listenerFunc: RenderProcessGoneLis
 ### addListener('unresponsive', ...)
 
 ```typescript
-addListener(eventName: 'unresponsive', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'unresponsive', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'unresponsive'</code>                                             |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the renderer of the web page becomes unresponsive as a result
+of a long running blocking task such as the execution of JavaScript.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+If a BrowserView fails to process an input event, or successfully navigate to a new URL within a reasonable time frame,
+the renderer is considered to be unresponsive, and this callback will be called.
+
+**Note:** On Android this event requires API level 29 or higher to be fired.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'unresponsive'</code>                                                                                                                 |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -810,31 +1112,79 @@ addListener(eventName: 'unresponsive', listenerFunc: EmptyListenerCallback) => P
 ### addListener('responsive', ...)
 
 ```typescript
-addListener(eventName: 'responsive', listenerFunc: EmptyListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'responsive', listenerFunc: BrowserViewListenerCallback<EmptyPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                    |
-| ------------------ | ----------------------------------------------------------------------- |
-| **`eventName`**    | <code>'responsive'</code>                                               |
-| **`listenerFunc`** | <code><a href="#emptylistenercallback">EmptyListenerCallback</a></code> |
+Calls `listenerFunc()` when the unresponsive renderer of the web page becomes responsive.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Note:** On Android this event requires API level 29 or higher to be fired.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'responsive'</code>                                                                                                                   |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#emptypayloaddata">EmptyPayloadData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
 
 --------------------
 
 
-### addListener(\`channel-${string}\`, ...)
+### addMessageListener(...)
 
 ```typescript
-addListener(eventName: ChannelEventName<string>, listenerFunc: ChannelListenerCallback) => Promise<PluginListenerHandle> & PluginListenerHandle
+addMessageListener(eventName: string, listenerFunc: BrowserViewListenerCallback<MessageChannelCallbackData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                        |
-| ------------------ | --------------------------------------------------------------------------- |
-| **`eventName`**    | <code>\`channel-${string}\`</code>                                            |
-| **`listenerFunc`** | <code><a href="#channellistenercallback">ChannelListenerCallback</a></code> |
+Listens to `eventName` and calls `listenerFunc(data)` when a new message arrives from the web page.
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Note:** This listener is only available if the bridge was enabled during the BrowserView creation or globally via the plugin configuration.
+
+**Note:** When using the electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
+Use [`removeListener(listenerFunc)`](#removelistener) instead.
+
+| Param              | Type                                                                                                                                                            |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>string</code>                                                                                                                                             |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#messagechannelcallbackdata">MessageChannelCallbackData</a>></code> |
+
+**Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### removeListener(...)
+
+```typescript
+removeListener(listenerHandle: PluginListenerHandle) => Promise<void>
+```
+
+Removes the specified `listenerHandle` from the listener array for the event it refers to.
+
+| Param                | Type                                                                  |
+| -------------------- | --------------------------------------------------------------------- |
+| **`listenerHandle`** | <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code> |
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### removeAllListeners()
+
+```typescript
+removeAllListeners() => Promise<void>
+```
+
+Removes all listeners of the BrowserView.
+
+**Since:** 1.0.0
 
 --------------------
 
@@ -844,277 +1194,220 @@ addListener(eventName: ChannelEventName<string>, listenerFunc: ChannelListenerCa
 
 #### CreateOptions
 
-| Prop                       | Type                 | Default            |
-| -------------------------- | -------------------- | ------------------ |
-| **`url`**                  | <code>string</code>  |                    |
-| **`allowMultipleWindows`** | <code>boolean</code> | <code>true</code>  |
-| **`enableBridge`**         | <code>boolean</code> | <code>false</code> |
-| **`overrideUserAgent`**    | <code>string</code>  |                    |
-| **`appendUserAgent`**      | <code>string</code>  |                    |
-| **`backgroundColor`**      | <code>string</code>  |                    |
+An interface containing the options used when creating a BrowserView.
+They override the global plugin configurations for this specific BrowserView.
+
+| Prop                       | Type                                    | Description                                                                                                                                                                                                                                      | Default            | Since |
+| -------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ----- |
+| **`url`**                  | <code>string</code>                     | Initial url that is loaded immediately after the BrowserView has been created.                                                                                                                                                                   |                    | 1.0.0 |
+| **`allowMultipleWindows`** | <code>boolean</code>                    | Open links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ in the external browser instead of the BrowserViews. | <code>true</code>  | 1.0.0 |
+| **`enableBridge`**         | <code>boolean</code>                    | Enable a bridge between the capacitor layer and the loaded web page.                                                                                                                                                                             | <code>false</code> | 1.0.0 |
+| **`overrideUserAgent`**    | <code>string</code>                     | Default user agent.                                                                                                                                                                                                                              |                    | 1.0.0 |
+| **`appendUserAgent`**      | <code>string</code>                     | String to append to the original user agent. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                 |                    | 1.0.0 |
+| **`backgroundColor`**      | <code><a href="#color">Color</a></code> | Default background color.                                                                                                                                                                                                                        |                    | 1.0.0 |
 
 
-#### BoundsArgs
+#### BoundsPayloadData
 
-| Prop         | Type                                            |
-| ------------ | ----------------------------------------------- |
-| **`bounds`** | <code><a href="#rectangle">Rectangle</a></code> |
+| Prop         | Type                                            | Since |
+| ------------ | ----------------------------------------------- | ----- |
+| **`bounds`** | <code><a href="#rectangle">Rectangle</a></code> | 1.0.0 |
 
 
 #### Rectangle
 
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`x`**      | <code>number</code> |
-| **`y`**      | <code>number</code> |
-| **`width`**  | <code>number</code> |
-| **`height`** | <code>number</code> |
+An interface that holds two integer coordinates and two integer dimensions for a rectangle.
+The coordinates are specified in terms of the upper-left corner of the rectangle.
+The width and height are the dimensions of the rectangle.
+These fields can be accessed directly.
+
+| Prop         | Type                | Description                                                           | Since |
+| ------------ | ------------------- | --------------------------------------------------------------------- | ----- |
+| **`x`**      | <code>number</code> | The x coordinate of the origin of the rectangle (must be an integer). | 1.0.0 |
+| **`y`**      | <code>number</code> | The y coordinate of the origin of the rectangle (must be an integer). | 1.0.0 |
+| **`width`**  | <code>number</code> | The width of the rectangle (must be an integer).                      | 1.0.0 |
+| **`height`** | <code>number</code> | The height of the rectangle (must be an integer).                     | 1.0.0 |
 
 
-#### BoundsResult
+#### ColorPayloadData
 
-| Prop         | Type                                            |
-| ------------ | ----------------------------------------------- |
-| **`bounds`** | <code><a href="#rectangle">Rectangle</a></code> |
-
-
-#### ColorArgs
-
-| Prop        | Type                |
-| ----------- | ------------------- |
-| **`color`** | <code>string</code> |
+| Prop        | Type                                    | Since |
+| ----------- | --------------------------------------- | ----- |
+| **`color`** | <code><a href="#color">Color</a></code> | 1.0.0 |
 
 
-#### UrlArgs
+#### UrlPayloadData
 
-| Prop      | Type                |
-| --------- | ------------------- |
-| **`url`** | <code>string</code> |
-
-
-#### UrlResult
-
-| Prop      | Type                |
-| --------- | ------------------- |
-| **`url`** | <code>string</code> |
+| Prop      | Type                | Description            | Since |
+| --------- | ------------------- | ---------------------- | ----- |
+| **`url`** | <code>string</code> | The url of a web page. | 1.0.0 |
 
 
-#### TitleResult
+#### TitlePayloadData
 
-| Prop        | Type                |
-| ----------- | ------------------- |
-| **`title`** | <code>string</code> |
-
-
-#### CanGoBackResult
-
-| Prop            | Type                 |
-| --------------- | -------------------- |
-| **`canGoBack`** | <code>boolean</code> |
+| Prop        | Type                | Description              | Since |
+| ----------- | ------------------- | ------------------------ | ----- |
+| **`title`** | <code>string</code> | The title of a web page. | 1.0.0 |
 
 
-#### CanGoForwardResult
+#### CanGoBackPayloadData
 
-| Prop               | Type                 |
-| ------------------ | -------------------- |
-| **`canGoForward`** | <code>boolean</code> |
-
-
-#### UserAgentArgs
-
-| Prop            | Type                |
-| --------------- | ------------------- |
-| **`userAgent`** | <code>string</code> |
+| Prop            | Type                 | Description                                           | Since |
+| --------------- | -------------------- | ----------------------------------------------------- | ----- |
+| **`canGoBack`** | <code>boolean</code> | Whether the browser can go back to previous web page. | 1.0.0 |
 
 
-#### UserAgentResult
+#### CanGoForwardPayloadData
 
-| Prop            | Type                |
-| --------------- | ------------------- |
-| **`userAgent`** | <code>string</code> |
-
-
-#### CodeExecuteResult
-
-| Prop         | Type             |
-| ------------ | ---------------- |
-| **`result`** | <code>any</code> |
+| Prop               | Type                 | Description                                          | Since |
+| ------------------ | -------------------- | ---------------------------------------------------- | ----- |
+| **`canGoForward`** | <code>boolean</code> | Whether the browser can go forward to next web page. | 1.0.0 |
 
 
-#### CodeExecuteArgs
+#### UserAgentPayloadData
 
-| Prop       | Type                |
-| ---------- | ------------------- |
-| **`code`** | <code>string</code> |
-
-
-#### AllowMultipleWindowsArgs
-
-| Prop                       | Type                 |
-| -------------------------- | -------------------- |
-| **`allowMultipleWindows`** | <code>boolean</code> |
+| Prop            | Type                | Description                          | Since |
+| --------------- | ------------------- | ------------------------------------ | ----- |
+| **`userAgent`** | <code>string</code> | The BrowserView's user-agent string. | 1.0.0 |
 
 
-#### AllowMultipleWindowsResult
+#### CodeExecuteResultData
 
-| Prop                       | Type                 |
-| -------------------------- | -------------------- |
-| **`allowMultipleWindows`** | <code>boolean</code> |
-
-
-#### AllowedNavigationArgs
-
-| Prop                    | Type                  |
-| ----------------------- | --------------------- |
-| **`allowedNavigation`** | <code>string[]</code> |
+| Prop         | Type             | Description                           | Since |
+| ------------ | ---------------- | ------------------------------------- | ----- |
+| **`result`** | <code>any</code> | The result of the execution (if any). | 1.0.0 |
 
 
-#### AllowedNavigationResult
+#### CodeExecutePayloadData
 
-| Prop                    | Type                  |
-| ----------------------- | --------------------- |
-| **`allowedNavigation`** | <code>string[]</code> |
+| Prop       | Type                | Description                | Since |
+| ---------- | ------------------- | -------------------------- | ----- |
+| **`code`** | <code>string</code> | The JavaScript to execute. | 1.0.0 |
 
 
-#### MessageArgs
+#### AllowMultipleWindowsPayloadData
 
-| Prop            | Type                                                                        |
-| --------------- | --------------------------------------------------------------------------- |
-| **`eventName`** | <code><a href="#channeleventname">ChannelEventName</a>&lt;string&gt;</code> |
-| **`args`**      | <code>any[]</code>                                                          |
+| Prop                       | Type                 | Description                                                                                                                                                                                                                                                                                                        | Since |
+| -------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| **`allowMultipleWindows`** | <code>boolean</code> | Whether the BrowserView supports multiple windows. If set to true, links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ open in the external browser instead of the BrowserView. | 1.0.0 |
+
+
+#### AllowedNavigationPayloadData
+
+| Prop                    | Type                  | Description                                                                      | Since |
+| ----------------------- | --------------------- | -------------------------------------------------------------------------------- | ----- |
+| **`allowedNavigation`** | <code>string[]</code> | The list of regular expressions that the BrowserView can additional navigate to. | 1.0.0 |
+
+
+#### MessageChannelPayloadData
+
+The payload data to send a message to the web page via `eventName`,
+along with arguments. Arguments will be serialized with JSON.
+
+| Prop            | Type                | Description                          | Since |
+| --------------- | ------------------- | ------------------------------------ | ----- |
+| **`eventName`** | <code>string</code> | The name of the event being send to. | 1.0.0 |
+| **`args`**      | <code>any[]</code>  | The array of arguments to send.      | 1.0.0 |
 
 
 #### PluginListenerHandle
 
 | Prop         | Type                                      |
 | ------------ | ----------------------------------------- |
-| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+| **`remove`** | <code>() => Promise<void&gt;</code> |
 
 
-#### UrlCallbackData
+#### EmptyPayloadData
 
-| Prop      | Type                |
-| --------- | ------------------- |
-| **`url`** | <code>string</code> |
+An empty interface that represents no data.
 
 
-#### IconCallbackData
+#### IconPayloadData
 
-| Prop       | Type                |
-| ---------- | ------------------- |
-| **`icon`** | <code>string</code> |
-
-
-#### TitleCallbackData
-
-| Prop        | Type                |
-| ----------- | ------------------- |
-| **`title`** | <code>string</code> |
+| Prop       | Type                | Description                | Since |
+| ---------- | ------------------- | -------------------------- | ----- |
+| **`icon`** | <code>string</code> | The favicon of a web page. | 1.0.0 |
 
 
-#### ErrorCallbackData
+#### ErrorPayloadData
 
-| Prop        | Type                                                          |
-| ----------- | ------------------------------------------------------------- |
-| **`error`** | <code><a href="#webresourceerror">WebResourceError</a></code> |
+| Prop        | Type                                                          | Description                           | Since |
+| ----------- | ------------------------------------------------------------- | ------------------------------------- | ----- |
+| **`error`** | <code><a href="#webresourceerror">WebResourceError</a></code> | Information about the error occurred. | 1.0.0 |
 
 
 #### WebResourceError
 
-| Prop                   | Type                |
-| ---------------------- | ------------------- |
-| **`errorCode`**        | <code>number</code> |
-| **`errorDescription`** | <code>string</code> |
-| **`validatedURL`**     | <code>string</code> |
+An interface that encapsulates information about the error that occurred during loading of web resources.
+
+| Prop                   | Type                | Description                                                                                                                                                                          | Since |
+| ---------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| **`errorCode`**        | <code>number</code> | The error code of the error. The full list of error codes and their meaning is available [here](https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h). | 1.0.0 |
+| **`errorDescription`** | <code>string</code> | A string describing the error. Descriptions are localized, and thus can be used for communicating the problem to the user.                                                           | 1.0.0 |
+| **`validatedURL`**     | <code>string</code> | The url that failed to load.                                                                                                                                                         | 1.0.0 |
 
 
-#### ResponseCallbackData
+#### ResponsePayloadData
 
-| Prop                | Type                                                                |
-| ------------------- | ------------------------------------------------------------------- |
-| **`url`**           | <code>string</code>                                                 |
-| **`errorResponse`** | <code><a href="#webresourceresponse">WebResourceResponse</a></code> |
+| Prop                | Type                                                                | Description                           | Since |
+| ------------------- | ------------------------------------------------------------------- | ------------------------------------- | ----- |
+| **`url`**           | <code>string</code>                                                 | The url that failed to load.          | 1.0.0 |
+| **`errorResponse`** | <code><a href="#webresourceresponse">WebResourceResponse</a></code> | Information about the error occurred. | 1.0.0 |
 
 
 #### WebResourceResponse
 
-| Prop                   | Type                |
-| ---------------------- | ------------------- |
-| **`httpResponseCode`** | <code>number</code> |
-| **`httpStatusText`**   | <code>string</code> |
+An interface that encapsulates a resource response about the error that occurred.
+
+| Prop                   | Type                | Description                                               | Since |
+| ---------------------- | ------------------- | --------------------------------------------------------- | ----- |
+| **`httpResponseCode`** | <code>number</code> | The status code of the error response.                    | 1.0.0 |
+| **`httpStatusText`**   | <code>string</code> | The description of the status code of the error response. | 1.0.0 |
 
 
-#### RenderProcessGoneCallbackData
+#### RenderProcessGonePayloadData
 
-| Prop          | Type                                                                        |
-| ------------- | --------------------------------------------------------------------------- |
-| **`details`** | <code><a href="#renderprocessgonedetail">RenderProcessGoneDetail</a></code> |
+| Prop          | Type                                                                        | Description                                 | Since |
+| ------------- | --------------------------------------------------------------------------- | ------------------------------------------- | ----- |
+| **`details`** | <code><a href="#renderprocessgonedetail">RenderProcessGoneDetail</a></code> | The reason why the renderer process exited. | 1.0.0 |
 
 
 #### RenderProcessGoneDetail
 
-| Prop          | Type                 |
-| ------------- | -------------------- |
-| **`crashed`** | <code>boolean</code> |
+An interface that encapsulates information about why the render process exited.
+The application may use this to decide how to handle the situation.
+
+| Prop          | Type                 | Description                                                                                                                                                                                         | Since |
+| ------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| **`crashed`** | <code>boolean</code> | Indicates whether the render process was observed to crash, or whether it was killed by the system. If the render process was killed, this is most likely caused by the system being low on memory. | 1.0.0 |
 
 
-#### ChannelCallbackData
+#### MessageChannelCallbackData
 
-| Prop       | Type               |
-| ---------- | ------------------ |
-| **`args`** | <code>any[]</code> |
+The callback data object when a message from the web page arrives.
+
+| Prop       | Type               | Description                      | Since |
+| ---------- | ------------------ | -------------------------------- | ----- |
+| **`args`** | <code>any[]</code> | The received array of arguments. | 1.0.0 |
 
 
 ### Type Aliases
 
 
-#### ChannelEventName
+#### Color
 
-<code>`channel-${TChannel}`</code>
+A string that represents a color.
 
+Supported formats are `#RRGGBB` and `#AARRGGBB`. The following names are also accepted: `red`, `blue`, `green`, `black`, `white`, `gray`,
+`cyan`, `magenta`, `yellow`, `darkgray`, `lightgrey`, `aqua`, `fuchsia`, `lime`, `maroon`, `navy`, `olive`, `purple`, `silver`, and `teal`.
 
-#### UrlListenerCallback
-
-<code><a href="#listenercallback">ListenerCallback</a>&lt;<a href="#urlcallbackdata">UrlCallbackData</a>&gt;</code>
-
-
-#### ListenerCallback
-
-<code>(err: any, ...args: any[]): void</code>
+<code>\`#${string}\` | 'red' | 'blue' | 'green' | 'black' | 'white' | 'gray' | 'cyan' | 'magenta' | 'yellow' | 'darkgray' | 'lightgrey' | 'aqua' | 'fuchsia' | 'lime' | 'maroon' | 'navy' | 'olive' | 'purple' | 'silver' | 'teal'</code>
 
 
-#### EmptyListenerCallback
+#### BrowserViewListenerCallback
 
-<code><a href="#listenercallback">ListenerCallback</a>&lt;{}&gt;</code>
+The callback function to be called when events are emitted.
 
-
-#### IconListenerCallback
-
-<code><a href="#listenercallback">ListenerCallback</a>&lt;<a href="#iconcallbackdata">IconCallbackData</a>&gt;</code>
-
-
-#### TitleListenerCallback
-
-<code><a href="#listenercallback">ListenerCallback</a>&lt;<a href="#titlecallbackdata">TitleCallbackData</a>&gt;</code>
-
-
-#### ErrorListenerCallback
-
-<code><a href="#listenercallback">ListenerCallback</a>&lt;<a href="#errorcallbackdata">ErrorCallbackData</a>&gt;</code>
-
-
-#### ResponseListenerCallback
-
-<code><a href="#listenercallback">ListenerCallback</a>&lt;<a href="#responsecallbackdata">ResponseCallbackData</a>&gt;</code>
-
-
-#### RenderProcessGoneListenerCallback
-
-<code><a href="#listenercallback">ListenerCallback</a>&lt;<a href="#renderprocessgonecallbackdata">RenderProcessGoneCallbackData</a>&gt;</code>
-
-
-#### ChannelListenerCallback
-
-<code><a href="#listenercallback">ListenerCallback</a>&lt;<a href="#channelcallbackdata">ChannelCallbackData</a>&gt;</code>
+<code>(data: T): void</code>
 
 </docgen-api>

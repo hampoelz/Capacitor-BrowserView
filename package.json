@@ -39,7 +39,7 @@
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api BrowserViewInterface --output-readme README.md --output-json dist/docs.json",
-    "docgen-fix": "sed -i 's/`channel-${string}`/\\\\`channel-${string}\\\\`/g' README.md && sed -i 's/`addListener(\\\\`channel-${string}\\\\`, ...)`/``addListener(`channel-${string}`, ...)``/g' README.md",
+    "docgen-fix": "sed -i -E --expression='s/<code>(.*)`(.+)\\$\\{(.+)\\}`(.*)<\\/code>/<code>\\1\\\\`\\2\\$\\{\\3\\}\\\\`\\4<\\/code>/' --expression='s/&lt;/</' --expression='s/&gt;/>/' README.md",
     "build-electron": "tsc --project electron/tsconfig.json && rollup -c electron/rollup.config.js && rimraf ./electron/build",
     "build": "npm run clean && npm run docgen && npm run docgen-fix && tsc && rollup -c rollup.config.js && npm run build-electron",
     "clean": "rimraf ./dist",
