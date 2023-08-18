@@ -501,15 +501,15 @@ export interface BrowserViewInterface {
   removeListener(listenerHandle: PluginListenerHandle): Promise<void>;
 
   /**
-   * Removes all listeners of the BrowserView.
+   * Removes all listeners, or those of the specified `eventName`, of the BrowserView.
    *
    * @since 1.0.0
    */
-  removeAllListeners(): Promise<void>;
+  removeAllListeners(eventName?: string): Promise<void>;
 }
 
 export class BrowserView implements BrowserViewInterface {
-  private readonly listenerHandleList: (Promise<PluginListenerHandle> & PluginListenerHandle)[] = [];
+  private readonly listenerList: { eventName: string, listenerHandle: Promise<PluginListenerHandle> & PluginListenerHandle }[] = [];
   private readonly browserViewUUID: BrowserViewUUID;
 
   constructor(browserViewUUID: BrowserViewUUID) {
@@ -526,6 +526,7 @@ export class BrowserView implements BrowserViewInterface {
   }
 
   destroy(): Promise<void> {
+    this.removeAllListeners();
     return CapacitorBrowserView.destroy(this.browserViewUUID);
   }
 
@@ -710,7 +711,7 @@ export class BrowserView implements BrowserViewInterface {
       }
     });
 
-    this.listenerHandleList.push(listenerHandle);
+    this.listenerList.push({ eventName, listenerHandle });
     return listenerHandle;
   }
 
@@ -718,17 +719,29 @@ export class BrowserView implements BrowserViewInterface {
     return this.addListener(`channel-${eventName}`, listenerFunc);
   }
 
-  removeListener(listenerHandle: PluginListenerHandle): Promise<void> {
+  async removeListener(listenerHandle: PluginListenerHandle): Promise<void> {
     if (Capacitor.getPlatform() === 'electron') {
-      return (CapacitorBrowserView as any).removeListener(listenerHandle);
+      await (CapacitorBrowserView as any).removeListener(listenerHandle);
+    } else {
+      await listenerHandle.remove();
     }
 
-    return listenerHandle.remove();
+    for (let index = 0; index < this.listenerList.length; index++) {
+      const listener = this.listenerList[index];
+
+      if (listenerHandle === await listener.listenerHandle) {
+        this.listenerList.splice(index, 1);
+        break;
+      }
+    }
   }
 
-  async removeAllListeners(): Promise<void> {
-    for (const listenerHandle of this.listenerHandleList) {
-      this.removeListener(await listenerHandle);
+  async removeAllListeners(eventName?: string): Promise<void> {
+    for (const listener of [...this.listenerList]) {
+      if (!eventName || eventName === listener.eventName) {
+        const listenerHandle = await listener.listenerHandle;
+        await this.removeListener(listenerHandle);
+      }
     }
   }
 }

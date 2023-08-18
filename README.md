@@ -321,7 +321,7 @@ It has the following methods:
 * [`addListener('responsive', ...)`](#addlistenerresponsive)
 * [`addMessageListener(...)`](#addmessagelistener)
 * [`removeListener(...)`](#removelistener)
-* [`removeAllListeners()`](#removealllisteners)
+* [`removeAllListeners(...)`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -1177,13 +1177,17 @@ Removes the specified `listenerHandle` from the listener array for the event it 
 --------------------
 
 
-### removeAllListeners()
+### removeAllListeners(...)
 
 ```typescript
-removeAllListeners() => Promise<void>
+removeAllListeners(eventName?: string | undefined) => Promise<void>
 ```
 
-Removes all listeners of the BrowserView.
+Removes all listeners, or those of the specified `eventName`, of the BrowserView.
+
+| Param           | Type                |
+| --------------- | ------------------- |
+| **`eventName`** | <code>string</code> |
 
 **Since:** 1.0.0
 
