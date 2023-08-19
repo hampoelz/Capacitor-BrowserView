@@ -11,7 +11,8 @@ xcuserdata
 # macOS files
 .DS_Store
 
-
+# Packaged npm module
+capacitor-browserview-*.tgz
 
 # Based on Android gitignore template: https://github.com/github/gitignore/blob/HEAD/Android.gitignore
 
