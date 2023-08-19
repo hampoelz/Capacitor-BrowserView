@@ -27,7 +27,7 @@
 **You've to use Capacitor v5 or newer. This project isn't compatible with lower versions of Capacitor.**
 
 ```bash
-npm install https://github.com/hampoelz/capacitor-browserview
+npm install https://github.com/hampoelz/capacitor-browserview/releases/download/v1.0.0-beta.1/capacitor-browserview.tgz
 npx cap sync
 ```
 
