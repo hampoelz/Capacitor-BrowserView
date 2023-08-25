@@ -31,7 +31,7 @@ export default [
           'node_modules/capacitor-browserview/electron/dist/plugin.js',
         ],
       }),
-    ]
+    ],
   },
   {
     input: 'electron/build/electron/src/bridge.js',
@@ -53,6 +53,6 @@ export default [
           'node_modules/capacitor-browserview/electron/dist/bridge.js',
         ],
       }),
-    ]
+    ],
   },
 ];

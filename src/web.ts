@@ -12,7 +12,10 @@ import type {
   AllowMultipleWindowsPayloadData,
   AllowedNavigationPayloadData
 } from './definitions';
-import type { BrowserViewUUID, CapacitorBrowserViewPlugin } from './implementation';
+import type {
+  BrowserViewUUID,
+  CapacitorBrowserViewPlugin
+} from './implementation';
 
 export class CapacitorBrowserViewWeb extends WebPlugin implements CapacitorBrowserViewPlugin {
   protected unavailableBrowserView(): CapacitorException {

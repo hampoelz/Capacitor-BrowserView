@@ -1,11 +1,17 @@
 import { randomUUID } from 'crypto';
-import type { BrowserWindow, BrowserViewConstructorOptions as WebViewConstructorOptions } from 'electron';
+import type {
+  BrowserWindow,
+  BrowserViewConstructorOptions as WebViewConstructorOptions
+} from 'electron';
 import { shell, ipcMain, BrowserView as WebView } from 'electron';
 import { get as httpGet } from 'http';
 import { get as httpsGet } from 'https';
 import { join } from 'path';
 
-import type { BrowserViewArgs, BrowserViewMessageArgs } from '../../src/implementation';
+import type {
+  BrowserViewArgs,
+  BrowserViewMessageArgs
+} from '../../src/implementation';
 
 import type { CapacitorBrowserView } from './index';
 

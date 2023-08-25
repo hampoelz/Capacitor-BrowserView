@@ -43,20 +43,20 @@ public class CapacitorBrowserView {
     private final CapacitorBrowserViewPlugin.PluginEventNotifier eventNotifier;
     private final Map<String, BrowserView> browserViews = new HashMap<>();
 
-    public CapacitorBrowserView(ViewGroup rootView, Context context, CapacitorBrowserViewPlugin.PluginEventNotifier eventNotifier) {
+    protected CapacitorBrowserView(ViewGroup rootView, Context context, CapacitorBrowserViewPlugin.PluginEventNotifier eventNotifier) {
         this.rootView = rootView;
         this.context = context;
         this.eventNotifier = eventNotifier;
     }
 
     @SuppressLint("ViewConstructor")
-    public static class BrowserView extends WebView {
+    protected static class BrowserView extends WebView {
 
         public final String uuid;
         private String currentHost;
         private String[] allowedNavigation = new String[0];
 
-        public BrowserView(String uuid, Context context) {
+        protected BrowserView(String uuid, Context context) {
             super(context);
             this.uuid = uuid;
         }
@@ -67,8 +67,8 @@ public class CapacitorBrowserView {
             for (final String regex : allowedNavigation) {
                 try {
                     Pattern.compile(regex);
-                } catch (PatternSyntaxException ex) {
-                    throw new Exception("Syntax error in regular-expression pattern '" + regex + "'. " + ex);
+                } catch (PatternSyntaxException e) {
+                    throw new Exception("Syntax error in regular-expression pattern '" + regex + "'. " + e);
                 }
             }
 
@@ -107,7 +107,7 @@ public class CapacitorBrowserView {
 
         private final String uuid;
 
-        public NativeBridge(String uuid) {
+        protected NativeBridge(String uuid) {
             this.uuid = uuid;
         }
 
@@ -118,7 +118,7 @@ public class CapacitorBrowserView {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    public BrowserView createBrowserView(Boolean _enableBridge) {
+    protected BrowserView createBrowserView(Boolean _enableBridge) {
         final String uuid = UUID.randomUUID().toString();
 
         final BrowserView browserView = new BrowserView(uuid, context);
@@ -135,8 +135,8 @@ public class CapacitorBrowserView {
         String _bridgeCode = null;
         try {
             _bridgeCode = FileOperations.ReadRawFile(context, R.raw.bridge);
-        } catch (IOException ex) {
-            Logger.error("Capacitor-BrowserView", "Failed to load the bridge module", ex);
+        } catch (IOException e) {
+            Logger.error(CapacitorBrowserViewPlugin.LOGGER_TAG, "Failed to load the bridge module.", e);
             _enableBridge = false;
         }
 
@@ -144,7 +144,7 @@ public class CapacitorBrowserView {
         final String bridgeCode = _bridgeCode;
 
         if (enableBridge) {
-            NativeBridge bridge = new NativeBridge(uuid);
+            final NativeBridge bridge = new NativeBridge(uuid);
             browserView.addJavascriptInterface(bridge, "_capacitorBrowserViewNativeBridge");
         }
 
@@ -175,7 +175,7 @@ public class CapacitorBrowserView {
                 public void onReceivedIcon(WebView view, Bitmap icon) {
                     super.onReceivedIcon(view, icon);
 
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    final ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     final byte[] bytes = stream.toByteArray();
                     icon.recycle();
@@ -240,7 +240,7 @@ public class CapacitorBrowserView {
                         context.startActivity(browserIntent);
                     }
 
-                    boolean preventDefault;
+                    final boolean preventDefault;
 
                     if (allowNavigation == null) {
                         preventDefault = super.shouldOverrideUrlLoading(view, url);
@@ -263,7 +263,7 @@ public class CapacitorBrowserView {
                         context.startActivity(browserIntent);
                     }
 
-                    boolean preventDefault;
+                    final boolean preventDefault;
 
                     if (allowNavigation == null) {
                         preventDefault = super.shouldOverrideUrlLoading(view, url);
@@ -365,7 +365,7 @@ public class CapacitorBrowserView {
         return browserView;
     }
 
-    public @Nullable BrowserView getBrowserView(PluginCall call) {
+    protected @Nullable BrowserView getBrowserView(PluginCall call) {
         final String uuid = call.getString("uuid");
         final BrowserView browserView = browserViews.get(uuid);
 
@@ -377,7 +377,7 @@ public class CapacitorBrowserView {
         return browserView;
     }
 
-    public void destroyBrowserView(PluginCall call) {
+    protected void destroyBrowserView(PluginCall call) {
         final String uuid = call.getString("uuid");
         final BrowserView browserView = getBrowserView(call);
 
@@ -394,7 +394,7 @@ public class CapacitorBrowserView {
         browserViews.remove(uuid);
     }
 
-    public void sendMessage(PluginCall call) {
+    protected void sendMessage(PluginCall call) {
         final BrowserView browserView = getBrowserView(call);
         final String eventName = call.getString("eventName");
         final JSArray data = call.getArray("args", new JSArray());

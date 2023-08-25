@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 public class FileOperations {
 
     public static String ReadRawFile(Context context, @RawRes int id) throws IOException {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         final InputStream inputStream = context.getResources().openRawResource(id);
         final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

@@ -23,7 +23,10 @@ import type {
   MessageChannelCallbackData,
   BrowserViewListenerCallback
 } from './definitions';
-import type { BrowserViewCallbackData, BrowserViewUUID } from './implementation';
+import type {
+  BrowserViewCallbackData,
+  BrowserViewUUID
+} from './implementation';
 import { CapacitorBrowserView } from './implementation';
 
 export interface BrowserViewInterface {
@@ -729,7 +732,7 @@ export class BrowserView implements BrowserViewInterface {
     for (let index = 0; index < this.listenerList.length; index++) {
       const listener = this.listenerList[index];
 
-      if (listenerHandle === await listener.listenerHandle) {
+      if (listenerHandle === (await listener.listenerHandle)) {
         this.listenerList.splice(index, 1);
         break;
       }

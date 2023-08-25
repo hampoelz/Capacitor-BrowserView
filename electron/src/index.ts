@@ -66,7 +66,6 @@ export class CapacitorBrowserView extends EventEmitter {
   }
 
   private async readPluginSettings(): Promise<PluginSettings> {
-
     //!-------------------------- workaround ---------------------------
     // the configuration exposed by the capacitor-community/electron platform
     // is always empty for some reason
@@ -324,7 +323,7 @@ export class CapacitorBrowserView extends EventEmitter {
   async sendMessage(args: BrowserViewMessageArgs): Promise<void> {
     const eventName = args.eventName;
     if (eventName === undefined) {
-      throw new Error("Required parameter 'eventName' was not specified");
+      throw new Error("Required parameter 'eventName' was not specified.");
     }
 
     if (args.args === undefined) {

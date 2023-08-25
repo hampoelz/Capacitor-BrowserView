@@ -28,6 +28,8 @@ import org.json.JSONException;
 )
 public class CapacitorBrowserViewPlugin extends Plugin {
 
+    protected static final String LOGGER_TAG = "CapacitorBrowserView";
+
     private final PluginEventNotifier eventNotifier = new PluginEventNotifier();
     private CapacitorBrowserView implementation;
 
@@ -63,7 +65,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         protected boolean allowMixedContent = false;
     }
 
-    private PluginSettings readPluginSettings() throws JSONException {
+    private PluginSettings readPluginSettings() {
         PluginSettings settings = new PluginSettings();
 
         PluginConfig config = getConfig();
@@ -90,14 +92,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
     @PluginMethod
     @SuppressLint("SetJavaScriptEnabled")
     public void create(PluginCall call) {
-        final PluginSettings pluginSettings;
-
-        try {
-            pluginSettings = readPluginSettings();
-        } catch (JSONException ex) {
-            call.reject("Failed to parse settings.");
-            return;
-        }
+        final PluginSettings pluginSettings = readPluginSettings();
 
         final String url = call.getString("url", pluginSettings.url);
         final boolean allowMultipleWindows = Boolean.TRUE.equals(call.getBoolean("allowMultipleWindows", pluginSettings.allowMultipleWindows));
@@ -117,14 +112,14 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             if (pluginSettings.allowNavigation != null) {
                 try {
                     browserView.setAllowedNavigation(pluginSettings.allowNavigation);
-                } catch (Exception ex) {
-                    call.reject(ex.toString());
+                } catch (Exception e) {
+                    call.reject("Failed to set the allowed navigation for a BrowserView.", e);
                     return;
                 }
             }
 
             if (overrideUserAgent == null && appendUserAgent != null) {
-                String defaultUserAgent = settings.getUserAgentString();
+                final String defaultUserAgent = settings.getUserAgentString();
                 settings.setUserAgentString(defaultUserAgent + " " + appendUserAgent);
             } else if (overrideUserAgent != null) {
                 settings.setUserAgentString(overrideUserAgent);
@@ -133,8 +128,8 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             if (backgroundColor != null) {
                 try {
                     browserView.setBackgroundColor(Color.parseColor(backgroundColor));
-                } catch (IllegalArgumentException ex) {
-                    Logger.debug("Capacitor-BrowserView", "BrowserView background color '" + backgroundColor + "' not applied");
+                } catch (IllegalArgumentException e) {
+                    Logger.error(CapacitorBrowserViewPlugin.LOGGER_TAG, "Failed to set the background color '" + backgroundColor + "' for a BrowserView. (Invalid color)", e);
                 }
             }
 
@@ -169,10 +164,10 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             return;
         }
 
-        Integer x = bounds.getInteger("x");
-        Integer y = bounds.getInteger("y");
-        Integer width = bounds.getInteger("width");
-        Integer height = bounds.getInteger("height");
+        final Integer x = bounds.getInteger("x");
+        final Integer y = bounds.getInteger("y");
+        final Integer width = bounds.getInteger("width");
+        final Integer height = bounds.getInteger("height");
 
         if (x == null || x < 0 || y == null || y < 0 || width == null || width < 0 || height == null || height < 0) {
             call.reject("One of the required parameters 'x', 'y', 'width' and/or 'height' was not specified or is invalid.");
@@ -203,7 +198,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) browserView.getLayoutParams();
 
             if (layoutParams == null) {
-                call.reject("Failed to get BrowserView bounds.");
+                call.reject("Unable to get BrowserView bounds.");
                 return;
             }
 
@@ -223,7 +218,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         if (browserView == null) return;
 
         final String color = call.getString("color");
-        if (color == null) {
+        if (color == null || color.isEmpty()) {
             call.reject("Required parameter 'color' was not specified.");
             return;
         }
@@ -232,8 +227,8 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             try {
                 browserView.setBackgroundColor(Color.parseColor(color));
                 call.resolve();
-            } catch (Exception ex) {
-                call.reject("WebView background color is invalid.");
+            } catch (Exception e) {
+                call.reject("Failed to set the background color for a BrowserView. (Invalid color)", e);
             }
         });
     }
@@ -246,7 +241,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         if (browserView == null) return;
 
         final String url = call.getString("url");
-        if (url == null) {
+        if (url == null || url.isEmpty()) {
             call.reject("Required parameter 'url' was not specified.");
             return;
         }
@@ -380,7 +375,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         if (browserView == null) return;
 
         final String userAgent = call.getString("userAgent");
-        if (userAgent == null) {
+        if (userAgent == null || userAgent.isEmpty()) {
             call.reject("Required parameter 'userAgent' was not specified.");
             return;
         }
@@ -419,7 +414,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         getActivity().runOnUiThread(() -> browserView.evaluateJavascript(code, value -> {
             JSObject data;
             try {
-                String result = "{ \"result\": " + value + " }";
+                final String result = "{ \"result\": " + value + " }";
                 data = new JSObject(result);
             } catch (JSONException e) {
                 data = new JSObject();
@@ -472,16 +467,16 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             for (int i = 0; i < allowedNavigation.length(); i++) {
                 allowedNavigationArray[i] = allowedNavigation.getString(i);
             }
-        } catch (JSONException ex) {
-            call.reject("Parameter 'allowedNavigation' is not valid.", ex);
+        } catch (JSONException e) {
+            call.reject("Parameter 'allowedNavigation' is not valid.", e);
             return;
         }
 
         try {
             browserView.setAllowedNavigation(allowedNavigationArray);
             call.resolve();
-        } catch (Exception ex) {
-            call.reject(ex.toString());
+        } catch (Exception e) {
+            call.reject("Failed to set the allowed navigation for a BrowserView.", e);
         }
     }
 
@@ -505,7 +500,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         if (browserView == null) return;
 
         final String eventName = call.getString("eventName");
-        if (eventName == null) {
+        if (eventName == null || eventName.isEmpty()) {
             call.reject("Required parameter 'eventName' was not specified.");
             return;
         }
