@@ -10,18 +10,18 @@ declare global {
 
 interface CapacitorBrowserViewBridge {
   send: (eventName: string, ...args: any[]) => void;
-  addListener: (eventName: string, callback: (args: any[]) => void) => void;
+  addListener: (eventName: string, callback: (...args: any[]) => void) => void;
 }
 
 const CapacitorBrowserView: CapacitorBrowserViewBridge = {
   send(eventName, ...args) {
-    const data = JSON.stringify([args]);
+    const data = JSON.stringify(args);
     window._capacitorBrowserViewNativeBridge.send(eventName, data);
   },
   addListener(eventName, callback) {
     window.addEventListener('channel-' + eventName, ((event: CustomEvent) => {
       const data = JSON.parse(event.detail);
-      callback(data);
+      callback(...data);
     }) as EventListener);
   }
 };
