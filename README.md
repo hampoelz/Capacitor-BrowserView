@@ -1,17 +1,29 @@
 # 📱 Capacitor BrowserView
 
-➡️ Embed additional web content into [Capacitor](https://capacitorjs.com) apps.
+:arrow_right: Embed additional web content into [Capacitor](https://capacitorjs.com) apps.
 
-> **⚠ WIP - Work in Progress ⚠**
->
-> The project is part of my diploma thesis, an overview can be found at [hampoelz/HTL_Diplomarbeit](https://github.com/hampoelz/HTL_Diplomarbeit).
->
-> ⏰ Planed Deadline: September 2023
->
-> Notes:
-> - The project is still very unstable, if you have any problems or suggestions it would be nice if you create an issue.
-> - When the project is stable it will be published on NPM.
-> - Features like IOS support will be added in the future.
+> [!WARNING]  
+> **WIP - Work in Progress**
+
+**Table of contents**
+
+* [Install](#install)
+  + [Supported Platforms](#supported-platforms)
+* [Getting Started](#getting-started)
+  + [Minimal example](#minimal-example)
+  + [Inter-Process Communication](#inter-process-communication)
+* [Configuration](#configuration)
+* [API - Bridge module](#api---bridge-module)
+* [API - Capacitor layer](#api---capacitor-layer)
+
+## Install
+
+**You've to use Capacitor v5 or newer. This project isn't compatible with lower versions of Capacitor.**
+
+```bash
+npm install https://github.com/hampoelz/capacitor-browserview/releases/download/v1.0.0-beta.2/capacitor-browserview.tgz
+npx cap sync
+```
 
 ### Supported Platforms
 
@@ -22,16 +34,9 @@
   - [x] Linux
   - [x] macOS
 
-## Install
-
-**You've to use Capacitor v5 or newer. This project isn't compatible with lower versions of Capacitor.**
-
-```bash
-npm install https://github.com/hampoelz/capacitor-browserview/releases/download/v1.0.0-beta.1/capacitor-browserview.tgz
-npx cap sync
-```
-
 ## Getting Started
+
+### Minimal example
 
 To embed an additional web page to your app, you first need to create a new BrowserView.
 This is done by importing the BrowserView class from the Capacitor plugin and calling the create method.
@@ -41,39 +46,89 @@ After that, all you have to do is set its bounds and load a website.
 ```typescript
 import { BrowserView } from 'capacitor-browserview';
 
-// Create a new BrowserView, set its bounds and load a website.
+// Creates a new BrowserView, sets its bounds and loads a website.
 const myView = await BrowserView.create();
 myView.setBounds({ bounds: { x: 0, y: 0, width: 300, height: 600 } });
 myView.loadUrl({ url: "https://capacitorjs.com/" });
 ```
 
-At this point, your BrowserView should be created within your application and the website should start loading.
+At this point, the BrowserView should be created within your application and the website should start loading.
 Using the returned reference to the BrowserView, you can easily interact with it, as shown here in a few examples:
 
 
 ```typescript
-// Reload the current web page.
+// Reloads the current web page.
 myView.reload();
 
-// Get the user agent for this web page.
+// Gets the user agent for this web page.
 const { userAgent } = await myView.getUserAgent();
 console.log("The following UserAgent is used for this web page: " + userAgent);
 
-// Handle finished page load.
+// Handles finished page load.
 myView.addListener('did-finish-load', () => {
     console.log("Congratulations! The web page loaded successfully.");
 });
 
-// Handle title changes of the web page.
+// Handles title changes of the web page.
 myView.addListener('page-title-updated', event => {
     console.log(`The web page has changed its title to '${event.title}'.`);
 });
 
-// Remove the BrowserView from your app, and clean up references.
+// Removes the BrowserView from your app, and cleans up references.
 myView.destroy();
 ```
 
-For details about the communication between the Capacitor layer and the loaded web page, see the [Bridge](#bridge) section.
+### Inter-Process Communication
+
+This plugin includes a bridge between the Capacitor layer and the loaded web page in the BrowserView(s).
+However, this feature is disabled by default. It can be enabled either globally via the plugin configuration or for each BrowserView individually during its creation.
+
+If the bridge feature is enabled, the global object `window.CapacitorBrowserView` is available on web pages within the corresponding BrowserView.
+
+To use the bridge, you first need to modify your web page so that it can receive and return messages.
+For example, add the following sample code to your web page.
+
+```javascript
+// Listens to "msg-from-capacitor" from the Capacitor layer.
+CapacitorBrowserView.addListener("msg-from-capacitor", message => {
+    console.log('Message from Capacitor-App: ' + message);
+
+    // Sends a message back to the Capacitor layer.
+    CapacitorBrowserView.send("msg-from-web", `Replying to the message '${message}'.`, "And optionally add further args");
+});
+```
+
+After that, you need to set up a new BrowserView with an enabled Bridge.
+In addition, the Capacitor app should also be able to receive messages and send a message to your website.
+Note that the web page must be loaded entirely before it can receive messages.
+This could look something like this:
+
+```typescript
+import { BrowserView } from 'capacitor-browserview';
+
+const myView = await BrowserView.create({ enableBridge: true });
+myView.setBounds({ bounds: { x: 0, y: 0, width: 300, height: 600 } });
+
+// Listens to "msg-from-web" from the web page.
+myView.addMessageListener('msg-from-web', data => {
+    console.log("Message from web page: ", data.args);
+});
+
+// Waits for the web page to finish loading.
+myView.addListener('did-finish-load', () => {
+
+    // Sends a message to the web page.
+    myView.sendMessage({
+        eventName: "msg-from-capacitor",
+        args: [ "Hello from Capacitor!" ]
+    });
+
+});
+
+myView.loadUrl({ url: "https://your_webpage.dev/" });
+```
+
+A full API documentation can be found in the [API - Bridge module](#api---bridge-module) section.
 
 ## Configuration
 
@@ -166,17 +221,14 @@ export default config;
 
 </docgen-config>
 
-## Bridge
+## API - Bridge module
 
-This extension includes a bridge between the Capacitor layer and the loaded web page in the BrowserView(s).
+This plugin includes a bridge between the Capacitor layer and the loaded web page in the BrowserView(s).
 However, this feature is disabled by default. It can be enabled either globally via the plugin configuration or for each BrowserView individually during its creation.
 
 If the bridge feature is enabled, the global object `window.CapacitorBrowserView` is available on web pages within the corresponding BrowserView.
 
-### API
-
-The `window.CapacitorBrowserView` object provides a few methods so you can send messages from your web page to the Capacitor layer.
-You can also receive replies from the Capacitor layer.
+The `window.CapacitorBrowserView` object provides an API to communicate between the Capacitor layer and the web pages.
 
 It has the following methods to listen for events and send messages:
 
@@ -205,7 +257,7 @@ Arguments will be serialized with JSON.
 ### CapacitorBrowserView.addListener(string, ...)
 
 ```typescript
-addListener: (eventName: string, callback: (args: any[]) => void) => void
+addListener: (eventName: string, callback: (...args: any[]) => void) => void
 ```
 
 Listens to `eventName` and calls `callback(args...)` when a new message arrives from the Capacitor layer.
@@ -227,54 +279,10 @@ callback: (args: any[]) => void
 
 --------------------
 
-### Example
 
-To use the bridge, you first need to modify your web page so that it can receive and return messages.
-For example, you can add the following sample code to your web page.
+## API - Capacitor layer
 
-```javascript
-// Listens to "msg-from-capacitor" from the Capacitor layer.
-CapacitorBrowserView.addListener("msg-from-capacitor", args => {
-    console.log('Message from Capacitor-App: ' + args);
-
-    // Send a message back to the Capacitor layer.
-    CapacitorBrowserView.send("msg-from-web", "Replying to this message: " + args, "And optionally add further args");
-});
-```
-
-After that, you need to set up a new BrowserView with an enabled Bridge.
-In addition, your Capacitor app should also be able to receive messages and send a message to your website.
-Note that the web page must be loaded entirely before it can receive messages.
-This could look something like this:
-
-```typescript
-import { BrowserView } from 'capacitor-browserview';
-
-const myView = await BrowserView.create({ enableBridge: true });
-myView.setBounds({ bounds: { x: 0, y: 0, width: 300, height: 600 } });
-
-// Listens to "msg-from-web" from the web page.
-myView.addMessageListener('msg-from-web', data => {
-    console.log("Message from web page: ", data.args);
-});
-
-// Wait for the web page to finish loading.
-myView.addListener('did-finish-load', () => {
-
-    // Send a message to the web page.
-    myView.sendMessage({
-        eventName: "msg-from-capacitor",
-        args: [ "Hello from Capacitor!" ]
-    });
-
-});
-
-myView.loadUrl({ url: "https://your_webpage.dev/" });
-```
-
-## API
-
-A `BrowserView` can be used to embed additional web content into your Capacitor-App. It is like a child window, except that it is positioned relative to its owning window. 
+A `BrowserView` can be used to embed additional web content into the Capacitor-App. It is like a child window, except that it is positioned relative to its owning window. 
 
 It has the following methods:
 
@@ -333,7 +341,7 @@ It has the following methods:
 ### create(...)
 
 ```typescript
-create(options?: CreateOptions | undefined) => Promise<BrowserView>
+create(options?: CreateOptions) => Promise<BrowserView>
 ```
 
 Creates a new BrowserView with properties as set by the `options`.
@@ -1180,7 +1188,7 @@ Removes the specified `listenerHandle` from the listener array for the event it 
 ### removeAllListeners(...)
 
 ```typescript
-removeAllListeners(eventName?: string | undefined) => Promise<void>
+removeAllListeners(eventName?: string) => Promise<void>
 ```
 
 Removes all listeners, or those of the specified `eventName`, of the BrowserView.
@@ -1329,9 +1337,9 @@ An empty interface that represents no data.
 
 #### IconPayloadData
 
-| Prop       | Type                | Description                | Since |
-| ---------- | ------------------- | -------------------------- | ----- |
-| **`icon`** | <code>string</code> | The favicon of a web page. | 1.0.0 |
+| Prop       | Type                | Description                                         | Since |
+| ---------- | ------------------- | --------------------------------------------------- | ----- |
+| **`icon`** | <code>string</code> | The favicon of a web page as base64 encoded string. | 1.0.0 |
 
 
 #### ErrorPayloadData

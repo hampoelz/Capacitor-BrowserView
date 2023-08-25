@@ -260,7 +260,7 @@ export interface UrlPayloadData {
 
 export interface IconPayloadData {
   /**
-   * The favicon of a web page.
+   * The favicon of a web page as base64 encoded string.
    *
    * @since 1.0.0
    */
