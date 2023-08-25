@@ -1,3 +1,6 @@
+import commonjs from '@rollup/plugin-commonjs';
+import nodeResolve from '@rollup/plugin-node-resolve';
+
 export default [
   {
     input: 'electron/build/electron/src/index.js',
@@ -7,6 +10,7 @@ export default [
         format: 'cjs',
         sourcemap: 'inline',
         inlineDynamicImports: true,
+        exports: 'auto',
       },
     ],
     external: [
@@ -19,6 +23,15 @@ export default [
       'path',
       'fs',
     ],
+    plugins: [
+      nodeResolve(),
+      commonjs({
+        ignoreDynamicRequires: true,
+        dynamicRequireTargets: [
+          'node_modules/capacitor-browserview/electron/dist/plugin.js',
+        ],
+      }),
+    ]
   },
   {
     input: 'electron/build/electron/src/bridge.js',
@@ -28,8 +41,18 @@ export default [
         format: 'cjs',
         sourcemap: 'inline',
         inlineDynamicImports: true,
+        exports: 'default',
       },
     ],
     external: ['electron'],
+    plugins: [
+      nodeResolve(),
+      commonjs({
+        ignoreDynamicRequires: true,
+        dynamicRequireTargets: [
+          'node_modules/capacitor-browserview/electron/dist/bridge.js',
+        ],
+      }),
+    ]
   },
 ];

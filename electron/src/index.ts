@@ -53,20 +53,19 @@ class PluginSettings {
 }
 
 export class CapacitorBrowserView extends EventEmitter {
-  private config?: Record<string, any>;
+  //private config?: Record<string, any>;
   private implementation: CapacitorBrowserViewImplementation;
 
-  constructor(config?: Record<string, any>) {
+  constructor(/*config?: Record<string, any>*/) {
     super();
 
     const browserWindow = BrowserWindow.getAllWindows()[0];
 
-    this.config = config;
+    //this.config = config;
     this.implementation = new CapacitorBrowserViewImplementation(browserWindow, this.PluginEventNotifier);
   }
 
-  private async readPluginSettings(): Promise<PluginSettings | undefined> {
-    let config = this.config?.plugins?.CapacitorBrowserView;
+  private async readPluginSettings(): Promise<PluginSettings> {
 
     //!-------------------------- workaround ---------------------------
     // the configuration exposed by the capacitor-community/electron platform
@@ -79,7 +78,7 @@ export class CapacitorBrowserView extends EventEmitter {
     const configPath = configPathBase + configPathExt;
     const configFile = await require(configPath);
     const capacitorConfig = configFile.default || configFile;
-    config = capacitorConfig?.plugins?.CapacitorBrowserView;
+    const config = capacitorConfig?.plugins?.CapacitorBrowserView;
     //!-----------------------------------------------------------------
 
     const settings = new PluginSettings();

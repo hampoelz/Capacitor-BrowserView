@@ -26,6 +26,4 @@ const CapacitorBrowserView: CapacitorBrowserViewBridge = {
   }
 };
 
-window.CapacitorBrowserView = CapacitorBrowserView;
-
-export { CapacitorBrowserView, CapacitorBrowserViewBridge };
+export default CapacitorBrowserView;

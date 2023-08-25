@@ -27,8 +27,10 @@ export default [
       {
         file: 'android/src/main/res/raw/bridge.js',
         format: 'iife',
+        name: 'CapacitorBrowserView',
         sourcemap: 'inline',
         inlineDynamicImports: true,
+        exports: 'default',
       },
     ],
   },
