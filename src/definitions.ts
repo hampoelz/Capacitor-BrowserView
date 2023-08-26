@@ -52,7 +52,7 @@ declare module '@capacitor/cli' {
       enableBridge?: boolean;
 
       /**
-       * Default user agent for BrowserViews.
+       * Default user-agent for BrowserViews.
        *
        * @since 1.0.0
        * @example "Mozilla/5.0 (CapacitorJS) CapacitorApp/1.0"
@@ -60,7 +60,7 @@ declare module '@capacitor/cli' {
       overrideUserAgent?: string;
 
       /**
-       * String to append to the original user agent for BrowserViews.
+       * String to append to the original user-agent for BrowserViews.
        *
        * This is disregarded if `overrideUserAgent` is used.
        *
@@ -78,7 +78,7 @@ declare module '@capacitor/cli' {
       backgroundColor?: Color;
 
       /**
-       * Default user agent for BrowserViews on Android.
+       * Default user-agent for BrowserViews on Android.
        *
        * Overrides global `overrideUserAgent` option.
        *
@@ -88,7 +88,7 @@ declare module '@capacitor/cli' {
       androidOverrideUserAgent?: string;
 
       /**
-       * String to append to the original user agent for BrowserViews for Android.
+       * String to append to the original user-agent for BrowserViews for Android.
        *
        * Overrides global `appendUserAgent` option.
        *
@@ -113,8 +113,8 @@ declare module '@capacitor/cli' {
        * Enable mixed content in the BrowserViews for Android.
        *
        * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
-       * is disabled by default for security. During development, you may need to
-       * enable it to allow the BrowserViews to load files from different schemes.
+       * is disabled by default for security. During development, this option may need to
+       * be enabled to allow the BrowserViews to load files from different schemes.
        *
        * **This is not intended for use in production.**
        *
@@ -125,7 +125,7 @@ declare module '@capacitor/cli' {
       androidAllowMixedContent?: boolean;
 
       /**
-       * Default user agent for BrowserViews on Electron.
+       * Default user-agent for BrowserViews on Electron.
        *
        * Overrides global `overrideUserAgent` option.
        *
@@ -135,7 +135,7 @@ declare module '@capacitor/cli' {
       electronOverrideUserAgent?: string;
 
       /**
-       * String to append to the original user agent for BrowserViews for Electron.
+       * String to append to the original user-agent for BrowserViews for Electron.
        *
        * Overrides global `appendUserAgent` option.
        *
@@ -160,8 +160,8 @@ declare module '@capacitor/cli' {
        * Enable mixed content in the BrowserViews for Electron.
        *
        * [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content)
-       * is disabled by default for security. During development, you may need to
-       * enable it to allow the BrowserViews to load files from different schemes.
+       * is disabled by default for security. During development, this option may need to
+       * be enabled to allow the BrowserViews to load files from different schemes.
        *
        * **This is not intended for use in production.**
        *
@@ -180,7 +180,7 @@ declare module '@capacitor/cli' {
  */
 export interface CreateOptions {
   /**
-   * Initial url that is loaded immediately after the BrowserView has been created.
+   * Initial URL that is loaded immediately after the BrowserView has been created.
    *
    * @since 1.0.0
    */
@@ -206,14 +206,14 @@ export interface CreateOptions {
   enableBridge?: boolean;
 
   /**
-   * Default user agent.
+   * Default user-agent.
    *
    * @since 1.0.0
    */
   overrideUserAgent?: string;
 
   /**
-   * String to append to the original user agent.
+   * String to append to the original user-agent.
    *
    * This is disregarded if `overrideUserAgent` is used.
    *
@@ -251,7 +251,7 @@ export interface ColorPayloadData {
 
 export interface UrlPayloadData {
   /**
-   * The url of a web page.
+   * The URL of a web page.
    *
    * @since 1.0.0
    */
@@ -354,7 +354,7 @@ export interface ErrorPayloadData {
 
 export interface ResponsePayloadData {
   /**
-   * The url that failed to load.
+   * The URL that failed to load.
    *
    * @since 1.0.0
    */
@@ -472,7 +472,7 @@ export interface WebResourceError {
   errorDescription: string;
 
   /**
-   * The url that failed to load.
+   * The URL that failed to load.
    *
    * @since 1.0.0
    */

@@ -18,7 +18,7 @@
 
 ## Install
 
-**You've to use Capacitor v5 or newer. This project isn't compatible with lower versions of Capacitor.**
+**Capacitor v5 or newer is required. This project isn't compatible with lower versions of Capacitor.**
 
 ```bash
 npm install https://github.com/hampoelz/capacitor-browserview/releases/download/v1.0.0-beta.2/capacitor-browserview.tgz
@@ -38,10 +38,9 @@ npx cap sync
 
 ### Minimal example
 
-To embed an additional web page to your app, you first need to create a new BrowserView.
-This is done by importing the BrowserView class from the Capacitor plugin and calling the create method.
-After that, all you have to do is set its bounds and load a website.
-
+To embed an additional web page to the Capacitor app, first a new BrowserView needs to be created.
+This is done by importing the BrowserView class from the Capacitor-BrowserView plugin and calling the create method.
+After that, just set its bounds and load a website.
 
 ```typescript
 import { BrowserView } from 'capacitor-browserview';
@@ -52,15 +51,15 @@ myView.setBounds({ bounds: { x: 0, y: 0, width: 300, height: 600 } });
 myView.loadUrl({ url: "https://capacitorjs.com/" });
 ```
 
-At this point, the BrowserView should be created within your application and the website should start loading.
-Using the returned reference to the BrowserView, you can easily interact with it, as shown here in a few examples:
+At this point, the BrowserView should be created within the application and the website should start loading.
+Using the returned reference to the BrowserView, it is easy to interact with it, as shown here in a few examples:
 
 
 ```typescript
 // Reloads the current web page.
 myView.reload();
 
-// Gets the user agent for this web page.
+// Gets the user-agent for this web page.
 const { userAgent } = await myView.getUserAgent();
 console.log("The following UserAgent is used for this web page: " + userAgent);
 
@@ -74,7 +73,7 @@ myView.addListener('page-title-updated', event => {
     console.log(`The web page has changed its title to '${event.title}'.`);
 });
 
-// Removes the BrowserView from your app, and cleans up references.
+// Removes the BrowserView from the app, and cleans up references.
 myView.destroy();
 ```
 
@@ -85,8 +84,8 @@ However, this feature is disabled by default. It can be enabled either globally 
 
 If the bridge feature is enabled, the global object `window.CapacitorBrowserView` is available on web pages within the corresponding BrowserView.
 
-To use the bridge, you first need to modify your web page so that it can receive and return messages.
-For example, add the following sample code to your web page.
+To use the bridge, the website first needs to be modified so that it is capable of receiving and returning messages.
+For example, add the following sample code to the web page:
 
 ```javascript
 // Listens to "msg-from-capacitor" from the Capacitor layer.
@@ -98,8 +97,8 @@ CapacitorBrowserView.addListener("msg-from-capacitor", message => {
 });
 ```
 
-After that, you need to set up a new BrowserView with an enabled Bridge.
-In addition, the Capacitor app should also be able to receive messages and send a message to your website.
+After that, a new BrowserView with an enabled bridge needs be set up.
+In addition, the Capacitor app should also be able to receive messages and send a message to the website.
 Note that the web page must be loaded entirely before it can receive messages.
 This could look something like this:
 
@@ -125,7 +124,7 @@ myView.addListener('did-finish-load', () => {
 
 });
 
-myView.loadUrl({ url: "https://your_webpage.dev/" });
+myView.loadUrl({ url: "https://webpage.dev/" });
 ```
 
 A full API documentation can be found in the [API - Bridge module](#api---bridge-module) section.
@@ -141,23 +140,23 @@ BrowserView is created or changed later via methods.
 
 These config values are available:
 
-| Prop                            | Type                                    | Description                                                                                                                                                                                                                                                                                                                                    | Default            | Since |
-| ------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----- |
-| **`url`**                       | <code>string</code>                     | Default external URL loaded in BrowserViews.                                                                                                                                                                                                                                                                                                   |                    | 1.0.0 |
-| **`allowMultipleWindows`**      | <code>boolean</code>                    | Open links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ in the external browser instead of the BrowserViews.                                                                                               | <code>true</code>  | 1.0.0 |
-| **`allowNavigation`**           | <code>string[]</code>                   | Set regular expressions to which the BrowserViews can navigate additional. By default, all external URLs are opened in the external browser (not the BrowserView).                                                                                                                                                                             | <code>[]</code>    | 1.0.0 |
-| **`enableBridge`**              | <code>boolean</code>                    | Enable a bridge between the Capacitor layer and the loaded web page.                                                                                                                                                                                                                                                                           | <code>false</code> | 1.0.0 |
-| **`overrideUserAgent`**         | <code>string</code>                     | Default user agent for BrowserViews.                                                                                                                                                                                                                                                                                                           |                    | 1.0.0 |
-| **`appendUserAgent`**           | <code>string</code>                     | String to append to the original user agent for BrowserViews. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                                                                              |                    | 1.0.0 |
-| **`backgroundColor`**           | <code><a href="#color">Color</a></code> | Default background color for BrowserViews.                                                                                                                                                                                                                                                                                                     |                    | 1.0.0 |
-| **`androidOverrideUserAgent`**  | <code>string</code>                     | Default user agent for BrowserViews on Android. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                   |                    | 1.0.0 |
-| **`androidAppendUserAgent`**    | <code>string</code>                     | String to append to the original user agent for BrowserViews for Android. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                       |                    | 1.0.0 |
-| **`androidBackgroundColor`**    | <code><a href="#color">Color</a></code> | Default background color for BrowserViews for Android. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                              |                    | 1.0.0 |
-| **`androidAllowMixedContent`**  | <code>boolean</code>                    | Enable mixed content in the BrowserViews for Android. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, you may need to enable it to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.**  | <code>false</code> | 1.0.0 |
-| **`electronOverrideUserAgent`** | <code>string</code>                     | Default user agent for BrowserViews on Electron. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                  |                    | 1.0.0 |
-| **`electronAppendUserAgent`**   | <code>string</code>                     | String to append to the original user agent for BrowserViews for Electron. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                      |                    | 1.0.0 |
-| **`electronBackgroundColor`**   | <code><a href="#color">Color</a></code> | Default background color for BrowserViews for Electron. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                             |                    | 1.0.0 |
-| **`electronAllowMixedContent`** | <code>boolean</code>                    | Enable mixed content in the BrowserViews for Electron. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, you may need to enable it to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.** | <code>false</code> | 1.0.0 |
+| Prop                            | Type                                    | Description                                                                                                                                                                                                                                                                                                                                             | Default            | Since |
+| ------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----- |
+| **`url`**                       | <code>string</code>                     | Default external URL loaded in BrowserViews.                                                                                                                                                                                                                                                                                                            |                    | 1.0.0 |
+| **`allowMultipleWindows`**      | <code>boolean</code>                    | Open links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ in the external browser instead of the BrowserViews.                                                                                                        | <code>true</code>  | 1.0.0 |
+| **`allowNavigation`**           | <code>string[]</code>                   | Set regular expressions to which the BrowserViews can navigate additional. By default, all external URLs are opened in the external browser (not the BrowserView).                                                                                                                                                                                      | <code>[]</code>    | 1.0.0 |
+| **`enableBridge`**              | <code>boolean</code>                    | Enable a bridge between the Capacitor layer and the loaded web page.                                                                                                                                                                                                                                                                                    | <code>false</code> | 1.0.0 |
+| **`overrideUserAgent`**         | <code>string</code>                     | Default user-agent for BrowserViews.                                                                                                                                                                                                                                                                                                                    |                    | 1.0.0 |
+| **`appendUserAgent`**           | <code>string</code>                     | String to append to the original user-agent for BrowserViews. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                                                                                       |                    | 1.0.0 |
+| **`backgroundColor`**           | <code><a href="#color">Color</a></code> | Default background color for BrowserViews.                                                                                                                                                                                                                                                                                                              |                    | 1.0.0 |
+| **`androidOverrideUserAgent`**  | <code>string</code>                     | Default user-agent for BrowserViews on Android. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                            |                    | 1.0.0 |
+| **`androidAppendUserAgent`**    | <code>string</code>                     | String to append to the original user-agent for BrowserViews for Android. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                                |                    | 1.0.0 |
+| **`androidBackgroundColor`**    | <code><a href="#color">Color</a></code> | Default background color for BrowserViews for Android. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                                       |                    | 1.0.0 |
+| **`androidAllowMixedContent`**  | <code>boolean</code>                    | Enable mixed content in the BrowserViews for Android. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, this option may need to be enabled to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.**  | <code>false</code> | 1.0.0 |
+| **`electronOverrideUserAgent`** | <code>string</code>                     | Default user-agent for BrowserViews on Electron. Overrides global `overrideUserAgent` option.                                                                                                                                                                                                                                                           |                    | 1.0.0 |
+| **`electronAppendUserAgent`**   | <code>string</code>                     | String to append to the original user-agent for BrowserViews for Electron. Overrides global `appendUserAgent` option. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                                               |                    | 1.0.0 |
+| **`electronBackgroundColor`**   | <code><a href="#color">Color</a></code> | Default background color for BrowserViews for Electron. Overrides global `backgroundColor` option.                                                                                                                                                                                                                                                      |                    | 1.0.0 |
+| **`electronAllowMixedContent`** | <code>boolean</code>                    | Enable mixed content in the BrowserViews for Electron. [Mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) is disabled by default for security. During development, this option may need to be enabled to allow the BrowserViews to load files from different schemes. **This is not intended for use in production.** | <code>false</code> | 1.0.0 |
 
 ### Examples
 
@@ -363,7 +362,7 @@ Creates a new BrowserView with properties as set by the `options`.
 destroy() => Promise<void>
 ```
 
-Removes the BrowserView from you App and destroys its internal state.
+Removes the BrowserView from the app and destroys its internal state.
 No other methods may be called on this BrowserView after destroy.
 
 **Since:** 1.0.0
@@ -765,7 +764,7 @@ addListener(eventName: 'close-window', listenerFunc: BrowserViewListenerCallback
 ```
 
 Calls `listenerFunc()` when the browser has stopped any loading in this window
-and has removed any cross-scripting ability in javascript.
+and has removed any cross-scripting ability in JavaScript.
 
 The application's implementation of this callback should remove the specific BrowserView if this is not already done
 and ensure that any URL or security indicator displayed is updated so that the user can tell that the page they were
@@ -1003,7 +1002,7 @@ Calls `listenerFunc()` when the document in the top-level frame is loaded.
 
 This callback is called when the body of the HTTP response has started loading, is reflected in the DOM,
 and will be visible in subsequent draws. This callback occurs early in the document loading process,
-and as such you should expect that linked resources (for example, CSS and images) may not be available.
+and as such it should be expected that linked resources (for example, CSS and images) may not be available.
 
 **Note:** On Android this event requires API level 23 or higher to be fired.
 
@@ -1212,11 +1211,11 @@ They override the global plugin configurations for this specific BrowserView.
 
 | Prop                       | Type                                    | Description                                                                                                                                                                                                                                      | Default            | Since |
 | -------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | ----- |
-| **`url`**                  | <code>string</code>                     | Initial url that is loaded immediately after the BrowserView has been created.                                                                                                                                                                   |                    | 1.0.0 |
+| **`url`**                  | <code>string</code>                     | Initial URL that is loaded immediately after the BrowserView has been created.                                                                                                                                                                   |                    | 1.0.0 |
 | **`allowMultipleWindows`** | <code>boolean</code>                    | Open links that request a new tab or window _(e.g. by `window.open()`, a link with `target="_blank"`, shift+clicking on a link, or submitting a form with `<form target="_blank">`.)_ in the external browser instead of the BrowserViews. | <code>true</code>  | 1.0.0 |
 | **`enableBridge`**         | <code>boolean</code>                    | Enable a bridge between the Capacitor layer and the loaded web page.                                                                                                                                                                             | <code>false</code> | 1.0.0 |
-| **`overrideUserAgent`**    | <code>string</code>                     | Default user agent.                                                                                                                                                                                                                              |                    | 1.0.0 |
-| **`appendUserAgent`**      | <code>string</code>                     | String to append to the original user agent. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                 |                    | 1.0.0 |
+| **`overrideUserAgent`**    | <code>string</code>                     | Default user-agent.                                                                                                                                                                                                                              |                    | 1.0.0 |
+| **`appendUserAgent`**      | <code>string</code>                     | String to append to the original user-agent. This is disregarded if `overrideUserAgent` is used.                                                                                                                                                 |                    | 1.0.0 |
 | **`backgroundColor`**      | <code><a href="#color">Color</a></code> | Default background color.                                                                                                                                                                                                                        |                    | 1.0.0 |
 
 
@@ -1253,7 +1252,7 @@ These fields can be accessed directly.
 
 | Prop      | Type                | Description            | Since |
 | --------- | ------------------- | ---------------------- | ----- |
-| **`url`** | <code>string</code> | The url of a web page. | 1.0.0 |
+| **`url`** | <code>string</code> | The URL of a web page. | 1.0.0 |
 
 
 #### TitlePayloadData
@@ -1357,14 +1356,14 @@ An interface that encapsulates information about the error that occurred during 
 | ---------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
 | **`errorCode`**        | <code>number</code> | The error code of the error. The full list of error codes and their meaning is available [here](https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h). | 1.0.0 |
 | **`errorDescription`** | <code>string</code> | A string describing the error. Descriptions are localized, and thus can be used for communicating the problem to the user.                                                           | 1.0.0 |
-| **`validatedURL`**     | <code>string</code> | The url that failed to load.                                                                                                                                                         | 1.0.0 |
+| **`validatedURL`**     | <code>string</code> | The URL that failed to load.                                                                                                                                                         | 1.0.0 |
 
 
 #### ResponsePayloadData
 
 | Prop                | Type                                                                | Description                           | Since |
 | ------------------- | ------------------------------------------------------------------- | ------------------------------------- | ----- |
-| **`url`**           | <code>string</code>                                                 | The url that failed to load.          | 1.0.0 |
+| **`url`**           | <code>string</code>                                                 | The URL that failed to load.          | 1.0.0 |
 | **`errorResponse`** | <code><a href="#webresourceresponse">WebResourceResponse</a></code> | Information about the error occurred. | 1.0.0 |
 
 

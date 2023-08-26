@@ -38,7 +38,7 @@ export interface BrowserViewInterface {
   create(options?: CreateOptions): Promise<BrowserView>;
 
   /**
-   * Removes the BrowserView from you App and destroys its internal state.
+   * Removes the BrowserView from the app and destroys its internal state.
    * No other methods may be called on this BrowserView after destroy.
    *
    * @since 1.0.0
@@ -238,7 +238,7 @@ export interface BrowserViewInterface {
 
   /**
    * Calls `listenerFunc()` when the browser has stopped any loading in this window
-   * and has removed any cross-scripting ability in javascript.
+   * and has removed any cross-scripting ability in JavaScript.
    *
    * The application's implementation of this callback should remove the specific BrowserView if this is not already done
    * and ensure that any URL or security indicator displayed is updated so that the user can tell that the page they were
@@ -386,7 +386,7 @@ export interface BrowserViewInterface {
    *
    * This callback is called when the body of the HTTP response has started loading, is reflected in the DOM,
    * and will be visible in subsequent draws. This callback occurs early in the document loading process,
-   * and as such you should expect that linked resources (for example, CSS and images) may not be available.
+   * and as such it should be expected that linked resources (for example, CSS and images) may not be available.
    *
    * **Note:** On Android this event requires API level 23 or higher to be fired.
    *
