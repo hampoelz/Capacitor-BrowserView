@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.util.Base64;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -176,10 +177,15 @@ public class CapacitorBrowserViewPlugin extends Plugin {
 
         final float density = getActivity().getResources().getDisplayMetrics().density;
 
+        final Rect window = new Rect();
+        getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(window);
+
+        final int topOffset = window.top;
+
         getActivity().runOnUiThread(() -> {
             final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) (width * density), (int) (height * density));
             layoutParams.leftMargin = (int) (x * density);
-            layoutParams.topMargin = (int) (y * density);
+            layoutParams.topMargin = (int) (y * density) + topOffset;
 
             browserView.setLayoutParams(layoutParams);
             browserView.bringToFront();
@@ -202,9 +208,14 @@ public class CapacitorBrowserViewPlugin extends Plugin {
                 return;
             }
 
+            final Rect window = new Rect();
+            getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(window);
+
+            final int topOffset = window.top;
+
             final JSObject bounds = new JSObject();
             bounds.put("x", (int) (layoutParams.leftMargin / density));
-            bounds.put("y", (int) (layoutParams.topMargin / density));
+            bounds.put("y", (int) (layoutParams.topMargin / density) - topOffset);
             bounds.put("width", (int) (layoutParams.width / density));
             bounds.put("height", (int) (layoutParams.height / density));
 
