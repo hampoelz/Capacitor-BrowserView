@@ -7,6 +7,7 @@ import type {
   BoundsPayloadData,
   ColorPayloadData,
   UrlPayloadData,
+  NavigationPayloadData,
   IconPayloadData,
   TitlePayloadData,
   CanGoBackPayloadData,
@@ -233,7 +234,7 @@ export interface BrowserViewInterface {
    */
   addListener(
     eventName: 'new-window',
-    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
+    listenerFunc: BrowserViewListenerCallback<NavigationPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
@@ -329,7 +330,7 @@ export interface BrowserViewInterface {
    */
   addListener(
     eventName: 'will-navigate',
-    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
+    listenerFunc: BrowserViewListenerCallback<NavigationPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
@@ -623,7 +624,7 @@ export class BrowserView implements BrowserViewInterface {
 
   addListener(
     eventName: 'new-window',
-    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
+    listenerFunc: BrowserViewListenerCallback<NavigationPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
@@ -653,7 +654,7 @@ export class BrowserView implements BrowserViewInterface {
 
   addListener(
     eventName: 'will-navigate',
-    listenerFunc: BrowserViewListenerCallback<UrlPayloadData>
+    listenerFunc: BrowserViewListenerCallback<NavigationPayloadData>
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(

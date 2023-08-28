@@ -127,7 +127,7 @@ export class CapacitorBrowserViewImplementation {
           browserView.webContents.loadURL(url);
         }
 
-        this.eventNotifier.willNavigate(uuid, url);
+        this.eventNotifier.willNavigate(uuid, url, !allowNavigation);
       }
     });
 
@@ -146,7 +146,7 @@ export class CapacitorBrowserViewImplementation {
           browserView.webContents.loadURL(url);
         }
 
-        this.eventNotifier.willNavigate(uuid, url);
+        this.eventNotifier.willNavigate(uuid, url, !allowNavigation);
       }
 
       return { action: 'deny' };
@@ -190,7 +190,7 @@ export class CapacitorBrowserViewImplementation {
         shell.openExternal(url);
       }
 
-      this.eventNotifier.willNavigate(uuid, url);
+      this.eventNotifier.willNavigate(uuid, url, !allowNavigation);
     });
 
     browserView.webContents.addListener('did-start-loading', () => {

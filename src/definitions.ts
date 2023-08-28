@@ -258,6 +258,20 @@ export interface UrlPayloadData {
   url: string;
 }
 
+export interface NavigationPayloadData {
+  /**
+   * The URL of a web page.
+   *
+   * @since 1.0.0
+   */
+  url: string;
+
+  /**
+   * Whether the URL is opened in the external browser or in the BrowserView.
+   */
+  isExternal: boolean
+}
+
 export interface IconPayloadData {
   /**
    * The favicon of a web page as base64 encoded string.

@@ -248,7 +248,7 @@ public class CapacitorBrowserView {
                         preventDefault = !allowNavigation;
                     }
 
-                    eventNotifier.willNavigate(uuid, url);
+                    eventNotifier.willNavigate(uuid, url, preventDefault);
                     return preventDefault;
                 }
 
@@ -271,7 +271,7 @@ public class CapacitorBrowserView {
                         preventDefault = !allowNavigation;
                     }
 
-                    eventNotifier.willNavigate(uuid, url);
+                    eventNotifier.willNavigate(uuid, url, preventDefault);
                     return preventDefault;
                 }
 

@@ -7,6 +7,7 @@ import type {
   BoundsPayloadData,
   ColorPayloadData,
   UrlPayloadData,
+  NavigationPayloadData,
   IconPayloadData,
   TitlePayloadData,
   CanGoBackPayloadData,
@@ -43,7 +44,7 @@ export type BrowserViewMessageArgs = BrowserViewArgs<MessageChannelPayloadData>;
 export type BrowserViewCallbackData<T> = BrowserViewUUID & T;
 
 export type BrowserViewEmptyCallbackData = BrowserViewCallbackData<EmptyPayloadData>;
-export type BrowserViewUrlCallbackData = BrowserViewCallbackData<UrlPayloadData>;
+export type BrowserViewNavigationPayloadData = BrowserViewCallbackData<NavigationPayloadData>;
 export type BrowserViewIconCallbackData = BrowserViewCallbackData<IconPayloadData>;
 export type BrowserViewTitleCallbackData = BrowserViewCallbackData<TitlePayloadData>;
 export type BrowserViewErrorCallbackData = BrowserViewCallbackData<ErrorPayloadData>;
@@ -77,13 +78,13 @@ export interface CapacitorBrowserViewPlugin {
   getAllowedNavigation(args: BrowserViewEmptyArgs): Promise<AllowedNavigationPayloadData>;
   sendMessage(args: BrowserViewMessageArgs): Promise<void>;
 
-  addListener(eventName: 'new-window', listenerFunc: BrowserViewListenerCallback<BrowserViewUrlCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
+  addListener(eventName: 'new-window', listenerFunc: BrowserViewListenerCallback<BrowserViewNavigationPayloadData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'close-window', listenerFunc: BrowserViewListenerCallback<BrowserViewEmptyCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'page-favicon-updated', listenerFunc: BrowserViewListenerCallback<BrowserViewIconCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'page-title-updated', listenerFunc: BrowserViewListenerCallback<BrowserViewTitleCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'enter-html-full-screen', listenerFunc: BrowserViewListenerCallback<BrowserViewEmptyCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'leave-html-full-screen', listenerFunc: BrowserViewListenerCallback<BrowserViewEmptyCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
-  addListener(eventName: 'will-navigate', listenerFunc: BrowserViewListenerCallback<BrowserViewUrlCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
+  addListener(eventName: 'will-navigate', listenerFunc: BrowserViewListenerCallback<BrowserViewNavigationPayloadData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'did-start-loading', listenerFunc: BrowserViewListenerCallback<BrowserViewEmptyCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'did-frame-finish-load', listenerFunc: BrowserViewListenerCallback<BrowserViewEmptyCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;
   addListener(eventName: 'did-finish-load', listenerFunc: BrowserViewListenerCallback<BrowserViewEmptyCallbackData>): Promise<PluginListenerHandle> & PluginListenerHandle;

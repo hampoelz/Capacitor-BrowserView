@@ -520,7 +520,7 @@ public class CapacitorBrowserViewPlugin extends Plugin {
     protected class PluginEventNotifier {
 
         protected void newWindow(String uuid, String url) {
-            notifyBrowserViewUrlListeners("new-window", uuid, url);
+            notifyBrowserViewNavigationListeners("new-window", uuid, url, true);
         }
 
         protected void closeWindow(String uuid) {
@@ -543,8 +543,8 @@ public class CapacitorBrowserViewPlugin extends Plugin {
             notifyBrowserViewListeners("leave-html-full-screen", uuid);
         }
 
-        protected void willNavigate(String uuid, String url) {
-            notifyBrowserViewUrlListeners("will-navigate", uuid, url);
+        protected void willNavigate(String uuid, String url, boolean isExternal) {
+            notifyBrowserViewNavigationListeners("will-navigate", uuid, url, isExternal);
         }
 
         protected void didStartLoading(String uuid) {
@@ -613,10 +613,11 @@ public class CapacitorBrowserViewPlugin extends Plugin {
         notifyListeners(eventName, args);
     }
 
-    private void notifyBrowserViewUrlListeners(String eventName, String uuid, String url) {
+    private void notifyBrowserViewNavigationListeners(String eventName, String uuid, String url, boolean isExternal) {
         final JSObject args = new JSObject();
         args.put("uuid", uuid);
         args.put("url", url);
+        args.put("isExternal", isExternal);
 
         notifyListeners(eventName, args);
     }

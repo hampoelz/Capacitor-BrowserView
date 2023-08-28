@@ -30,7 +30,7 @@ import type {
   BrowserViewAllowedNavigationArgs,
   BrowserViewMessageArgs,
   BrowserViewEmptyCallbackData,
-  BrowserViewUrlCallbackData,
+  BrowserViewNavigationPayloadData,
   BrowserViewIconCallbackData,
   BrowserViewTitleCallbackData,
   BrowserViewErrorCallbackData,
@@ -343,7 +343,7 @@ export class CapacitorBrowserView extends EventEmitter {
 
   protected PluginEventNotifier = {
     newWindow: (uuid: string, url: string): void => {
-      this.notifyBrowserViewUrlListeners('new-window', uuid, url);
+      this.notifyBrowserViewNavigationListeners('new-window', uuid, url, true);
     },
 
     closeWindow: (uuid: string): void => {
@@ -366,8 +366,8 @@ export class CapacitorBrowserView extends EventEmitter {
       this.notifyBrowserViewListeners('leave-html-full-screen', uuid);
     },
 
-    willNavigate: (uuid: string, url: string): void => {
-      this.notifyBrowserViewUrlListeners('will-navigate', uuid, url);
+    willNavigate: (uuid: string, url: string, isExternal: boolean): void => {
+      this.notifyBrowserViewNavigationListeners('will-navigate', uuid, url, isExternal);
     },
 
     didStartLoading: (uuid: string): void => {
@@ -431,8 +431,8 @@ export class CapacitorBrowserView extends EventEmitter {
     this.emit(eventName, args);
   }
 
-  private notifyBrowserViewUrlListeners(eventName: string, uuid: string, url: string): void {
-    const args: BrowserViewUrlCallbackData = { uuid, url };
+  private notifyBrowserViewNavigationListeners(eventName: string, uuid: string, url: string, isExternal: boolean): void {
+    const args: BrowserViewNavigationPayloadData = { uuid, url, isExternal };
     this.emit(eventName, args);
   }
 

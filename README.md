@@ -733,7 +733,7 @@ Sends a message to the current page in the BrowserView.
 ### addListener('new-window', ...)
 
 ```typescript
-addListener(eventName: 'new-window', listenerFunc: BrowserViewListenerCallback<UrlPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'new-window', listenerFunc: BrowserViewListenerCallback<NavigationPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
 Calls `listenerFunc(data)` when the current page request a new tab or window, e.g. by `window.open()`,
@@ -745,10 +745,10 @@ the method `BrowserView.setAllowMultipleWindows()` or with the global option `al
 **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
-| Param              | Type                                                                                                                                    |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'new-window'</code>                                                                                                               |
-| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#urlpayloaddata">UrlPayloadData</a>></code> |
+| Param              | Type                                                                                                                                                  |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'new-window'</code>                                                                                                                             |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#navigationpayloaddata">NavigationPayloadData</a>></code> |
 
 **Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
@@ -884,7 +884,7 @@ Use [`removeListener(listenerFunc)`](#removelistener) instead.
 ### addListener('will-navigate', ...)
 
 ```typescript
-addListener(eventName: 'will-navigate', listenerFunc: BrowserViewListenerCallback<UrlPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'will-navigate', listenerFunc: BrowserViewListenerCallback<NavigationPayloadData>) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
 Calls `listenerFunc(data)` when a user or the page wants to start navigation on the main frame.
@@ -901,10 +901,10 @@ _On Android it may be called for subframes too._
 **Note:** When using the Electron platform, [`PluginListenerHandle.remove()`](#pluginlistenerhandle) does not work due to limitations.
 Use [`removeListener(listenerFunc)`](#removelistener) instead.
 
-| Param              | Type                                                                                                                                    |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'will-navigate'</code>                                                                                                            |
-| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#urlpayloaddata">UrlPayloadData</a>></code> |
+| Param              | Type                                                                                                                                                  |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'will-navigate'</code>                                                                                                                          |
+| **`listenerFunc`** | <code><a href="#browserviewlistenercallback">BrowserViewListenerCallback</a><<a href="#navigationpayloaddata">NavigationPayloadData</a>></code> |
 
 **Returns:** <code>Promise<<a href="#pluginlistenerhandle">PluginListenerHandle</a>> & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
@@ -1327,6 +1327,14 @@ along with arguments. Arguments will be serialized with JSON.
 | Prop         | Type                                      |
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() => Promise<void&gt;</code> |
+
+
+#### NavigationPayloadData
+
+| Prop             | Type                 | Description                                                              | Since |
+| ---------------- | -------------------- | ------------------------------------------------------------------------ | ----- |
+| **`url`**        | <code>string</code>  | The URL of a web page.                                                   | 1.0.0 |
+| **`isExternal`** | <code>boolean</code> | Whether the URL is opened in the external browser or in the BrowserView. |       |
 
 
 #### EmptyPayloadData
