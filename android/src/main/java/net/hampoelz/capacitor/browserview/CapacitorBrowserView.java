@@ -118,7 +118,7 @@ public class CapacitorBrowserView {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    protected BrowserView createBrowserView(Boolean _enableBridge) {
+    protected BrowserView createBrowserView(Boolean enableBridge) {
         final String uuid = UUID.randomUUID().toString();
 
         final BrowserView browserView = new BrowserView(uuid, context);
@@ -132,18 +132,17 @@ public class CapacitorBrowserView {
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
-        String _bridgeCode = null;
+        String bridgeCode = null;
         try {
-            _bridgeCode = FileOperations.ReadRawFile(context, R.raw.bridge);
+            bridgeCode = FileOperations.ReadRawFile(context, R.raw.bridge);
         } catch (IOException e) {
             Logger.error(CapacitorBrowserViewPlugin.LOGGER_TAG, "Failed to load the bridge module.", e);
-            _enableBridge = false;
+            enableBridge = false;
         }
 
-        final Boolean enableBridge = _enableBridge;
-        final String bridgeCode = _bridgeCode;
+        final Boolean isBridgeEnabled = enableBridge;
 
-        if (enableBridge) {
+        if (isBridgeEnabled) {
             final NativeBridge bridge = new NativeBridge(uuid);
             browserView.addJavascriptInterface(bridge, "_capacitorBrowserViewNativeBridge");
         }
@@ -279,7 +278,7 @@ public class CapacitorBrowserView {
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
 
-                    if (enableBridge) {
+                    if (isBridgeEnabled) {
                         browserView.evaluateJavascript(bridgeCode, null);
                     }
 
